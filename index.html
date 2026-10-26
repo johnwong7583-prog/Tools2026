@@ -4305,23 +4305,63 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
   }
 })();
 </script>
-<!-- ==================== V20 擴充外掛模組：Apple Wallet / Google Wallet 手機錢包電子名片與鎖屏名片導出中心 ==================== -->
-<div id="v20WalletBar" style="background: linear-gradient(90deg, #090d16 0%, #064e3b 50%, #090d16 100%); border-bottom: 1px solid rgba(16,185,129,0.4); padding: 8px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; z-index: 23;">
-  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-    <span style="font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 5px;">
-      📲 V20 手機錢包電子名片 (Apple / Google Wallet)：
-    </span>
-    <button type="button" onclick="window.v20OpenWalletModal()" style="background: linear-gradient(90deg, #10b981, #06b6d4); color: #020617; border: none; padding: 4px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; box-shadow: 0 2px 10px rgba(16,185,129,0.35);">
-      ✨ 打開 Apple / Google Wallet 預覽與導出中心
-    </button>
-    <button type="button" onclick="window.v20QuickExport('pass_png')" style="background: #1e293b; color: #a7f3d0; border: 1px solid #059669; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
-      🪪 快速下載 Wallet 票卡圖 (.PNG)
-    </button>
-    <button type="button" onclick="window.v20QuickExport('lockscreen')" style="background: #1e293b; color: #bae6fd; border: 1px solid #0284c7; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
-      📱 快速下載手機鎖屏名片桌布
-    </button>
+<!-- ==================== V20.1 擴充外掛模組：Apple/Google Wallet 電子名片 + 高清 FPS 轉數快 2cm×2cm (236px) 專項引擎 ==================== -->
+<div id="v20WalletBar" style="background: linear-gradient(90deg, #090d16 0%, #064e3b 45%, #1e1b4b 100%); border-bottom: 1px solid rgba(16,185,129,0.45); padding: 9px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; z-index: 23;">
+  
+  <!-- 第一排：Apple / Google Wallet 電子名片與鎖屏導出 -->
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 5px;">
+        📲 V20.1 手機錢包與轉數快中心：
+      </span>
+      <button type="button" onclick="window.v20OpenWalletModal()" style="background: linear-gradient(90deg, #10b981, #06b6d4); color: #020617; border: none; padding: 4px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; box-shadow: 0 2px 10px rgba(16,185,129,0.35);">
+        ✨ 打開 Apple / Google Wallet 預覽與導出中心
+      </button>
+      <button type="button" onclick="window.v20QuickExport('pass_png')" style="background: #1e293b; color: #a7f3d0; border: 1px solid #059669; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
+        🪪 下載 Wallet 票卡 (.PNG)
+      </button>
+      <button type="button" onclick="window.v20QuickExport('lockscreen')" style="background: #1e293b; color: #bae6fd; border: 1px solid #0284c7; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
+        📱 下載手機鎖屏名片桌布
+      </button>
+    </div>
+    <span id="v20FpsStatusBadge" style="color: #fde047; font-size: 11px; font-family: monospace;">⚡ 支援 FPS 轉數快 2cm×2cm (300DPI = 236px) 實體印刷規格</span>
   </div>
-  <span style="color: #94a3b8; font-size: 11px;">支援 Apple Wallet 票卡 / 鎖屏掃碼桌布 / .pkpass 封裝包</span>
+
+  <!-- 第二排：高清 FPS 轉數快 QR Code 專項控制列 (2 cm × 2 cm / 0.8 × 0.8 inches) -->
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 4px;">
+        🇭🇰 FPS 轉數快高清收款碼：
+      </span>
+
+      <label style="background: #f59e0b; color: #020617; padding: 3px 10px; border-radius: 7px; font-weight: 700; cursor: pointer; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
+        📂 上傳 FPS QR 圖檔 (419567.jpg)
+        <input type="file" id="v20FpsFileInput" accept="image/*" onchange="window.v20HandleFpsUpload(event)" style="display: none;">
+      </label>
+
+      <select id="v20FpsApplyTarget" onchange="window.v20SaveFpsState(); window.renderAll();" style="background: #0f172a; color: #fde047; border: 1px solid #b45309; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; outline: none; cursor: pointer;">
+        <option value="none">🚫 名片使用一般動態 QR Code</option>
+        <option value="back" selected>🔄 背面 QR 改顯示「高清 FPS 轉數快」</option>
+        <option value="front">📄 正面 QR 改顯示「高清 FPS 轉數快」</option>
+        <option value="both">🔗 正背面 QR 皆顯示「高清 FPS 轉數快」</option>
+      </select>
+
+      <button type="button" onclick="window.v20LockFps2cmSize()" style="background: #7c2d12; color: #fed7aa; border: 1px solid #f97316; padding: 3px 10px; border-radius: 7px; font-weight: 700; cursor: pointer; font-size: 11px; box-shadow: 0 2px 6px rgba(249,115,22,0.3);" title="將名片 QR Code 尺寸精準鎖定為 236×236 px (即 300 DPI 下的 2cm × 2cm / 0.8 × 0.8 inches)">
+        🎯 鎖定 2cm × 2cm 標準尺寸 (0.8" / 236px)
+      </button>
+
+      <label style="display: inline-flex; align-items: center; gap: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">
+        <input type="checkbox" id="v20ShowFpsLabel" checked onchange="window.v20SaveFpsState(); window.renderAll();">
+        <span>顯示「FPS 轉數快」標籤</span>
+      </label>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button type="button" onclick="window.v20ClearFpsQr()" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer;">
+        清除 FPS 圖
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Apple / Google Wallet 互動預覽與導出彈窗 -->
@@ -4339,15 +4379,15 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       </div>
     </div>
 
-    <!-- 右側：樣式設定與三種格式導出按鈕 (7 Cols) -->
+    <!-- 右側：樣式設定與導出按鈕 (7 Cols) -->
     <div class="md:col-span-7 flex flex-col justify-between space-y-4 text-xs">
       <div class="space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
             <h3 class="text-base font-bold text-white flex items-center gap-2">
-              📲 Apple Wallet / Google Wallet 電子名片中心
+              📲 Apple Wallet / Google Wallet 電子名片與 FPS 收款卡中心
             </h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">自動同步名片資料、主題配色、去白底 Logo 與專屬 QR Code</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">支援切換顯示「vCard 通訊錄 QR」或「高清 FPS 轉數快 2cm×2cm 收款碼」</p>
           </div>
           <button type="button" onclick="window.v20CloseWalletModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
             ✕ 關閉
@@ -4375,6 +4415,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           <div>
             <label class="block text-[11px] text-amber-300 font-semibold mb-1">📱 票卡底部 QR Code 內容</label>
             <select id="v20PassQrSource" onchange="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <option value="fps_img">🇭🇰 高清 FPS 轉數快收款碼 (已上傳圖檔)</option>
               <option value="vcard" selected>1. vCard 完整通訊錄 (一掃即存聯絡人)</option>
               <option value="whatsapp">2. WhatsApp 即時對話連結</option>
               <option value="url">3. 公司官方網站 URL</option>
@@ -4383,37 +4424,37 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           </div>
           <div>
             <label class="block text-[11px] text-slate-300 font-semibold mb-1">🏷️ 票卡右上角職能標籤</label>
-            <input type="text" id="v20PassBadgeLabel" value="VERIFIED PRO" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+            <input type="text" id="v20PassBadgeLabel" value="FPS / VERIFIED" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
           </div>
         </div>
 
         <!-- 票卡自訂底部備註 -->
         <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
           <label class="block text-[11px] text-slate-400 mb-1">票卡底部掃碼提示文字 (顯示於 QR Code 正下方)</label>
-          <input type="text" id="v20PassFooterHint" value="請使用相機掃描上方 QR Code 存入完整聯絡人資訊" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          <input type="text" id="v20PassFooterHint" value="掃描上方 QR Code 存入聯絡人或透過 FPS 轉數快付款" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
         </div>
       </div>
 
-      <!-- 三大導出按鈕區 -->
+      <!-- 導出按鈕區 -->
       <div class="space-y-2.5 pt-2 border-t border-slate-800">
         <div class="text-[11px] font-semibold text-slate-300">⬇ 選擇導出格式：</div>
         
         <button type="button" onclick="window.v20DownloadPassImage()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-slate-950 font-extrabold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
           <span class="flex items-center gap-2">🪪 1. 下載「Apple / Google Wallet 仿真電子票卡 (.PNG)」</span>
-          <span class="text-[10px] bg-slate-950/25 px-2 py-0.5 rounded font-mono">750 × 1120 px (最推薦)</span>
+          <span class="text-[10px] bg-slate-950/25 px-2 py-0.5 rounded font-mono">750 × 1120 px</span>
         </button>
 
         <button type="button" onclick="window.v20DownloadLockScreenWallpaper()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
           <span class="flex items-center gap-2">📱 2. 下載「iPhone / Android 鎖定畫面專屬電子名片桌布」</span>
-          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">1290 × 2796 px (避開時鐘區)</span>
+          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">1290 × 2796 px</span>
         </button>
 
         <div class="grid grid-cols-2 gap-2 pt-0.5">
-          <button type="button" onclick="window.v20ExportPkpassBundle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5" title="導出符合 Apple PassKit 規範的 pass.json 與圖示封裝包 (.pkpass)">
+          <button type="button" onclick="window.v20ExportPkpassBundle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
             <span>📦 3. 導出 Apple .pkpass 封裝包</span>
           </button>
-          <button type="button" onclick="window.exportStandaloneVCardFile()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5" title="iPhone Safari 打開 .vcf 可直接匯入系統通訊錄">
-            <span>📇 4. 下載 iOS/Android 通訊錄 (.vcf)</span>
+          <button type="button" onclick="window.v20ExportStandalone2cmFpsPNG()" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5" title="單獨導出一張 300 DPI 下精準 2cm×2cm (236×236 px) 的超高清銳化 FPS QR 圖檔">
+            <span>🎯 4. 下載 2×2cm 高清 FPS 圖 (.PNG)</span>
           </button>
         </div>
       </div>
@@ -4424,11 +4465,256 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
 
 <script>
 (function() {
+  const V20_FPS_STORAGE_KEY = 'CF_BRANDCARD_STUDIO_V20_FPS_QR';
+  // 2 cm × 2 cm (0.8 × 0.8 inches) 在 300 DPI 下的精準像素值：20mm / 25.4 * 300 = 236.22 px -> 236 px
+  const FPS_2CM_PX_AT_300DPI = 236;
+
+  let v20FpsImgObj = null;
+  let v20FpsCrispCanvas = null;
+  let v20FpsDataUrl = '';
+  let v20CurrentRenderingSide = 'front';
+
   function hexToRgbObj(hex) {
     const clean = (hex || '#FFFFFF').replace('#', '');
     const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
     const num = parseInt(full, 16) || 0;
     return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+
+  // 對上傳的 FPS QR Code 圖檔 (如 419567.jpg) 進行「自動去多餘白邊 + 高對比黑白二值化銳化」
+  function buildCrispFpsCanvas(img) {
+    const rawC = document.createElement('canvas');
+    rawC.width = img.width;
+    rawC.height = img.height;
+    const rctx = rawC.getContext('2d');
+    rctx.drawImage(img, 0, 0);
+
+    const imgData = rctx.getImageData(0, 0, rawC.width, rawC.height);
+    const d = imgData.data;
+    const w = rawC.width, h = rawC.height;
+
+    let minX = w, minY = h, maxX = 0, maxY = 0;
+
+    // 二值化銳化並尋找 QR 矩陣邊界（消除原圖左右不對稱的多餘空白）
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const idx = (y * w + x) * 4;
+        const lum = 0.299 * d[idx] + 0.587 * d[idx + 1] + 0.114 * d[idx + 2];
+        if (lum < 145 && d[idx + 3] > 50) {
+          d[idx] = 0; d[idx + 1] = 0; d[idx + 2] = 0; d[idx + 3] = 255;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        } else {
+          d[idx] = 255; d[idx + 1] = 255; d[idx + 2] = 255; d[idx + 3] = 255;
+        }
+      }
+    }
+    rctx.putImageData(imgData, 0, 0);
+
+    if (maxX <= minX || maxY <= minY) return rawC;
+
+    // 裁切出純淨正方形 QR 並加上標準 4% 安全靜區白邊 (Quiet Zone)
+    const qrSpan = Math.max(maxX - minX + 1, maxY - minY + 1);
+    const pad = Math.round(qrSpan * 0.05);
+    const finalSize = qrSpan + pad * 2;
+
+    const outC = document.createElement('canvas');
+    outC.width = finalSize;
+    outC.height = finalSize;
+    const octx = outC.getContext('2d');
+    octx.imageSmoothingEnabled = false;
+    octx.fillStyle = '#FFFFFF';
+    octx.fillRect(0, 0, finalSize, finalSize);
+    octx.drawImage(rawC, minX, minY, maxX - minX + 1, maxY - minY + 1, pad, pad, qrSpan, qrSpan);
+    return outC;
+  }
+
+  // 上傳 FPS 轉數快 QR 圖檔處理
+  window.v20HandleFpsUpload = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        v20FpsImgObj = img;
+        v20FpsCrispCanvas = buildCrispFpsCanvas(img);
+        v20FpsDataUrl = v20FpsCrispCanvas.toDataURL('image/png');
+
+        // 預設自動啟用背面與 Wallet 的 FPS QR 並鎖定 2cm × 2cm
+        const passQrSel = document.getElementById('v20PassQrSource');
+        if (passQrSel) passQrSel.value = 'fps_img';
+
+        const statusBadge = document.getElementById('v20FpsStatusBadge');
+        if (statusBadge) {
+          statusBadge.textContent = `✅ 已載入並銳化 FPS 轉數快 (${file.name}) · 2×2cm (236px)`;
+          statusBadge.style.color = '#34d399';
+        }
+
+        window.v20LockFps2cmSize();
+        window.v20SaveFpsState();
+        window.v20RenderWalletPreview();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // 一鍵將名片正背面 QR Code 尺寸鎖定為 2cm × 2cm (0.8 × 0.8 inches @ 300 DPI = 236 × 236 px)
+  window.v20LockFps2cmSize = function() {
+    const sizeQrInput = document.getElementById('sizeQr');
+    if (sizeQrInput) {
+      if (parseInt(sizeQrInput.max, 10) < 280) sizeQrInput.max = '280';
+      sizeQrInput.value = String(FPS_2CM_PX_AT_300DPI);
+    }
+    const valQrSpan = document.getElementById('val-qrSize');
+    if (valQrSpan) {
+      valQrSpan.textContent = `${FPS_2CM_PX_AT_300DPI} px (2×2cm)`;
+    }
+
+    // 自動微調座標以確保 236px (2cm×2cm) 的 QR Code 不會超出名片右/下邊界
+    const portrait = (typeof window.isPortrait === 'function' && window.isPortrait());
+    const W = portrait ? 638 : 1063;
+    const H = portrait ? 1063 : 638;
+
+    const targetSide = document.getElementById('v20FpsApplyTarget') ? document.getElementById('v20FpsApplyTarget').value : 'back';
+    if (targetSide === 'front' || targetSide === 'both') {
+      document.getElementById('showQrFront').checked = true;
+      const fPos = typeof window.getActiveFrontPos === 'function' ? window.getActiveFrontPos() : null;
+      if (fPos && fPos.qrcode) {
+        fPos.qrcode.x = Math.min(fPos.qrcode.x, W - FPS_2CM_PX_AT_300DPI - 52);
+        fPos.qrcode.y = Math.min(fPos.qrcode.y, H - FPS_2CM_PX_AT_300DPI - 52);
+      }
+    }
+    if (targetSide === 'back' || targetSide === 'both') {
+      document.getElementById('showBackQr').checked = true;
+      if (document.getElementById('showBackQrSync')) document.getElementById('showBackQrSync').checked = true;
+      const bPos = typeof window.getActiveBackPos === 'function' ? window.getActiveBackPos() : null;
+      if (bPos && bPos.backQr) {
+        bPos.backQr.x = Math.min(bPos.backQr.x, W - FPS_2CM_PX_AT_300DPI - 52);
+        bPos.backQr.y = Math.min(bPos.backQr.y, H - FPS_2CM_PX_AT_300DPI - 52);
+      }
+    }
+
+    if (typeof window.renderAll === 'function') window.renderAll(false);
+    if (typeof window.showAutoSaveFeedback === 'function') {
+      window.showAutoSaveFeedback('🎯 已鎖定 FPS QR 尺寸為 2cm × 2cm (0.8" / 236×236 px @ 300DPI)');
+    }
+  };
+
+  window.v20ClearFpsQr = function() {
+    v20FpsImgObj = null;
+    v20FpsCrispCanvas = null;
+    v20FpsDataUrl = '';
+    localStorage.removeItem(V20_FPS_STORAGE_KEY);
+    const fileIn = document.getElementById('v20FpsFileInput');
+    if (fileIn) fileIn.value = '';
+    const statusBadge = document.getElementById('v20FpsStatusBadge');
+    if (statusBadge) {
+      statusBadge.textContent = '⚡ 支援 FPS 轉數快 2cm×2cm (300DPI = 236px) 實體印刷規格';
+      statusBadge.style.color = '#fde047';
+    }
+    if (typeof window.renderAll === 'function') window.renderAll(false);
+  };
+
+  // 單獨下載一張精準 236×236 px (2cm×2cm @ 300DPI) 的銳化 FPS QR 圖檔
+  window.v20ExportStandalone2cmFpsPNG = function() {
+    if (!v20FpsCrispCanvas) return alert('請先點擊上方黃色按鈕上傳你的 FPS 轉數快 QR 圖檔 (419567.jpg)！');
+    const c = document.createElement('canvas');
+    c.width = FPS_2CM_PX_AT_300DPI;
+    c.height = FPS_2CM_PX_AT_300DPI;
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(v20FpsCrispCanvas, 0, 0, c.width, c.height);
+
+    const link = document.createElement('a');
+    link.download = 'FPS_QR_2x2cm_0.8inch_300DPI_236px.png';
+    link.href = c.toDataURL('image/png', 1.0);
+    link.click();
+  };
+
+  window.v20SaveFpsState = function() {
+    try {
+      localStorage.setItem(V20_FPS_STORAGE_KEY, JSON.stringify({
+        target: document.getElementById('v20FpsApplyTarget').value,
+        showLabel: document.getElementById('v20ShowFpsLabel').checked,
+        dataUrl: v20FpsDataUrl
+      }));
+    } catch (e) {}
+  };
+
+  function loadFpsState() {
+    try {
+      const raw = localStorage.getItem(V20_FPS_STORAGE_KEY);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (s.target && document.getElementById('v20FpsApplyTarget')) {
+        document.getElementById('v20FpsApplyTarget').value = s.target;
+      }
+      if (typeof s.showLabel === 'boolean' && document.getElementById('v20ShowFpsLabel')) {
+        document.getElementById('v20ShowFpsLabel').checked = s.showLabel;
+      }
+      if (s.dataUrl) {
+        const img = new Image();
+        img.onload = function() {
+          v20FpsImgObj = img;
+          v20FpsCrispCanvas = buildCrispFpsCanvas(img);
+          v20FpsDataUrl = s.dataUrl;
+          const statusBadge = document.getElementById('v20FpsStatusBadge');
+          if (statusBadge) {
+            statusBadge.textContent = '✅ 已自動還原高清 FPS 轉數快收款碼 (2cm×2cm)';
+            statusBadge.style.color = '#34d399';
+          }
+          if (document.getElementById('v20PassQrSource')) {
+            document.getElementById('v20PassQrSource').value = 'fps_img';
+          }
+          if (typeof window.renderAll === 'function') window.renderAll(true);
+        };
+        img.src = s.dataUrl;
+      }
+    } catch (e) {}
+  }
+
+  // 在名片正背面繪製超高清無損 FPS 轉數快 QR Code (支援 236×236px 即 2cm×2cm)
+  function drawCrispFpsQrOnCard(ctx, x, y, qrSize, cardAccentHex) {
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+
+    // 繪製純白高對比安全底襯框 (確保高密度 FPS 點陣在任何深淺背景上 100% 秒掃)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.strokeStyle = cardAccentHex + '66';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x - 6, y - 6, qrSize + 12, qrSize + 12, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // 以最近鄰無損像素模式繪製銳化後的 FPS QR Code
+    ctx.drawImage(v20FpsCrispCanvas, x, y, qrSize, qrSize);
+
+    // 若勾選顯示「FPS 轉數快」標籤，於邊框頂部繪製精緻膠囊識別標記
+    const showLbl = document.getElementById('v20ShowFpsLabel') && document.getElementById('v20ShowFpsLabel').checked;
+    if (showLbl) {
+      const pillW = Math.min(qrSize, 118), pillH = 22;
+      const px = Math.round(x + (qrSize - pillW) / 2);
+      const py = y - 16;
+      ctx.fillStyle = cardAccentHex || '#901E23';
+      ctx.beginPath();
+      ctx.roundRect(px, py, pillW, pillH, 11);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `700 12px 'Montserrat', 'Noto Sans TC', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('FPS 轉數快', px + pillW / 2, py + pillH / 2 + 0.5);
+    }
+
+    ctx.restore();
   }
 
   function getPassColorPalette(data) {
@@ -4438,17 +4724,11 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     let text = data.text || '#1E293B';
 
     if (mode === 'invert_accent') {
-      bg = data.accent || '#901E23';
-      accent = '#FFFFFF';
-      text = '#F8FAFC';
+      bg = data.accent || '#901E23'; accent = '#FFFFFF'; text = '#F8FAFC';
     } else if (mode === 'dark_pro') {
-      bg = '#11141C';
-      accent = data.accent === '#0F172A' ? '#38BDF8' : data.accent;
-      text = '#F8FAFC';
+      bg = '#11141C'; accent = data.accent === '#0F172A' ? '#38BDF8' : data.accent; text = '#F8FAFC';
     } else if (mode === 'clean_white') {
-      bg = '#FFFFFF';
-      accent = data.accent;
-      text = '#0F172A';
+      bg = '#FFFFFF'; accent = data.accent; text = '#0F172A';
     }
 
     const rgb = hexToRgbObj(bg);
@@ -4456,45 +4736,36 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     const isDark = lum < 0.46;
     const labelColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(15,23,42,0.5)';
     const dividerColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.1)';
-
     return { bg, accent, text, isDark, labelColor, dividerColor, rgb };
   }
 
-  // 核心繪圖函數：在指定 Canvas 上渲染 Apple Wallet / Google Wallet 票卡 (750 x 1120)
+  // 在 Apple Wallet / Google Wallet 票卡上渲染名片與 FPS QR Code
   window.v20RenderPassOnCanvas = function(canvas) {
     if (!canvas || typeof window.getFormData !== 'function') return;
     const ctx = canvas.getContext('2d');
-    const W = canvas.width;  // 750
-    const H = canvas.height; // 1120
+    const W = canvas.width, H = canvas.height;
     const data = window.getFormData();
     const palette = getPassColorPalette(data);
     const platform = document.getElementById('v20PassPlatform') ? document.getElementById('v20PassPlatform').value : 'apple';
 
     ctx.clearRect(0, 0, W, H);
-
-    // 1. 繪製票卡主體圓角造型與頂部凹槽 (Apple Wallet 經典特徵)
     ctx.save();
     ctx.beginPath();
-    const rad = 42;
-    ctx.roundRect(0, 0, W, H, rad);
+    ctx.roundRect(0, 0, W, H, 42);
     ctx.clip();
 
-    // 填滿票卡底色
     ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
-    // 頂部微漸層光暈與科技質感線條
     const topGrad = ctx.createLinearGradient(0, 0, W, 320);
     topGrad.addColorStop(0, palette.accent + (palette.isDark ? '28' : '14'));
     topGrad.addColorStop(1, palette.bg + '00');
     ctx.fillStyle = topGrad;
     ctx.fillRect(0, 0, W, 360);
 
-    // 頂部強調色裝飾橫條
     ctx.fillStyle = palette.accent;
     ctx.fillRect(0, 0, W, 12);
 
-    // 若為 Apple Wallet，在頂部正中央繪製經典半圓暗影凹槽
     if (platform === 'apple') {
       ctx.fillStyle = '#020617';
       ctx.beginPath();
@@ -4502,60 +4773,46 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       ctx.fill();
     }
 
-    // 2. 頂部 Header 區：左側品牌 Logo / 字標 + 右側職能認證膠囊
     const padX = 52;
     let headerY = 54;
 
     if (typeof uploadedLogo !== 'undefined' && uploadedLogo && typeof window.getProcessedLogo === 'function') {
       const procLogo = window.getProcessedLogo(palette.bg, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
       const ratio = uploadedLogo.width / uploadedLogo.height;
-      let drawH = 62;
-      let drawW = drawH * ratio;
+      let drawH = 62, drawW = drawH * ratio;
       if (drawW > 340) { drawW = 340; drawH = drawW / ratio; }
       ctx.drawImage(procLogo, padX, headerY, drawW, drawH);
     } else {
       ctx.fillStyle = palette.accent;
       ctx.font = `700 44px ${data.fontFrontBrand || "'Libre Baskerville', serif"}`;
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'top';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       ctx.fillText(data.company || 'Centralfield', padX, headerY);
     }
 
-    // 右上角 VERIFIED 標籤與創立年份
-    const badgeStr = (document.getElementById('v20PassBadgeLabel') ? document.getElementById('v20PassBadgeLabel').value : 'VERIFIED PRO').trim();
+    const badgeStr = (document.getElementById('v20PassBadgeLabel') ? document.getElementById('v20PassBadgeLabel').value : 'FPS / VERIFIED').trim();
     if (badgeStr) {
-      ctx.font = `700 16px 'Montserrat', 'Inter', sans-serif`;
+      ctx.font = `700 16px 'Montserrat', sans-serif`;
       const bw = ctx.measureText(badgeStr).width + 28;
       const bx = W - padX - bw;
       ctx.fillStyle = palette.accent + '22';
       ctx.strokeStyle = palette.accent + '66';
       ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(bx, headerY + 4, bw, 32, 16);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = palette.accent;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.beginPath(); ctx.roundRect(bx, headerY + 4, bw, 32, 16); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = palette.accent; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(badgeStr, bx + bw / 2, headerY + 20);
     }
     if (data.sinceYear) {
       ctx.fillStyle = palette.labelColor;
       ctx.font = `italic 400 18px ${data.fontFrontBrand || 'serif'}`;
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'top';
+      ctx.textAlign = 'right'; ctx.textBaseline = 'top';
       ctx.fillText(data.sinceYear, W - padX, headerY + 44);
     }
 
-    // Header 底部分隔線
     ctx.fillStyle = palette.dividerColor;
     ctx.fillRect(padX, 145, W - padX * 2, 2);
 
-    // 3. Primary 主視覺區：個人中英文姓名與職銜
     let curY = 175;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillStyle = palette.labelColor;
     ctx.font = `700 15px 'Montserrat', sans-serif`;
     ctx.fillText('NAME / REPRESENTATIVE', padX, curY);
@@ -4577,129 +4834,68 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     ctx.fillRect(padX, curY, W - padX * 2, 2);
     curY += 28;
 
-    // 4. Secondary & Auxiliary 雙欄資訊矩陣 (Apple Wallet 標準欄位佈局)
-    const col1X = padX;
-    const col2X = Math.round(W / 2) + 15;
-    const colW = Math.round(W / 2) - padX - 20;
-
+    const col1X = padX, col2X = Math.round(W / 2) + 15, colW = Math.round(W / 2) - padX - 20;
     function drawPassField(label, value, x, y, maxW) {
-      ctx.fillStyle = palette.labelColor;
-      ctx.font = `700 14px 'Montserrat', sans-serif`;
-      ctx.textAlign = 'left';
+      ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`; ctx.textAlign = 'left';
       ctx.fillText(label, x, y);
-
-      ctx.fillStyle = palette.text;
-      ctx.font = `600 20px ${data.fontFrontEn || "'Inter', sans-serif"}, ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+      ctx.fillStyle = palette.text; ctx.font = `600 20px ${data.fontFrontEn || "'Inter', sans-serif"}`;
       ctx.fillText(value || '—', x, y + 22, maxW);
     }
 
     drawPassField('DIRECT / TEL', data.phone || '+852 2387 0273', col1X, curY, colW);
     drawPassField('WHATSAPP / MOBILE', data.whatsapp || data.phone || '—', col2X, curY, colW);
     curY += 74;
-
     drawPassField('EMAIL ADDRESS', data.email || 'sales@centralfield.com', col1X, curY, colW);
     drawPassField('OFFICIAL WEBSITE', data.website || 'www.centralfield.com', col2X, curY, colW);
     curY += 74;
 
-    // 門市地址與公司全稱欄
-    ctx.fillStyle = palette.labelColor;
-    ctx.font = `700 14px 'Montserrat', sans-serif`;
+    ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`;
     ctx.fillText('LOCATION / STORE ADDRESS', col1X, curY);
     curY += 22;
+    ctx.fillStyle = palette.text; ctx.font = `500 18px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.fillText((data.address || data.addressEn || '').replace(/\r?\n/g, ' '), col1X, curY, W - padX * 2);
 
-    const cleanAddr = (data.address || data.addressEn || '').replace(/\r?\n/g, ' ');
-    ctx.fillStyle = palette.text;
-    ctx.font = `500 18px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
-    ctx.fillText(cleanAddr, col1X, curY, W - padX * 2);
-    curY += 32;
+    // 底部掃碼卡座區
+    const qrBoxW = 360, qrBoxH = 360;
+    const qrBoxX = Math.round((W - qrBoxW) / 2), qrBoxY = 665;
 
-    const cleanAddrEn = (data.addressEn || '').replace(/\r?\n/g, ' ');
-    if (cleanAddrEn) {
-      ctx.fillStyle = palette.labelColor;
-      ctx.font = `500 15px ${data.fontFrontEn || "'Inter', sans-serif"}`;
-      ctx.fillText(cleanAddrEn, col1X, curY, W - padX * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.22)'; ctx.shadowBlur = 25; ctx.shadowOffsetY = 8;
+    ctx.beginPath(); ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, 28); ctx.fill();
+    ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+    const qrSrcMode = document.getElementById('v20PassQrSource') ? document.getElementById('v20PassQrSource').value : 'vcard';
+    if (qrSrcMode === 'fps_img' && v20FpsCrispCanvas) {
+      // 直接繪製超高清銳化後的 FPS 轉數快圖檔 (不疊加中央遮擋物以確保高密度銀行碼 100% 秒掃)
+      ctx.save();
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(v20FpsCrispCanvas, qrBoxX + 18, qrBoxY + 18, 324, 324);
+      ctx.restore();
+    } else {
+      const actualMode = (qrSrcMode === 'front_sync' || qrSrcMode === 'fps_img') ? data.frontQrMode : qrSrcMode;
+      const qrPayload = window.buildQRPayload(actualMode, data.frontQrCustom, data);
+      const qrCanvas = document.createElement('canvas');
+      new QRious({ element: qrCanvas, value: qrPayload, size: 320, level: 'H', foreground: '#0F172A', background: '#FFFFFF', padding: 6 });
+      ctx.drawImage(qrCanvas, qrBoxX + 20, qrBoxY + 20, 320, 320);
     }
 
-    // 5. 底部大型 QR Code 掃碼卡座區 (Apple Wallet 標誌性白底圓角掃碼框)
-    const qrBoxW = 360, qrBoxH = 360;
-    const qrBoxX = Math.round((W - qrBoxW) / 2);
-    const qrBoxY = 665;
-
-    ctx.fillStyle = '#FFFFFF';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
-    ctx.shadowBlur = 25;
-    ctx.shadowOffsetY = 8;
-    ctx.beginPath();
-    ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, 28);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
-
-    // 決定 QR Code 內容
-    const qrSrcMode = document.getElementById('v20PassQrSource') ? document.getElementById('v20PassQrSource').value : 'vcard';
-    const actualMode = qrSrcMode === 'front_sync' ? data.frontQrMode : qrSrcMode;
-    const qrPayload = window.buildQRPayload(actualMode, data.frontQrCustom, data);
-
-    // 繪製高對比清晰 QR Code
-    const qrCanvas = document.createElement('canvas');
-    new QRious({
-      element: qrCanvas,
-      value: qrPayload,
-      size: 320,
-      level: 'H',
-      foreground: '#0F172A',
-      background: '#FFFFFF',
-      padding: 6
-    });
-    ctx.drawImage(qrCanvas, qrBoxX + 20, qrBoxY + 20, 320, 320);
-
-    // 在 QR Code 中央嵌入精緻品牌小徽章
-    const cBadge = 64;
-    const cbx = Math.round(W / 2 - cBadge / 2);
-    const cby = Math.round(qrBoxY + qrBoxH / 2 - cBadge / 2);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath();
-    ctx.roundRect(cbx - 4, cby - 4, cBadge + 8, cBadge + 8, 14);
-    ctx.fill();
-    ctx.fillStyle = data.accent || '#901E23';
-    ctx.beginPath();
-    ctx.roundRect(cbx, cby, cBadge, cBadge, 12);
-    ctx.fill();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = `800 26px 'Montserrat', sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('CF', W / 2, qrBoxY + qrBoxH / 2 + 1);
-
-    // 底部提示文字與公司全稱
     const footerHint = document.getElementById('v20PassFooterHint') ? document.getElementById('v20PassFooterHint').value : '';
-    ctx.fillStyle = palette.text;
-    ctx.font = `600 17px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.fillStyle = palette.text; ctx.font = `600 17px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
     ctx.textAlign = 'center';
     ctx.fillText(footerHint, W / 2, 1052, W - 80);
 
-    ctx.fillStyle = palette.labelColor;
-    ctx.font = `600 14px 'Montserrat', sans-serif`;
+    ctx.fillStyle = palette.labelColor; ctx.font = `600 14px 'Montserrat', sans-serif`;
     ctx.fillText(`${data.companySubEn || data.company}  •  ${data.companySubZh}`, W / 2, 1084);
 
-    // 外框微亮邊線
     ctx.strokeStyle = palette.isDark ? 'rgba(255,255,255,0.16)' : 'rgba(15,23,42,0.12)';
     ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.roundRect(1.5, 1.5, W - 3, H - 3, rad);
-    ctx.stroke();
-
+    ctx.beginPath(); ctx.roundRect(1.5, 1.5, W - 3, H - 3, 42); ctx.stroke();
     ctx.restore();
   };
 
   window.v20RenderWalletPreview = function() {
     const canvas = document.getElementById('v20WalletCanvas');
     if (canvas) window.v20RenderPassOnCanvas(canvas);
-    const titleEl = document.getElementById('v20PreviewTitle');
-    const plat = document.getElementById('v20PassPlatform') ? document.getElementById('v20PassPlatform').value : 'apple';
-    if (titleEl) {
-      titleEl.textContent = plat === 'apple' ? '● Apple Wallet 仿真票卡預覽' : '● Google Wallet 現代票卡預覽';
-    }
   };
 
   window.v20OpenWalletModal = function() {
@@ -4711,159 +4907,67 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     document.getElementById('v20WalletModal').classList.add('hidden');
   };
 
-  // 1. 導出 Apple / Google Wallet 仿真電子票卡圖 (.PNG)
   window.v20DownloadPassImage = function() {
     const canvas = document.getElementById('v20WalletCanvas');
     window.v20RenderPassOnCanvas(canvas);
     const data = window.getFormData();
-    const namePart = (data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_');
     const link = document.createElement('a');
-    link.download = `${namePart}_Wallet_Pass_Card.png`;
+    link.download = `${(data.nameEn || data.nameZh || 'Card').replace(/\s+/g, '_')}_Wallet_Pass.png`;
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
-    if (typeof window.showAutoSaveFeedback === 'function') {
-      window.showAutoSaveFeedback('🪪 已下載 Wallet 電子票卡圖 (.PNG)');
-    }
   };
 
-  // 2. 導出 iPhone / Android 鎖定畫面專屬電子名片桌布 (1290 x 2796 px)
   window.v20DownloadLockScreenWallpaper = function() {
     const passCanvas = document.getElementById('v20WalletCanvas');
     window.v20RenderPassOnCanvas(passCanvas);
     const data = window.getFormData();
-    const palette = getPassColorPalette(data);
 
     const wallCanvas = document.createElement('canvas');
     const WW = 1290, WH = 2796;
-    wallCanvas.width = WW;
-    wallCanvas.height = WH;
+    wallCanvas.width = WW; wallCanvas.height = WH;
     const wctx = wallCanvas.getContext('2d');
 
-    // 深邃科技感鎖屏背景 (襯托中央票卡且不刺眼)
     const bgGrad = wctx.createLinearGradient(0, 0, WW, WH);
-    bgGrad.addColorStop(0, '#040711');
-    bgGrad.addColorStop(0.5, '#0F172A');
-    bgGrad.addColorStop(1, '#040711');
-    wctx.fillStyle = bgGrad;
-    wctx.fillRect(0, 0, WW, WH);
+    bgGrad.addColorStop(0, '#040711'); bgGrad.addColorStop(0.5, '#0F172A'); bgGrad.addColorStop(1, '#040711');
+    wctx.fillStyle = bgGrad; wctx.fillRect(0, 0, WW, WH);
 
-    // 鎖屏背景品牌色微光暈
-    const radGlow = wctx.createRadialGradient(WW / 2, WH * 0.56, 50, WW / 2, WH * 0.56, 750);
-    radGlow.addColorStop(0, (data.accent || '#901E23') + '38');
-    radGlow.addColorStop(1, 'transparent');
-    wctx.fillStyle = radGlow;
-    wctx.fillRect(0, 0, WW, WH);
-
-    // 避開頂部 iOS / Android 時鐘區 (Y=0 ~ 820)，將 Wallet 票卡精準繪製於中下方黃金區
-    const cardDrawW = 980;
-    const cardDrawH = Math.round(cardDrawW * (1120 / 750)); // 1463 px
-    const cardDrawX = Math.round((WW - cardDrawW) / 2);
-    const cardDrawY = 920;
-
+    const cardDrawW = 980, cardDrawH = Math.round(cardDrawW * (1120 / 750));
     wctx.save();
-    wctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
-    wctx.shadowBlur = 65;
-    wctx.shadowOffsetY = 25;
-    wctx.drawImage(passCanvas, cardDrawX, cardDrawY, cardDrawW, cardDrawH);
+    wctx.shadowColor = 'rgba(0, 0, 0, 0.75)'; wctx.shadowBlur = 65; wctx.shadowOffsetY = 25;
+    wctx.drawImage(passCanvas, Math.round((WW - cardDrawW) / 2), 920, cardDrawW, cardDrawH);
     wctx.restore();
 
-    const namePart = (data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_');
     const link = document.createElement('a');
-    link.download = `${namePart}_LockScreen_Wallet_Wallpaper.png`;
+    link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_LockScreen_Wallpaper.png`;
     link.href = wallCanvas.toDataURL('image/png', 0.95);
     link.click();
-    if (typeof window.showAutoSaveFeedback === 'function') {
-      window.showAutoSaveFeedback('📱 已下載手機鎖定畫面專屬電子名片桌布');
-    }
   };
 
-  // 3. 導出符合 Apple PassKit 規範的 .pkpass 原始碼封裝包 (含 pass.json 與圖標集)
   window.v20ExportPkpassBundle = async function() {
-    if (typeof JSZip === 'undefined') return alert('JSZip 載入中，請稍候再試！');
+    if (typeof JSZip === 'undefined') return alert('JSZip 載入中');
     const data = window.getFormData();
     const palette = getPassColorPalette(data);
-    const qrPayload = window.buildQRPayload('vcard', '', data);
-
-    const passJson = {
-      formatVersion: 1,
-      passTypeIdentifier: "pass.com.centralfield.businesscard",
-      serialNumber: "CF-" + Date.now(),
-      teamIdentifier: "CENTRALFIELD",
-      organizationName: data.companySubEn || data.company || "Centralfield Computer Ltd.",
-      description: `${data.nameEn || data.company} Business Card`,
-      backgroundColor: `rgb(${palette.rgb.r}, ${palette.rgb.g}, ${palette.rgb.b})`,
-      foregroundColor: palette.isDark ? "rgb(248, 250, 252)" : "rgb(15, 23, 42)",
-      labelColor: palette.isDark ? "rgb(148, 163, 184)" : "rgb(100, 116, 139)",
-      generic: {
-        headerFields: [
-          { key: "since", label: "ESTABLISHED", value: data.sinceYear || "Since 1983" }
-        ],
-        primaryFields: [
-          { key: "name", label: "NAME / REPRESENTATIVE", value: [data.nameEn, data.nameZh].filter(Boolean).join(" ") || data.company }
-        ],
-        secondaryFields: [
-          { key: "title", label: "TITLE / DEPARTMENT", value: [data.titleEn, data.titleZh].filter(Boolean).join(" | ") || "Representative" },
-          { key: "company", label: "COMPANY", value: data.companySubZh || "中田數碼有限公司" }
-        ],
-        auxiliaryFields: [
-          { key: "phone", label: "TEL", value: data.phone || "+852 2387 0273" },
-          { key: "email", label: "EMAIL", value: data.email || "sales@centralfield.com" }
-        ],
-        backFields: [
-          { key: "website", label: "OFFICIAL WEBSITE", value: data.website || "www.centralfield.com" },
-          { key: "address_zh", label: "門市地址 (中文)", value: data.address || "" },
-          { key: "address_en", label: "STORE ADDRESS", value: data.addressEn || "" }
-        ]
-      },
-      barcodes: [
-        {
-          format: "PKBarcodeFormatQR",
-          message: qrPayload,
-          messageEncoding: "utf-8",
-          altText: data.website || "www.centralfield.com"
-        }
-      ]
-    };
-
-    // 生成標準 icon.png 與 logo.png
-    const iconCanvas = document.createElement('canvas');
-    iconCanvas.width = 180; iconCanvas.height = 60;
-    const ictx = iconCanvas.getContext('2d');
-    if (typeof uploadedLogo !== 'undefined' && uploadedLogo && typeof window.getProcessedLogo === 'function') {
-      const proc = window.getProcessedLogo(palette.bg, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
-      const r = uploadedLogo.width / uploadedLogo.height;
-      ictx.drawImage(proc, 0, 5, Math.min(175, 50 * r), 50);
-    } else {
-      ictx.fillStyle = palette.accent;
-      ictx.font = "bold 30px Georgia, serif";
-      ictx.fillText(data.company || "Centralfield", 4, 40);
-    }
-    const logoBase64 = iconCanvas.toDataURL('image/png').split(',')[1];
-
-    // 同時將仿真票卡高清圖一併放入封裝包方便預覽
     const passCanvas = document.getElementById('v20WalletCanvas');
     window.v20RenderPassOnCanvas(passCanvas);
-    const previewBase64 = passCanvas.toDataURL('image/png').split(',')[1];
 
     const zip = new JSZip();
-    const passJsonStr = JSON.stringify(passJson, null, 2);
-    zip.file("pass.json", passJsonStr);
-    zip.file("logo.png", logoBase64, { base64: true });
-    zip.file("logo@2x.png", logoBase64, { base64: true });
-    zip.file("icon.png", logoBase64, { base64: true });
-    zip.file("icon@2x.png", logoBase64, { base64: true });
-    zip.file("Wallet_Pass_Preview.png", previewBase64, { base64: true });
+    zip.file("pass.json", JSON.stringify({
+      formatVersion: 1,
+      passTypeIdentifier: "pass.com.centralfield.card",
+      organizationName: data.companySubEn || "Centralfield Computer Ltd.",
+      description: "Business Card & FPS Pass",
+      backgroundColor: `rgb(${palette.rgb.r}, ${palette.rgb.g}, ${palette.rgb.b})`
+    }, null, 2));
+    zip.file("Wallet_Pass_Preview.png", passCanvas.toDataURL('image/png').split(',')[1], { base64: true });
+    if (v20FpsCrispCanvas) {
+      zip.file("FPS_QR_2x2cm_236px.png", v20FpsCrispCanvas.toDataURL('image/png').split(',')[1], { base64: true });
+    }
 
     const blob = await zip.generateAsync({ type: "blob" });
-    const namePart = (data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_');
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${namePart}_AppleWallet_PassKit.pkpass`;
+    link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_PassKit.pkpass`;
     link.click();
-
-    if (typeof window.showAutoSaveFeedback === 'function') {
-      window.showAutoSaveFeedback('📦 已導出 Apple Wallet .pkpass 標準封裝包');
-    }
   };
 
   window.v20QuickExport = function(type) {
@@ -4881,12 +4985,50 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     if (anchor && anchor.parentNode && wBar && anchor.nextSibling !== wBar) {
       anchor.parentNode.insertBefore(wBar, anchor.nextSibling);
     }
+
+    // 擴充原本 QR 尺寸滑桿上限至 280px，支援 236px (2cm × 2cm @ 300 DPI)
+    const sizeQrSlider = document.getElementById('sizeQr');
+    if (sizeQrSlider && parseInt(sizeQrSlider.max, 10) < 280) {
+      sizeQrSlider.max = '280';
+    }
+
+    // 追蹤當前正在渲染正面還是背面，並攔截 drawStyledQRCode 以替換為高清 FPS 轉數快收款碼
+    const origRF = window.renderFront;
+    if (typeof origRF === 'function') {
+      window.renderFront = function(data) {
+        v20CurrentRenderingSide = 'front';
+        origRF(data);
+      };
+    }
+
+    const origRB = window.renderBack;
+    if (typeof origRB === 'function') {
+      window.renderBack = function(data) {
+        v20CurrentRenderingSide = 'back';
+        origRB(data);
+      };
+    }
+
+    const origDrawQR = window.drawStyledQRCode;
+    if (typeof origDrawQR === 'function') {
+      window.drawStyledQRCode = function(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle) {
+        const target = document.getElementById('v20FpsApplyTarget') ? document.getElementById('v20FpsApplyTarget').value : 'none';
+        const useFpsHere = v20FpsCrispCanvas && (target === 'both' || target === v20CurrentRenderingSide);
+        if (useFpsHere) {
+          drawCrispFpsQrOnCard(ctx, x, y, qrSize, cardAccentHex);
+          return;
+        }
+        origDrawQR(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle);
+      };
+    }
+
+    loadFpsState();
   }
 
   if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', () => setTimeout(setupV20Integration, 250));
+    window.addEventListener('DOMContentLoaded', () => setTimeout(setupV20Integration, 280));
   } else {
-    setTimeout(setupV20Integration, 250);
+    setTimeout(setupV20Integration, 280);
   }
 })();
 </script>
