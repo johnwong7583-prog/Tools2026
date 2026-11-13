@@ -3451,6 +3451,1586 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     document.getElementById('glareBack').style.opacity = '1';
   });
 </script>
+<!-- ==================== V16 + V17 GitHub Pages 專用穩定合體外掛模組 ==================== -->
+<style>
+  .plugin-floating-panel {
+    position: fixed;
+    bottom: 16px;
+    z-index: 45;
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+    color: #f1f5f9;
+    font-size: 12px;
+    transition: all 0.25s ease;
+  }
+  #v16ToolbarModal { right: 16px; border: 1px solid rgba(99, 102, 241, 0.45); }
+  #v17ToolbarModal { left: 16px; border: 1px solid rgba(6, 182, 212, 0.45); }
+  .plugin-hidden { display: none !important; }
+</style>
 
+<!-- V16 面板：鍵盤微調 + QR 徽章 + 認證角標 + UV黑稿/vCard -->
+<div id="v16ToolbarModal" class="plugin-floating-panel">
+  <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2.5">
+    <span class="font-bold text-indigo-300 flex items-center gap-1.5">🚀 V16 專業設計與印刷外掛箱</span>
+    <button type="button" onclick="window.togglePluginModal('v16')" class="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800">✕ 隱藏</button>
+  </div>
+  <div class="space-y-2.5">
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 space-y-1.5">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] text-slate-300">🎯 選中：<strong id="v16ActiveBlockName" class="text-cyan-400">請點擊畫布區塊</strong></span>
+        <button type="button" onclick="window.centerSelectedBlockHorizontally()" class="text-[11px] bg-indigo-600 hover:bg-indigo-500 text-white px-2 py-0.5 rounded transition">↔ 水平置中</button>
+      </div>
+      <p class="text-[10px] text-slate-400">💡 點擊畫布區塊後，按方向鍵 <kbd class="px-1 bg-slate-800 rounded">↑↓←→</kbd> 微調 1px（按住 Shift 移 10px）</p>
+    </div>
+
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 space-y-1.5">
+      <label class="flex items-center gap-1.5 text-amber-300 font-medium cursor-pointer">
+        <input type="checkbox" id="v16QrCenterBadge" onchange="window.saveV16State(); window.renderAll()" class="rounded bg-slate-900 border-slate-700">
+        <span>🔲 QR Code 中央嵌入品牌徽章 (Level-H)</span>
+      </label>
+      <div class="flex items-center gap-2">
+        <select id="v16QrBadgeType" onchange="window.saveV16State(); window.renderAll()" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white w-1/2">
+          <option value="text" selected>文字徽章 (如 CF)</option>
+          <option value="logo">已上傳之公司 Logo</option>
+        </select>
+        <input type="text" id="v16QrBadgeText" value="CF" maxlength="4" oninput="window.saveV16State(); window.renderAll()" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white w-1/2">
+      </div>
+    </div>
+
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 space-y-1.5">
+      <div class="flex items-center justify-between">
+        <label class="flex items-center gap-1.5 text-emerald-300 font-medium cursor-pointer">
+          <input type="checkbox" id="v16ShowTechBadges" onchange="window.saveV16State(); window.renderAll()" class="rounded bg-slate-900 border-slate-700">
+          <span>🏅 底部硬件/企業認證角標列</span>
+        </label>
+        <select id="v16BadgeSide" onchange="window.saveV16State(); window.renderAll()" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[10px] text-slate-300">
+          <option value="back" selected>背面</option>
+          <option value="front">正面</option>
+          <option value="both">雙面</option>
+        </select>
+      </div>
+      <input type="text" id="v16TechBadgeString" value="NVIDIA RTX AI Partner | Custom Liquid Cooling | Enterprise IT" oninput="window.saveV16State(); window.renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white">
+    </div>
+
+    <div class="grid grid-cols-2 gap-1.5 pt-1">
+      <button type="button" onclick="window.exportStandaloneVCardFile()" class="bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white border border-slate-700 py-1.5 px-2 rounded-lg text-[11px] font-medium transition">📱 下載 .vcf 通訊錄</button>
+      <button type="button" onclick="window.exportSpotUVMaskPNG()" class="bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white border border-slate-700 py-1.5 px-2 rounded-lg text-[11px] font-medium transition">✨ 導出局部 UV 黑稿</button>
+    </div>
+  </div>
+</div>
+
+<!-- V17 面板：磁吸對齊線 + 多圖層/品牌牆 + 個人數碼落地頁 -->
+<div id="v17ToolbarModal" class="plugin-floating-panel">
+  <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2.5">
+    <span class="font-bold text-cyan-300 flex items-center gap-1.5">✨ V17 磁吸對齊 · 多圖層 · 數碼網頁</span>
+    <button type="button" onclick="window.togglePluginModal('v17')" class="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800">✕ 隱藏</button>
+  </div>
+  <div class="space-y-2.5">
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
+      <label class="flex items-center gap-2 text-pink-300 font-medium cursor-pointer">
+        <input type="checkbox" id="v17EnableSnap" checked onchange="window.saveV17State()" class="rounded bg-slate-900 border-slate-700">
+        <span>📏 啟用畫布拖曳「智能磁吸對齊線」</span>
+      </label>
+      <span class="text-[10px] font-mono text-pink-400">±7px 吸附</span>
+    </div>
+
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="font-semibold text-indigo-300">🖼️ 自由圖片層 / 代理品牌牆</span>
+        <div class="flex gap-1">
+          <label class="bg-indigo-600 hover:bg-indigo-500 text-white px-2 py-0.5 rounded text-[11px] cursor-pointer transition">
+            + 圖片層
+            <input type="file" accept="image/*" onchange="window.v17AddImageLayer(event)" class="hidden">
+          </label>
+          <button type="button" onclick="window.v17AddHardwareWallLayer()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded text-[11px] transition">+ 品牌牆</button>
+        </div>
+      </div>
+
+      <div id="v17LayerControls" class="plugin-hidden space-y-1.5 pt-1.5 border-t border-slate-800">
+        <div class="flex items-center gap-1.5">
+          <select id="v17LayerSelect" onchange="window.v17SelectLayer(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white"></select>
+          <select id="v17LayerSide" onchange="window.v17UpdateActiveLayer()" class="bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-[11px] text-cyan-300">
+            <option value="back">背面</option>
+            <option value="front">正面</option>
+          </select>
+          <button type="button" onclick="window.v17DeleteActiveLayer()" class="bg-rose-900 hover:bg-rose-700 text-rose-200 px-2 py-1 rounded text-[11px]">刪除</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
+          <div>
+            <div class="flex justify-between"><span>大小</span><span id="v17ValScale" class="text-cyan-400 font-mono">120px</span></div>
+            <input type="range" id="v17LayerScale" min="30" max="550" value="120" oninput="window.v17UpdateActiveLayer()" class="w-full h-1 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
+          <div>
+            <div class="flex justify-between"><span>透明度</span><span id="v17ValOpacity" class="text-cyan-400 font-mono">100%</span></div>
+            <input type="range" id="v17LayerOpacity" min="15" max="100" value="100" oninput="window.v17UpdateActiveLayer()" class="w-full h-1 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
+        </div>
+        <div id="v17WallTextRow" class="plugin-hidden">
+          <input type="text" id="v17WallItemsInput" oninput="window.v17UpdateActiveLayer()" placeholder="以逗號分隔品牌名稱..." class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white">
+        </div>
+      </div>
+    </div>
+
+    <button type="button" onclick="window.exportDigitalLandingPageHTML()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-500 hover:opacity-95 text-slate-950 font-bold py-2 px-3 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 text-xs">
+      <span>🌐 導出「個人專屬數碼名片網頁 (.HTML)」</span>
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const V16_KEY = 'CF_BRANDCARD_STUDIO_V16_PLUGIN';
+  const V17_KEY = 'CF_BRANDCARD_STUDIO_V17_PLUGIN';
+
+  let lastSelectedSide = 'front';
+  let lastSelectedKey  = 'brand';
+  let v17Layers = [];
+  let v17ActiveIdx = -1;
+  let v17DraggingLayerIdx = -1;
+  let v17LayerDragOffset = { x: 0, y: 0 };
+  let v17SnapLinesFront = [];
+  let v17SnapLinesBack  = [];
+
+  window.togglePluginModal = function(which) {
+    const el = document.getElementById(which === 'v16' ? 'v16ToolbarModal' : 'v17ToolbarModal');
+    if (el) el.classList.toggle('plugin-hidden');
+  };
+
+  window.saveV16State = function() {
+    try {
+      localStorage.setItem(V16_KEY, JSON.stringify({
+        qrBadge: document.getElementById('v16QrCenterBadge').checked,
+        qrBadgeType: document.getElementById('v16QrBadgeType').value,
+        qrBadgeText: document.getElementById('v16QrBadgeText').value,
+        showTechBadges: document.getElementById('v16ShowTechBadges').checked,
+        badgeSide: document.getElementById('v16BadgeSide').value,
+        badgeStr: document.getElementById('v16TechBadgeString').value
+      }));
+    } catch (e) {}
+  };
+
+  window.saveV17State = function() {
+    try {
+      const serializable = v17Layers.map(l => ({
+        id: l.id, type: l.type, name: l.name, side: l.side,
+        x: l.x, y: l.y, w: l.w, h: l.h, size: l.size, opacity: l.opacity,
+        dataUrl: l.dataUrl || '', wallText: l.wallText || ''
+      }));
+      localStorage.setItem(V17_KEY, JSON.stringify({
+        enableSnap: document.getElementById('v17EnableSnap').checked,
+        layers: serializable
+      }));
+    } catch (e) {}
+  };
+
+  function loadStates() {
+    try {
+      const r16 = localStorage.getItem(V16_KEY);
+      if (r16) {
+        const s = JSON.parse(r16);
+        if (typeof s.qrBadge === 'boolean') document.getElementById('v16QrCenterBadge').checked = s.qrBadge;
+        if (s.qrBadgeType) document.getElementById('v16QrBadgeType').value = s.qrBadgeType;
+        if (s.qrBadgeText !== undefined) document.getElementById('v16QrBadgeText').value = s.qrBadgeText;
+        if (typeof s.showTechBadges === 'boolean') document.getElementById('v16ShowTechBadges').checked = s.showTechBadges;
+        if (s.badgeSide) document.getElementById('v16BadgeSide').value = s.badgeSide;
+        if (s.badgeStr !== undefined) document.getElementById('v16TechBadgeString').value = s.badgeStr;
+      }
+      const r17 = localStorage.getItem(V17_KEY);
+      if (r17) {
+        const s17 = JSON.parse(r17);
+        if (typeof s17.enableSnap === 'boolean') document.getElementById('v17EnableSnap').checked = s17.enableSnap;
+        if (Array.isArray(s17.layers) && s17.layers.length > 0) {
+          v17Layers = [];
+          s17.layers.forEach(item => {
+            const obj = { ...item, imgObj: null };
+            if (item.type === 'image' && item.dataUrl) {
+              const img = new Image();
+              img.onload = () => { obj.imgObj = img; window.renderAll(true); };
+              img.src = item.dataUrl;
+            }
+            v17Layers.push(obj);
+          });
+          v17ActiveIdx = 0;
+          v17RebuildLayerUI();
+        }
+      }
+    } catch (e) {}
+  }
+
+  window.centerSelectedBlockHorizontally = function() {
+    const W = window.isPortrait() ? 638 : 1063;
+    const targetMap = lastSelectedSide === 'front' ? window.getActiveFrontPos() : window.getActiveBackPos();
+    const block = targetMap ? targetMap[lastSelectedKey] : null;
+    if (!block) return;
+    if (lastSelectedSide === 'front' && lastSelectedKey === 'brand') {
+      block.autoRight = false;
+      document.getElementById('frontLogoPosPreset').value = 'custom';
+    }
+    block.x = block.centered ? Math.round(W / 2) : Math.round((W - (block.w || 200)) / 2);
+    window.renderAll(false);
+    window.showAutoSaveFeedback('🎯 區塊已水平置中');
+  };
+
+  window.v17AddImageLayer = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        let finalUrl = e.target.result;
+        if (img.width > 800) {
+          const sc = document.createElement('canvas');
+          const r = 800 / img.width;
+          sc.width = 800; sc.height = Math.round(img.height * r);
+          sc.getContext('2d').drawImage(img, 0, 0, sc.width, sc.height);
+          finalUrl = sc.toDataURL('image/png');
+        }
+        v17Layers.push({
+          id: Date.now(), type: 'image', name: `圖片: ${file.name.slice(0, 10)}`,
+          side: 'back', x: 120, y: 120, size: 130,
+          w: 130 * (img.width / img.height), h: 130, opacity: 100,
+          dataUrl: finalUrl, imgObj: img, wallText: ''
+        });
+        v17ActiveIdx = v17Layers.length - 1;
+        v17RebuildLayerUI();
+        window.saveV17State();
+        window.renderAll(true);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  };
+
+  window.v17AddHardwareWallLayer = function() {
+    const W = window.isPortrait() ? 638 : 1063;
+    const H = window.isPortrait() ? 1063 : 638;
+    v17Layers.push({
+      id: Date.now(), type: 'wall', name: '硬件代理品牌徽章牆',
+      side: 'back', x: Math.round(W * 0.08), y: Math.round(H * 0.62),
+      size: 300, w: 500, h: 90, opacity: 95, dataUrl: '', imgObj: null,
+      wallText: 'NVIDIA GEFORCE RTX, AMD RYZEN / EPYC, INTEL CORE ULTRA, CUSTOM LIQUID COOLING, AI WORKSTATION, ENTERPRISE NAS'
+    });
+    v17ActiveIdx = v17Layers.length - 1;
+    v17RebuildLayerUI();
+    window.saveV17State();
+    window.renderAll(true);
+  };
+
+  function v17RebuildLayerUI() {
+    const box = document.getElementById('v17LayerControls');
+    const sel = document.getElementById('v17LayerSelect');
+    if (!v17Layers.length) {
+      box.classList.add('plugin-hidden');
+      return;
+    }
+    box.classList.remove('plugin-hidden');
+    sel.innerHTML = '';
+    v17Layers.forEach((l, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `${idx + 1}. [${l.side === 'front' ? '正面' : '背面'}] ${l.name}`;
+      sel.appendChild(opt);
+    });
+    window.v17SelectLayer(v17ActiveIdx >= 0 && v17ActiveIdx < v17Layers.length ? v17ActiveIdx : 0);
+  }
+
+  window.v17SelectLayer = function(idx) {
+    v17ActiveIdx = parseInt(idx, 10);
+    const l = v17Layers[v17ActiveIdx];
+    if (!l) return;
+    document.getElementById('v17LayerSelect').value = v17ActiveIdx;
+    document.getElementById('v17LayerSide').value = l.side;
+    document.getElementById('v17LayerScale').value = l.size;
+    document.getElementById('v17LayerOpacity').value = l.opacity;
+    document.getElementById('v17ValScale').textContent = `${l.size}px`;
+    document.getElementById('v17ValOpacity').textContent = `${l.opacity}%`;
+    const wallRow = document.getElementById('v17WallTextRow');
+    if (l.type === 'wall') {
+      wallRow.classList.remove('plugin-hidden');
+      document.getElementById('v17WallItemsInput').value = l.wallText || '';
+    } else {
+      wallRow.classList.add('plugin-hidden');
+    }
+  };
+
+  window.v17UpdateActiveLayer = function() {
+    const l = v17Layers[v17ActiveIdx];
+    if (!l) return;
+    l.side = document.getElementById('v17LayerSide').value;
+    l.size = parseInt(document.getElementById('v17LayerScale').value, 10) || 120;
+    l.opacity = parseInt(document.getElementById('v17LayerOpacity').value, 10) || 100;
+    if (l.type === 'wall') l.wallText = document.getElementById('v17WallItemsInput').value;
+    document.getElementById('v17ValScale').textContent = `${l.size}px`;
+    document.getElementById('v17ValOpacity').textContent = `${l.opacity}%`;
+    v17RebuildLayerUI();
+    window.saveV17State();
+    window.renderAll(true);
+  };
+
+  window.v17DeleteActiveLayer = function() {
+    if (v17ActiveIdx < 0 || v17ActiveIdx >= v17Layers.length) return;
+    v17Layers.splice(v17ActiveIdx, 1);
+    v17ActiveIdx = v17Layers.length - 1;
+    v17RebuildLayerUI();
+    window.saveV17State();
+    window.renderAll(true);
+  };
+
+  window.exportStandaloneVCardFile = function() {
+    const data = window.getFormData();
+    const vcardStr = window.buildQRPayload('vcard', '', data);
+    const blob = new Blob([vcardStr], { type: 'text/vcard;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${(data.nameEn || data.nameZh || 'Contact').replace(/\s+/g, '_')}.vcf`;
+    link.click();
+  };
+
+  window.exportSpotUVMaskPNG = function() {
+    const data = window.getFormData();
+    const savedBg = document.getElementById('colorBg').value;
+    const savedAccent = document.getElementById('colorAccent').value;
+    const savedText = document.getElementById('colorText').value;
+    document.getElementById('colorBg').value = '#FFFFFF';
+    document.getElementById('colorAccent').value = '#000000';
+    document.getElementById('colorText').value = '#000000';
+    window.invalidateLogoCache();
+    window.renderAll(true);
+
+    const link = document.createElement('a');
+    link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_SpotUV_Mask.png`;
+    link.href = document.getElementById('canvasFront').toDataURL('image/png', 1.0);
+    link.click();
+
+    document.getElementById('colorBg').value = savedBg;
+    document.getElementById('colorAccent').value = savedAccent;
+    document.getElementById('colorText').value = savedText;
+    window.invalidateLogoCache();
+    window.renderAll(true);
+  };
+
+  window.exportDigitalLandingPageHTML = function() {
+    window.renderAll(true);
+    const data = window.getFormData();
+    const frontCardImg = document.getElementById('canvasFront').toDataURL('image/png', 0.92);
+    const backCardImg  = document.getElementById('canvasBack').toDataURL('image/png', 0.92);
+    const cleanWa = (data.whatsapp || data.phone || '85291317468').replace(/[^0-9]/g, '');
+    const cleanTel = (data.phone || '+85223870273').replace(/[^0-9+]/g, '');
+    const fullWeb = (data.website || 'www.centralfield.com').startsWith('http') ? data.website : `https://${data.website || 'www.centralfield.com'}`;
+    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((data.address || data.company).replace(/\n/g, ' '))}`;
+    const vcardUri = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(window.buildQRPayload('vcard', '', data));
+
+    const htmlPage = `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${data.nameEn || data.company} - 數碼名片</title><script src="https://cdn.tailwindcss.com"><\/script></head><body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center py-8 px-4"><div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5"><img id="cImg" src="${frontCardImg}" class="w-full rounded-2xl border border-slate-800"><div class="flex justify-center gap-2"><button onclick="document.getElementById('cImg').src='${frontCardImg}'" class="text-xs px-3 py-1 rounded-full bg-slate-800 text-cyan-300">正面</button><button onclick="document.getElementById('cImg').src='${backCardImg}'" class="text-xs px-3 py-1 rounded-full bg-slate-800 text-emerald-300">背面</button></div><div class="text-center"><h1 class="text-2xl font-bold">${data.nameEn} ${data.nameZh}</h1><p class="text-sm text-slate-400">${data.titleEn}</p></div><a href="${vcardUri}" download="contact.vcf" class="block w-full text-center py-3 rounded-2xl font-bold text-white" style="background:${data.accent}">📥 存入手機通訊錄</a><div class="grid grid-cols-2 gap-2.5 text-xs font-semibold"><a href="https://wa.me/${cleanWa}" target="_blank" class="bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 py-3 rounded-xl text-center">💬 WhatsApp</a><a href="tel:${cleanTel}" class="bg-slate-800 py-3 rounded-xl text-center">☎️ 撥打電話</a><a href="mailto:${data.email}" class="bg-slate-800 py-3 rounded-xl text-center">✉️ 發送電郵</a><a href="${mapUrl}" target="_blank" class="bg-slate-800 py-3 rounded-xl text-center">📍 門市導航</a></div></div></body></html>`;
+    const blob = new Blob([htmlPage], { type: 'text/html;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${(data.nameEn || 'DigitalCard').replace(/\s+/g, '_')}_WebCard.html`;
+    link.click();
+  };
+
+  function computeSnap(canvasEl, activeKey, posMap, isFront) {
+    const snapEl = document.getElementById('v17EnableSnap');
+    if (!snapEl || !snapEl.checked || !activeKey || !posMap[activeKey]) {
+      if (isFront) v17SnapLinesFront = []; else v17SnapLinesBack = [];
+      return;
+    }
+    const W = canvasEl.width, H = canvasEl.height;
+    const b = posMap[activeKey];
+    const bw = b.w || 200, bh = b.h || 60;
+    const isCent = !!b.centered;
+    const leftX = isCent ? b.x - bw / 2 : b.x;
+    const centerX = isCent ? b.x : b.x + bw / 2;
+    const centerY = b.y + bh / 2;
+    const lines = [];
+
+    if (Math.abs(centerX - W / 2) <= 7) {
+      b.x = isCent ? Math.round(W / 2) : Math.round(W / 2 - bw / 2);
+      lines.push({ type: 'v', pos: Math.round(W / 2), label: '水平正中' });
+    }
+    if (Math.abs(centerY - H / 2) <= 7) {
+      b.y = Math.round(H / 2 - bh / 2);
+      lines.push({ type: 'h', pos: Math.round(H / 2), label: '垂直正中' });
+    }
+    Object.keys(posMap).forEach(k => {
+      if (k === activeKey || !posMap[k]) return;
+      const ob = posMap[k];
+      const oLeft = ob.drawX !== undefined ? ob.drawX : ob.x;
+      if (!isCent && Math.abs(leftX - oLeft) <= 7) {
+        b.x = Math.round(oLeft);
+        lines.push({ type: 'v', pos: Math.round(oLeft), label: `對齊 ${ob.label}` });
+      }
+    });
+    if (isFront) v17SnapLinesFront = lines; else v17SnapLinesBack = lines;
+  }
+
+  function drawSnapLines(ctx, lines) {
+    if (!lines || !lines.length) return;
+    const W = ctx.canvas.width, H = ctx.canvas.height;
+    ctx.save();
+    ctx.strokeStyle = '#EC4899';
+    ctx.lineWidth = 1.8;
+    ctx.setLineDash([5, 4]);
+    lines.forEach(l => {
+      ctx.beginPath();
+      if (l.type === 'v') { ctx.moveTo(l.pos, 0); ctx.lineTo(l.pos, H); }
+      else { ctx.moveTo(0, l.pos); ctx.lineTo(W, l.pos); }
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function drawCustomLayers(ctx, side, data) {
+    const { backBrandColor, backTextColor } = window.getBackColorScheme(data);
+    const accent = side === 'front' ? data.accent : backBrandColor;
+    const textCol = side === 'front' ? data.text : backTextColor;
+
+    v17Layers.forEach((l, idx) => {
+      if (l.side !== side) return;
+      ctx.save();
+      ctx.globalAlpha = (l.opacity || 100) / 100;
+      if (l.type === 'image' && l.imgObj) {
+        const ratio = l.imgObj.width / l.imgObj.height;
+        l.h = l.size; l.w = l.size * ratio;
+        ctx.drawImage(l.imgObj, l.x, l.y, l.w, l.h);
+      } else if (l.type === 'wall') {
+        const items = (l.wallText || '').split(',').map(s => s.trim()).filter(Boolean);
+        const cols = 3, cellW = Math.max(95, Math.round(l.size * 0.56)), cellH = 34, gap = 10;
+        items.forEach((name, i) => {
+          const bx = l.x + (i % cols) * (cellW + gap);
+          const by = l.y + Math.floor(i / cols) * (cellH + gap);
+          ctx.fillStyle = accent + '16'; ctx.strokeStyle = accent + '55'; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.roundRect(bx, by, cellW, cellH, 7); ctx.fill(); ctx.stroke();
+          ctx.fillStyle = accent; ctx.fillRect(bx + 7, by + 11, 4, 12);
+          ctx.fillStyle = textCol; ctx.font = `700 ${Math.max(10, Math.round(cellW * 0.072))}px 'Montserrat', sans-serif`;
+          ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+          ctx.fillText(name, bx + 16, by + cellH / 2 + 0.5, cellW - 22);
+        });
+        const rCount = Math.ceil(items.length / cols);
+        l.w = cols * cellW + (cols - 1) * gap;
+        l.h = Math.max(36, rCount * cellH + (rCount - 1) * gap);
+      }
+      ctx.restore();
+    });
+  }
+
+  function drawTechBadges(ctx, side, data) {
+    const chk = document.getElementById('v16ShowTechBadges');
+    if (!chk || !chk.checked) return;
+    const targetSide = document.getElementById('v16BadgeSide').value;
+    if (targetSide !== 'both' && targetSide !== side) return;
+    const badges = (document.getElementById('v16TechBadgeString').value || '').split('|').map(s => s.trim()).filter(Boolean);
+    if (!badges.length) return;
+
+    const W = ctx.canvas.width, H = ctx.canvas.height;
+    const { backBrandColor, backTextColor } = window.getBackColorScheme(data);
+    const accent = side === 'front' ? data.accent : backBrandColor;
+    const textCol = side === 'front' ? data.text : backTextColor;
+
+    ctx.save();
+    ctx.font = `600 13px ${side === 'front' ? data.fontFrontEn : data.fontBackEn}`;
+    const padX = 14, pillH = 24, gap = 10;
+    const widths = badges.map(b => ctx.measureText(b).width + padX * 2);
+    let curX = Math.round((W - (widths.reduce((a, b) => a + b, 0) + gap * (badges.length - 1))) / 2);
+    const pillY = side === 'back' ? H - 125 : H - 46;
+
+    badges.forEach((bText, i) => {
+      const pw = widths[i];
+      ctx.fillStyle = accent + '16'; ctx.strokeStyle = accent + '55'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.roundRect(curX, pillY, pw, pillH, 12); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = textCol; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(bText, curX + pw / 2, pillY + pillH / 2 + 0.5);
+      curX += pw + gap;
+    });
+    ctx.restore();
+  }
+
+  // 當 DOM 完全載入後，安全掛載頂部開關按鈕與攔截器
+  window.addEventListener('DOMContentLoaded', () => {
+    // 在頂部導航欄加入 V16 與 V17 切換按鈕
+    const headerBtnGroup = document.querySelector('header > div:last-child');
+    if (headerBtnGroup) {
+      const btnBar = document.createElement('div');
+      btnBar.className = 'flex items-center gap-1.5';
+      btnBar.innerHTML = `
+        <button type="button" onclick="window.togglePluginModal('v16')" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition">🚀 V16 工具箱</button>
+        <button type="button" onclick="window.togglePluginModal('v17')" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition">✨ V17 圖層/網頁</button>
+      `;
+      headerBtnGroup.insertBefore(btnBar, headerBtnGroup.firstChild);
+    }
+
+    // 攔截 QR Code 繪製以支援中央徽章
+    const origQR = window.drawStyledQRCode;
+    if (typeof origQR === 'function') {
+      window.drawStyledQRCode = function(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle) {
+        origQR(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle);
+        const useBadge = document.getElementById('v16QrCenterBadge') && document.getElementById('v16QrCenterBadge').checked;
+        if (!useBadge) return;
+        const badgeSize = Math.round(qrSize * 0.24);
+        const bx = Math.round(x + (qrSize - badgeSize) / 2);
+        const by = Math.round(y + (qrSize - badgeSize) / 2);
+        ctx.save();
+        ctx.fillStyle = cardBgHex;
+        ctx.beginPath(); ctx.roundRect(bx - 3, by - 3, badgeSize + 6, badgeSize + 6, 6); ctx.fill();
+        ctx.fillStyle = cardAccentHex;
+        ctx.beginPath(); ctx.roundRect(bx, by, badgeSize, badgeSize, 5); ctx.fill();
+        ctx.fillStyle = '#FFFFFF';
+        const bText = (document.getElementById('v16QrBadgeText').value || 'CF').trim();
+        ctx.font = `800 ${Math.round(badgeSize * 0.48)}px 'Montserrat', sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(bText, bx + badgeSize / 2, by + badgeSize / 2 + 1);
+        ctx.restore();
+      };
+    }
+
+    // 攔截正面與背面渲染
+    const origRF = window.renderFront;
+    if (typeof origRF === 'function') {
+      window.renderFront = function(data) {
+        origRF(data);
+        const ctx = document.getElementById('canvasFront').getContext('2d');
+        drawTechBadges(ctx, 'front', data);
+        drawCustomLayers(ctx, 'front', data);
+        drawSnapLines(ctx, v17SnapLinesFront);
+      };
+    }
+
+    const origRB = window.renderBack;
+    if (typeof origRB === 'function') {
+      window.renderBack = function(data) {
+        origRB(data);
+        const ctx = document.getElementById('canvasBack').getContext('2d');
+        drawTechBadges(ctx, 'back', data);
+        drawCustomLayers(ctx, 'back', data);
+        drawSnapLines(ctx, v17SnapLinesBack);
+      };
+    }
+
+    const fCanvas = document.getElementById('canvasFront');
+    const bCanvas = document.getElementById('canvasBack');
+
+    fCanvas.addEventListener('mousedown', (e) => {
+      const pt = window.getCanvasMousePt(fCanvas, e);
+      for (let i = v17Layers.length - 1; i >= 0; i--) {
+        const l = v17Layers[i];
+        if (l.side === 'front' && pt.x >= l.x && pt.x <= l.x + (l.w || 120) && pt.y >= l.y && pt.y <= l.y + (l.h || 80)) {
+          e.stopImmediatePropagation();
+          v17DraggingLayerIdx = i;
+          window.v17SelectLayer(i);
+          v17LayerDragOffset = { x: pt.x - l.x, y: pt.y - l.y };
+          return;
+        }
+      }
+      const hit = window.hitTestFront(pt.x, pt.y);
+      if (hit) {
+        lastSelectedSide = 'front'; lastSelectedKey = hit;
+        document.getElementById('v16ActiveBlockName').textContent = `正面 · ${window.getActiveFrontPos()[hit].label}`;
+      }
+    }, true);
+
+    bCanvas.addEventListener('mousedown', (e) => {
+      const pt = window.getCanvasMousePt(bCanvas, e);
+      for (let i = v17Layers.length - 1; i >= 0; i--) {
+        const l = v17Layers[i];
+        if (l.side === 'back' && pt.x >= l.x && pt.x <= l.x + (l.w || 120) && pt.y >= l.y && pt.y <= l.y + (l.h || 80)) {
+          e.stopImmediatePropagation();
+          v17DraggingLayerIdx = i;
+          window.v17SelectLayer(i);
+          v17LayerDragOffset = { x: pt.x - l.x, y: pt.y - l.y };
+          return;
+        }
+      }
+      const hit = window.hitTestBack(pt.x, pt.y);
+      if (hit) {
+        lastSelectedSide = 'back'; lastSelectedKey = hit;
+        document.getElementById('v16ActiveBlockName').textContent = `背面 · ${window.getActiveBackPos()[hit].label}`;
+      }
+    }, true);
+
+    window.addEventListener('mousemove', (e) => {
+      if (v17DraggingLayerIdx >= 0) {
+        const l = v17Layers[v17DraggingLayerIdx];
+        const pt = window.getCanvasMousePt(l.side === 'front' ? fCanvas : bCanvas, e);
+        l.x = Math.round(pt.x - v17LayerDragOffset.x);
+        l.y = Math.round(pt.y - v17LayerDragOffset.y);
+        window.renderAll(true);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      v17SnapLinesFront = []; v17SnapLinesBack = [];
+      if (v17DraggingLayerIdx >= 0) {
+        v17DraggingLayerIdx = -1;
+        window.saveV17State();
+        window.renderAll(true);
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+      const targetMap = lastSelectedSide === 'front' ? window.getActiveFrontPos() : window.getActiveBackPos();
+      const block = targetMap ? targetMap[lastSelectedKey] : null;
+      if (!block) return;
+      e.preventDefault();
+      const step = e.shiftKey ? 10 : 1;
+      if (lastSelectedSide === 'front' && lastSelectedKey === 'brand') block.autoRight = false;
+      if (e.key === 'ArrowUp') block.y -= step;
+      if (e.key === 'ArrowDown') block.y += step;
+      if (e.key === 'ArrowLeft') block.x -= step;
+      if (e.key === 'ArrowRight') block.x += step;
+      window.renderAll(false);
+    });
+
+    loadStates();
+    setTimeout(() => window.renderAll(true), 150);
+  });
+})();
+</script>
+<!-- ==================== V17.1 局部 UV 黑稿與圖層外掛修正版 ==================== -->
+<script>
+  // 獨立且全局可用的局部 UV / 燙金黑稿導出函數
+  window.exportSpotUVMaskPNG = function() {
+    if (typeof window.getFormData !== 'function' || typeof window.renderAll !== 'function') {
+      return alert('系統主程式尚未就緒，請重新整理網頁後再試！');
+    }
+
+    const data = window.getFormData();
+    const savedBg = document.getElementById('colorBg').value;
+    const savedAccent = document.getElementById('colorAccent').value;
+    const savedText = document.getElementById('colorText').value;
+
+    // 強制設定為純白底與 100% 純黑圖案
+    window.isExportingClean = true;
+    document.getElementById('colorBg').value = '#FFFFFF';
+    document.getElementById('colorAccent').value = '#000000';
+    document.getElementById('colorText').value = '#000000';
+    
+    if (typeof window.invalidateLogoCache === 'function') window.invalidateLogoCache();
+    window.renderAll(true);
+
+    const fCanvas = document.getElementById('canvasFront');
+    if (!fCanvas) {
+      window.isExportingClean = false;
+      return alert('找不到正面畫布！');
+    }
+
+    const namePart = (data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_');
+    const orientPart = window.isPortrait() ? 'Portrait' : 'Landscape';
+    const link = document.createElement('a');
+    link.download = `${namePart}_${orientPart}_Front_SpotUV_Mask_300dpi.png`;
+    link.href = fCanvas.toDataURL('image/png', 1.0);
+    link.click();
+
+    // 還原原有配色與狀態
+    document.getElementById('colorBg').value = savedBg;
+    document.getElementById('colorAccent').value = savedAccent;
+    document.getElementById('colorText').value = savedText;
+    window.isExportingClean = false;
+    if (typeof window.invalidateLogoCache === 'function') window.invalidateLogoCache();
+    window.renderAll(true);
+
+    if (typeof window.showAutoSaveFeedback === 'function') {
+      window.showAutoSaveFeedback('✨ 已成功導出印刷級局部 UV / 燙金黑稿');
+    }
+  };
+</script>
+<!-- ==================== V19.1 紙張材質模擬器（強制自檢與渲染版） ==================== -->
+<div id="v19TextureBar" style="background: linear-gradient(90deg, #18181b 0%, #3b0764 50%, #18181b 100%); border-bottom: 2px solid #c084fc; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; z-index: 99; position: relative;">
+  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+    <span style="font-weight: 700; color: #f0abfc; display: flex; align-items: center; gap: 4px;">
+      🧵 V19 紙張材質模擬器：
+    </span>
+    <select id="v19TextureTarget" style="background: #0f172a; color: #f472b6; border: 1px solid #7e22ce; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 600; outline: none; cursor: pointer;">
+      <option value="both" selected>🔗 套用：正背面同步</option>
+      <option value="front">📄 僅套用：正面</option>
+      <option value="back">🔄 僅套用：背面</option>
+    </select>
+
+    <select id="v19TextureStyle" onchange="window.v19ApplyTexture()" style="background: #0f172a; color: #f8fafc; border: 1px solid #7e22ce; border-radius: 6px; padding: 4px 10px; font-size: 11px; outline: none; cursor: pointer;">
+      <option value="none" selected>🚫 無材質 (平滑啞膠卡)</option>
+      <option value="forged_carbon">⬛ 鍛造碳纖維紋 (Forged Carbon)</option>
+      <option value="brushed_metal">🪙 精密金屬拉絲紋 (Brushed Metal)</option>
+      <option value="rice_paper">📜 極簡手工宣紙紋 (Rice Paper)</option>
+      <option value="fine_linen">🧵 微細立體亞麻紋 (Fine Linen Fabric)</option>
+    </select>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <span style="color: #e2e8f0; font-size: 11px;">紋理濃度：</span>
+    <input type="range" id="v19TextureOpacity" min="5" max="50" value="18" oninput="window.v19ApplyTexture()" style="width: 90px; cursor: pointer;" title="調整底紋不透明度">
+    <span id="v19TextureOpacityVal" style="font-family: monospace; color: #f0abfc; font-size: 11px; width: 32px;">18%</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const V19_KEY = 'CF_BRANDCARD_STUDIO_V19_TEXTURE';
+  let v19State = { front: 'none', back: 'none', opacity: 18 };
+
+  window.saveV19State = function() {
+    try { localStorage.setItem(V19_KEY, JSON.stringify(v19State)); } catch(e) {}
+  };
+
+  window.loadV19State = function() {
+    try {
+      const raw = localStorage.getItem(V19_KEY);
+      if (raw) {
+        const obj = JSON.parse(raw);
+        if (obj.front) v19State.front = obj.front;
+        if (obj.back) v19State.back = obj.back;
+        if (typeof obj.opacity === 'number') v19State.opacity = obj.opacity;
+      }
+    } catch(e) {}
+    const sel = document.getElementById('v19TextureStyle');
+    const range = document.getElementById('v19TextureOpacity');
+    const valSpan = document.getElementById('v19TextureOpacityVal');
+    if (sel) sel.value = v19State.front;
+    if (range) range.value = v19State.opacity;
+    if (valSpan) valSpan.textContent = v19State.opacity + '%';
+  };
+
+  window.v19ApplyTexture = function() {
+    const sel = document.getElementById('v19TextureStyle');
+    const range = document.getElementById('v19TextureOpacity');
+    const targetSel = document.getElementById('v19TextureTarget');
+    const valSpan = document.getElementById('v19TextureOpacityVal');
+    if (!sel || !range) return;
+
+    const val = sel.value;
+    const op = parseInt(range.value, 10) || 18;
+    const target = targetSel ? targetSel.value : 'both';
+    if (valSpan) valSpan.textContent = op + '%';
+
+    v19State.opacity = op;
+    if (target === 'both') { v19State.front = val; v19State.back = val; }
+    else if (target === 'front') { v19State.front = val; }
+    else if (target === 'back') { v19State.back = val; }
+
+    window.saveV19State();
+    if (typeof window.renderAll === 'function') window.renderAll(false);
+  };
+
+  function drawCanvasTexture(ctx, textureType, opacityPercent) {
+    if (!textureType || textureType === 'none' || opacityPercent <= 0) return;
+    const W = ctx.canvas.width, H = ctx.canvas.height;
+    ctx.save();
+    ctx.globalAlpha = opacityPercent / 100;
+
+    if (textureType === 'forged_carbon') {
+      ctx.fillStyle = '#000000';
+      for (let i = 0; i < 420; i++) {
+        const cx = (Math.sin(i * 12.9898) * 43758.5453) % 1 * W;
+        const cy = (Math.cos(i * 78.233) * 43758.5453) % 1 * H;
+        const cw = 18 + (i % 25), ch = 4 + (i % 8);
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((i % 4) * 0.785);
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.22)';
+        ctx.fillRect(-cw/2, -ch/2, cw, ch);
+        ctx.restore();
+      }
+    } else if (textureType === 'brushed_metal') {
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 0.8;
+      for (let y = 0; y < H; y += 3) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      for (let y = 1; y < H; y += 3) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    } else if (textureType === 'rice_paper') {
+      ctx.fillStyle = '#713f12';
+      for (let i = 0; i < 600; i++) {
+        const px = (Math.cos(i * 21.1) * 12345.6) % 1 * W;
+        const py = (Math.sin(i * 34.2) * 12345.6) % 1 * H;
+        ctx.fillRect(px, py, 1.2, 1.2);
+      }
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 300; i++) {
+        const px = (Math.sin(i * 15.3) * 9876.5) % 1 * W;
+        const py = (Math.cos(i * 42.8) * 9876.5) % 1 * H;
+        ctx.fillRect(px, py, 1.5, 1.5);
+      }
+    } else if (textureType === 'fine_linen') {
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.14)'; ctx.lineWidth = 0.8;
+      for (let x = 0; x < W; x += 4) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 4) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    }
+    ctx.restore();
+  }
+
+  function initV19() {
+    // 強制將紫色的 V19 材質列插入到頂部導航 header 下方
+    const headerEl = document.querySelector('header');
+    const tBar = document.getElementById('v19TextureBar');
+    if (headerEl && tBar && headerEl.nextSibling !== tBar) {
+      headerEl.parentNode.insertBefore(tBar, headerEl.nextSibling);
+    }
+
+    window.loadV19State();
+
+    // 安全攔截正面渲染
+    const origRF = window.renderFront;
+    if (typeof origRF === 'function' && !window._v19FrontHooked) {
+      window._v19FrontHooked = true;
+      window.renderFront = function(data) {
+        origRF(data);
+        const fCan = document.getElementById('canvasFront');
+        if (fCan) drawCanvasTexture(fCan.getContext('2d'), v19State.front, v19State.opacity);
+      };
+    }
+
+    // 安全攔截背面渲染
+    const origRB = window.renderBack;
+    if (typeof origRB === 'function' && !window._v19BackHooked) {
+      window._v19BackHooked = true;
+      window.renderBack = function(data) {
+        origRB(data);
+        const bCan = document.getElementById('canvasBack');
+        if (bCan) drawCanvasTexture(bCan.getContext('2d'), v19State.back, v19State.opacity);
+      };
+    }
+
+    if (typeof window.renderAll === 'function') window.renderAll(true);
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => setTimeout(initV19, 300));
+  } else {
+    setTimeout(initV19, 300);
+  }
+})();
+</script>
+<!-- ==================== V20.1 擴充外掛模組：Apple/Google Wallet 電子名片 + 高清 FPS 轉數快 2cm×2cm (236px) 專項引擎 ==================== -->
+<div id="v20WalletBar" style="background: linear-gradient(90deg, #090d16 0%, #064e3b 45%, #1e1b4b 100%); border-bottom: 1px solid rgba(16,185,129,0.45); padding: 9px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; z-index: 23;">
+  
+  <!-- 第一排：Apple / Google Wallet 電子名片與鎖屏導出 -->
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 5px;">
+        📲 V20.1 手機錢包與轉數快中心：
+      </span>
+      <button type="button" onclick="window.v20OpenWalletModal()" style="background: linear-gradient(90deg, #10b981, #06b6d4); color: #020617; border: none; padding: 4px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; box-shadow: 0 2px 10px rgba(16,185,129,0.35);">
+        ✨ 打開 Apple / Google Wallet 預覽與導出中心
+      </button>
+      <button type="button" onclick="window.v20QuickExport('pass_png')" style="background: #1e293b; color: #a7f3d0; border: 1px solid #059669; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
+        🪪 下載 Wallet 票卡 (.PNG)
+      </button>
+      <button type="button" onclick="window.v20QuickExport('lockscreen')" style="background: #1e293b; color: #bae6fd; border: 1px solid #0284c7; padding: 4px 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 11px;">
+        📱 下載手機鎖屏名片桌布
+      </button>
+    </div>
+    <span id="v20FpsStatusBadge" style="color: #fde047; font-size: 11px; font-family: monospace;">⚡ 支援 FPS 轉數快 2cm×2cm (300DPI = 236px) 實體印刷規格</span>
+  </div>
+
+  <!-- 第二排：高清 FPS 轉數快 QR Code 專項控制列 (2 cm × 2 cm / 0.8 × 0.8 inches) -->
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 4px;">
+        🇭🇰 FPS 轉數快高清收款碼：
+      </span>
+
+      <label style="background: #f59e0b; color: #020617; padding: 3px 10px; border-radius: 7px; font-weight: 700; cursor: pointer; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
+        📂 上傳 FPS QR 圖檔 (419567.jpg)
+        <input type="file" id="v20FpsFileInput" accept="image/*" onchange="window.v20HandleFpsUpload(event)" style="display: none;">
+      </label>
+
+      <select id="v20FpsApplyTarget" onchange="window.v20SaveFpsState(); window.renderAll();" style="background: #0f172a; color: #fde047; border: 1px solid #b45309; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; outline: none; cursor: pointer;">
+        <option value="none">🚫 名片使用一般動態 QR Code</option>
+        <option value="back" selected>🔄 背面 QR 改顯示「高清 FPS 轉數快」</option>
+        <option value="front">📄 正面 QR 改顯示「高清 FPS 轉數快」</option>
+        <option value="both">🔗 正背面 QR 皆顯示「高清 FPS 轉數快」</option>
+      </select>
+
+      <button type="button" onclick="window.v20LockFps2cmSize()" style="background: #7c2d12; color: #fed7aa; border: 1px solid #f97316; padding: 3px 10px; border-radius: 7px; font-weight: 700; cursor: pointer; font-size: 11px; box-shadow: 0 2px 6px rgba(249,115,22,0.3);" title="將名片 QR Code 尺寸精準鎖定為 236×236 px (即 300 DPI 下的 2cm × 2cm / 0.8 × 0.8 inches)">
+        🎯 鎖定 2cm × 2cm 標準尺寸 (0.8" / 236px)
+      </button>
+
+      <label style="display: inline-flex; align-items: center; gap: 4px; color: #e2e8f0; font-size: 11px; cursor: pointer;">
+        <input type="checkbox" id="v20ShowFpsLabel" checked onchange="window.v20SaveFpsState(); window.renderAll();">
+        <span>顯示「FPS 轉數快」標籤</span>
+      </label>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button type="button" onclick="window.v20ClearFpsQr()" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer;">
+        清除 FPS 圖
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Apple / Google Wallet 互動預覽與導出彈窗 -->
+<div id="v20WalletModal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 select-none overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-4xl w-full p-6 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-6 my-auto">
+    
+    <!-- 左側：即時仿真手機 Wallet 票卡預覽 (5 Cols) -->
+    <div class="md:col-span-5 flex flex-col items-center justify-center bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+      <div class="text-[11px] text-slate-400 mb-2 flex items-center justify-between w-full px-2">
+        <span id="v20PreviewTitle" class="text-emerald-400 font-semibold">● Apple Wallet 仿真票卡預覽</span>
+        <span>750 × 1120 px</span>
+      </div>
+      <div class="w-full max-w-[270px] rounded-2xl overflow-hidden shadow-2xl border border-slate-800/80 flex items-center justify-center bg-slate-950">
+        <canvas id="v20WalletCanvas" width="750" height="1120" class="w-full h-auto object-contain"></canvas>
+      </div>
+    </div>
+
+    <!-- 右側：樣式設定與導出按鈕 (7 Cols) -->
+    <div class="md:col-span-7 flex flex-col justify-between space-y-4 text-xs">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              📲 Apple Wallet / Google Wallet 電子名片與 FPS 收款卡中心
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">支援切換顯示「vCard 通訊錄 QR」或「高清 FPS 轉數快 2cm×2cm 收款碼」</p>
+          </div>
+          <button type="button" onclick="window.v20CloseWalletModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
+            ✕ 關閉
+          </button>
+        </div>
+
+        <!-- 票卡外觀與條碼設定 -->
+        <div class="grid grid-cols-2 gap-3 bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
+          <div>
+            <label class="block text-[11px] text-emerald-300 font-semibold mb-1">🎨 Wallet 票卡平台風格</label>
+            <select id="v20PassPlatform" onchange="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <option value="apple" selected> Apple Wallet 經典票卡 (頂部凹槽)</option>
+              <option value="google">G Google Wallet 現代圓角卡 (膠囊標頭)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-cyan-300 font-semibold mb-1">🌗 票卡底色模式</label>
+            <select id="v20PassColorMode" onchange="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <option value="sync_card" selected>🔗 跟隨目前名片正面主題色</option>
+              <option value="invert_accent">🔥 滿版品牌強調色 (紅底/藍底白字)</option>
+              <option value="dark_pro">🖤 尊尚曜石深黑 (#11141C)</option>
+              <option value="clean_white">🤍 純淨極簡皓白 (#FFFFFF)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-amber-300 font-semibold mb-1">📱 票卡底部 QR Code 內容</label>
+            <select id="v20PassQrSource" onchange="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <option value="fps_img">🇭🇰 高清 FPS 轉數快收款碼 (已上傳圖檔)</option>
+              <option value="vcard" selected>1. vCard 完整通訊錄 (一掃即存聯絡人)</option>
+              <option value="whatsapp">2. WhatsApp 即時對話連結</option>
+              <option value="url">3. 公司官方網站 URL</option>
+              <option value="front_sync">4. 跟隨名片正面 QR 設定</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 font-semibold mb-1">🏷️ 票卡右上角職能標籤</label>
+            <input type="text" id="v20PassBadgeLabel" value="FPS / VERIFIED" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <!-- 票卡自訂底部備註 -->
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
+          <label class="block text-[11px] text-slate-400 mb-1">票卡底部掃碼提示文字 (顯示於 QR Code 正下方)</label>
+          <input type="text" id="v20PassFooterHint" value="掃描上方 QR Code 存入聯絡人或透過 FPS 轉數快付款" oninput="window.v20RenderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+        </div>
+      </div>
+
+      <!-- 導出按鈕區 -->
+      <div class="space-y-2.5 pt-2 border-t border-slate-800">
+        <div class="text-[11px] font-semibold text-slate-300">⬇ 選擇導出格式：</div>
+        
+        <button type="button" onclick="window.v20DownloadPassImage()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-slate-950 font-extrabold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
+          <span class="flex items-center gap-2">🪪 1. 下載「Apple / Google Wallet 仿真電子票卡 (.PNG)」</span>
+          <span class="text-[10px] bg-slate-950/25 px-2 py-0.5 rounded font-mono">750 × 1120 px</span>
+        </button>
+
+        <button type="button" onclick="window.v20DownloadLockScreenWallpaper()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
+          <span class="flex items-center gap-2">📱 2. 下載「iPhone / Android 鎖定畫面專屬電子名片桌布」</span>
+          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">1290 × 2796 px</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
+          <button type="button" onclick="window.v20ExportPkpassBundle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
+            <span>📦 3. 導出 Apple .pkpass 封裝包</span>
+          </button>
+          <button type="button" onclick="window.v20ExportStandalone2cmFpsPNG()" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5" title="單獨導出一張 300 DPI 下精準 2cm×2cm (236×236 px) 的超高清銳化 FPS QR 圖檔">
+            <span>🎯 4. 下載 2×2cm 高清 FPS 圖 (.PNG)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  const V20_FPS_STORAGE_KEY = 'CF_BRANDCARD_STUDIO_V20_FPS_QR';
+  // 2 cm × 2 cm (0.8 × 0.8 inches) 在 300 DPI 下的精準像素值：20mm / 25.4 * 300 = 236.22 px -> 236 px
+  const FPS_2CM_PX_AT_300DPI = 236;
+
+  let v20FpsImgObj = null;
+  let v20FpsCrispCanvas = null;
+  let v20FpsDataUrl = '';
+  let v20CurrentRenderingSide = 'front';
+
+  function hexToRgbObj(hex) {
+    const clean = (hex || '#FFFFFF').replace('#', '');
+    const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
+    const num = parseInt(full, 16) || 0;
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+
+  // 對上傳的 FPS QR Code 圖檔 (如 419567.jpg) 進行「自動去多餘白邊 + 高對比黑白二值化銳化」
+  function buildCrispFpsCanvas(img) {
+    const rawC = document.createElement('canvas');
+    rawC.width = img.width;
+    rawC.height = img.height;
+    const rctx = rawC.getContext('2d');
+    rctx.drawImage(img, 0, 0);
+
+    const imgData = rctx.getImageData(0, 0, rawC.width, rawC.height);
+    const d = imgData.data;
+    const w = rawC.width, h = rawC.height;
+
+    let minX = w, minY = h, maxX = 0, maxY = 0;
+
+    // 二值化銳化並尋找 QR 矩陣邊界（消除原圖左右不對稱的多餘空白）
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const idx = (y * w + x) * 4;
+        const lum = 0.299 * d[idx] + 0.587 * d[idx + 1] + 0.114 * d[idx + 2];
+        if (lum < 145 && d[idx + 3] > 50) {
+          d[idx] = 0; d[idx + 1] = 0; d[idx + 2] = 0; d[idx + 3] = 255;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        } else {
+          d[idx] = 255; d[idx + 1] = 255; d[idx + 2] = 255; d[idx + 3] = 255;
+        }
+      }
+    }
+    rctx.putImageData(imgData, 0, 0);
+
+    if (maxX <= minX || maxY <= minY) return rawC;
+
+    // 裁切出純淨正方形 QR 並加上標準 4% 安全靜區白邊 (Quiet Zone)
+    const qrSpan = Math.max(maxX - minX + 1, maxY - minY + 1);
+    const pad = Math.round(qrSpan * 0.05);
+    const finalSize = qrSpan + pad * 2;
+
+    const outC = document.createElement('canvas');
+    outC.width = finalSize;
+    outC.height = finalSize;
+    const octx = outC.getContext('2d');
+    octx.imageSmoothingEnabled = false;
+    octx.fillStyle = '#FFFFFF';
+    octx.fillRect(0, 0, finalSize, finalSize);
+    octx.drawImage(rawC, minX, minY, maxX - minX + 1, maxY - minY + 1, pad, pad, qrSpan, qrSpan);
+    return outC;
+  }
+
+  // 上傳 FPS 轉數快 QR 圖檔處理
+  window.v20HandleFpsUpload = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        v20FpsImgObj = img;
+        v20FpsCrispCanvas = buildCrispFpsCanvas(img);
+        v20FpsDataUrl = v20FpsCrispCanvas.toDataURL('image/png');
+
+        // 預設自動啟用背面與 Wallet 的 FPS QR 並鎖定 2cm × 2cm
+        const passQrSel = document.getElementById('v20PassQrSource');
+        if (passQrSel) passQrSel.value = 'fps_img';
+
+        const statusBadge = document.getElementById('v20FpsStatusBadge');
+        if (statusBadge) {
+          statusBadge.textContent = `✅ 已載入並銳化 FPS 轉數快 (${file.name}) · 2×2cm (236px)`;
+          statusBadge.style.color = '#34d399';
+        }
+
+        window.v20LockFps2cmSize();
+        window.v20SaveFpsState();
+        window.v20RenderWalletPreview();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // 一鍵將名片正背面 QR Code 尺寸鎖定為 2cm × 2cm (0.8 × 0.8 inches @ 300 DPI = 236 × 236 px)
+  window.v20LockFps2cmSize = function() {
+    const sizeQrInput = document.getElementById('sizeQr');
+    if (sizeQrInput) {
+      if (parseInt(sizeQrInput.max, 10) < 280) sizeQrInput.max = '280';
+      sizeQrInput.value = String(FPS_2CM_PX_AT_300DPI);
+    }
+    const valQrSpan = document.getElementById('val-qrSize');
+    if (valQrSpan) {
+      valQrSpan.textContent = `${FPS_2CM_PX_AT_300DPI} px (2×2cm)`;
+    }
+
+    // 自動微調座標以確保 236px (2cm×2cm) 的 QR Code 不會超出名片右/下邊界
+    const portrait = (typeof window.isPortrait === 'function' && window.isPortrait());
+    const W = portrait ? 638 : 1063;
+    const H = portrait ? 1063 : 638;
+
+    const targetSide = document.getElementById('v20FpsApplyTarget') ? document.getElementById('v20FpsApplyTarget').value : 'back';
+    if (targetSide === 'front' || targetSide === 'both') {
+      document.getElementById('showQrFront').checked = true;
+      const fPos = typeof window.getActiveFrontPos === 'function' ? window.getActiveFrontPos() : null;
+      if (fPos && fPos.qrcode) {
+        fPos.qrcode.x = Math.min(fPos.qrcode.x, W - FPS_2CM_PX_AT_300DPI - 52);
+        fPos.qrcode.y = Math.min(fPos.qrcode.y, H - FPS_2CM_PX_AT_300DPI - 52);
+      }
+    }
+    if (targetSide === 'back' || targetSide === 'both') {
+      document.getElementById('showBackQr').checked = true;
+      if (document.getElementById('showBackQrSync')) document.getElementById('showBackQrSync').checked = true;
+      const bPos = typeof window.getActiveBackPos === 'function' ? window.getActiveBackPos() : null;
+      if (bPos && bPos.backQr) {
+        bPos.backQr.x = Math.min(bPos.backQr.x, W - FPS_2CM_PX_AT_300DPI - 52);
+        bPos.backQr.y = Math.min(bPos.backQr.y, H - FPS_2CM_PX_AT_300DPI - 52);
+      }
+    }
+
+    if (typeof window.renderAll === 'function') window.renderAll(false);
+    if (typeof window.showAutoSaveFeedback === 'function') {
+      window.showAutoSaveFeedback('🎯 已鎖定 FPS QR 尺寸為 2cm × 2cm (0.8" / 236×236 px @ 300DPI)');
+    }
+  };
+
+  window.v20ClearFpsQr = function() {
+    v20FpsImgObj = null;
+    v20FpsCrispCanvas = null;
+    v20FpsDataUrl = '';
+    localStorage.removeItem(V20_FPS_STORAGE_KEY);
+    const fileIn = document.getElementById('v20FpsFileInput');
+    if (fileIn) fileIn.value = '';
+    const statusBadge = document.getElementById('v20FpsStatusBadge');
+    if (statusBadge) {
+      statusBadge.textContent = '⚡ 支援 FPS 轉數快 2cm×2cm (300DPI = 236px) 實體印刷規格';
+      statusBadge.style.color = '#fde047';
+    }
+    if (typeof window.renderAll === 'function') window.renderAll(false);
+  };
+
+  // 單獨下載一張精準 236×236 px (2cm×2cm @ 300DPI) 的銳化 FPS QR 圖檔
+  window.v20ExportStandalone2cmFpsPNG = function() {
+    if (!v20FpsCrispCanvas) return alert('請先點擊上方黃色按鈕上傳你的 FPS 轉數快 QR 圖檔 (419567.jpg)！');
+    const c = document.createElement('canvas');
+    c.width = FPS_2CM_PX_AT_300DPI;
+    c.height = FPS_2CM_PX_AT_300DPI;
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(v20FpsCrispCanvas, 0, 0, c.width, c.height);
+
+    const link = document.createElement('a');
+    link.download = 'FPS_QR_2x2cm_0.8inch_300DPI_236px.png';
+    link.href = c.toDataURL('image/png', 1.0);
+    link.click();
+  };
+
+  window.v20SaveFpsState = function() {
+    try {
+      localStorage.setItem(V20_FPS_STORAGE_KEY, JSON.stringify({
+        target: document.getElementById('v20FpsApplyTarget').value,
+        showLabel: document.getElementById('v20ShowFpsLabel').checked,
+        dataUrl: v20FpsDataUrl
+      }));
+    } catch (e) {}
+  };
+
+  function loadFpsState() {
+    try {
+      const raw = localStorage.getItem(V20_FPS_STORAGE_KEY);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (s.target && document.getElementById('v20FpsApplyTarget')) {
+        document.getElementById('v20FpsApplyTarget').value = s.target;
+      }
+      if (typeof s.showLabel === 'boolean' && document.getElementById('v20ShowFpsLabel')) {
+        document.getElementById('v20ShowFpsLabel').checked = s.showLabel;
+      }
+      if (s.dataUrl) {
+        const img = new Image();
+        img.onload = function() {
+          v20FpsImgObj = img;
+          v20FpsCrispCanvas = buildCrispFpsCanvas(img);
+          v20FpsDataUrl = s.dataUrl;
+          const statusBadge = document.getElementById('v20FpsStatusBadge');
+          if (statusBadge) {
+            statusBadge.textContent = '✅ 已自動還原高清 FPS 轉數快收款碼 (2cm×2cm)';
+            statusBadge.style.color = '#34d399';
+          }
+          if (document.getElementById('v20PassQrSource')) {
+            document.getElementById('v20PassQrSource').value = 'fps_img';
+          }
+          if (typeof window.renderAll === 'function') window.renderAll(true);
+        };
+        img.src = s.dataUrl;
+      }
+    } catch (e) {}
+  }
+
+  // 在名片正背面繪製超高清無損 FPS 轉數快 QR Code (支援 236×236px 即 2cm×2cm)
+  function drawCrispFpsQrOnCard(ctx, x, y, qrSize, cardAccentHex) {
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+
+    // 繪製純白高對比安全底襯框 (確保高密度 FPS 點陣在任何深淺背景上 100% 秒掃)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.strokeStyle = cardAccentHex + '66';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x - 6, y - 6, qrSize + 12, qrSize + 12, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // 以最近鄰無損像素模式繪製銳化後的 FPS QR Code
+    ctx.drawImage(v20FpsCrispCanvas, x, y, qrSize, qrSize);
+
+    // 若勾選顯示「FPS 轉數快」標籤，於邊框頂部繪製精緻膠囊識別標記
+    const showLbl = document.getElementById('v20ShowFpsLabel') && document.getElementById('v20ShowFpsLabel').checked;
+    if (showLbl) {
+      const pillW = Math.min(qrSize, 118), pillH = 22;
+      const px = Math.round(x + (qrSize - pillW) / 2);
+      const py = y - 16;
+      ctx.fillStyle = cardAccentHex || '#901E23';
+      ctx.beginPath();
+      ctx.roundRect(px, py, pillW, pillH, 11);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `700 12px 'Montserrat', 'Noto Sans TC', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('FPS 轉數快', px + pillW / 2, py + pillH / 2 + 0.5);
+    }
+
+    ctx.restore();
+  }
+
+  function getPassColorPalette(data) {
+    const mode = document.getElementById('v20PassColorMode') ? document.getElementById('v20PassColorMode').value : 'sync_card';
+    let bg = data.bg || '#FFFFFF';
+    let accent = data.accent || '#901E23';
+    let text = data.text || '#1E293B';
+
+    if (mode === 'invert_accent') {
+      bg = data.accent || '#901E23'; accent = '#FFFFFF'; text = '#F8FAFC';
+    } else if (mode === 'dark_pro') {
+      bg = '#11141C'; accent = data.accent === '#0F172A' ? '#38BDF8' : data.accent; text = '#F8FAFC';
+    } else if (mode === 'clean_white') {
+      bg = '#FFFFFF'; accent = data.accent; text = '#0F172A';
+    }
+
+    const rgb = hexToRgbObj(bg);
+    const lum = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    const isDark = lum < 0.46;
+    const labelColor = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(15,23,42,0.5)';
+    const dividerColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.1)';
+    return { bg, accent, text, isDark, labelColor, dividerColor, rgb };
+  }
+
+  // 在 Apple Wallet / Google Wallet 票卡上渲染名片與 FPS QR Code
+  window.v20RenderPassOnCanvas = function(canvas) {
+    if (!canvas || typeof window.getFormData !== 'function') return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const data = window.getFormData();
+    const palette = getPassColorPalette(data);
+    const platform = document.getElementById('v20PassPlatform') ? document.getElementById('v20PassPlatform').value : 'apple';
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(0, 0, W, H, 42);
+    ctx.clip();
+
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    const topGrad = ctx.createLinearGradient(0, 0, W, 320);
+    topGrad.addColorStop(0, palette.accent + (palette.isDark ? '28' : '14'));
+    topGrad.addColorStop(1, palette.bg + '00');
+    ctx.fillStyle = topGrad;
+    ctx.fillRect(0, 0, W, 360);
+
+    ctx.fillStyle = palette.accent;
+    ctx.fillRect(0, 0, W, 12);
+
+    if (platform === 'apple') {
+      ctx.fillStyle = '#020617';
+      ctx.beginPath();
+      ctx.arc(W / 2, -8, 52, 0, Math.PI, false);
+      ctx.fill();
+    }
+
+    const padX = 52;
+    let headerY = 54;
+
+    if (typeof uploadedLogo !== 'undefined' && uploadedLogo && typeof window.getProcessedLogo === 'function') {
+      const procLogo = window.getProcessedLogo(palette.bg, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
+      const ratio = uploadedLogo.width / uploadedLogo.height;
+      let drawH = 62, drawW = drawH * ratio;
+      if (drawW > 340) { drawW = 340; drawH = drawW / ratio; }
+      ctx.drawImage(procLogo, padX, headerY, drawW, drawH);
+    } else {
+      ctx.fillStyle = palette.accent;
+      ctx.font = `700 44px ${data.fontFrontBrand || "'Libre Baskerville', serif"}`;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(data.company || 'Centralfield', padX, headerY);
+    }
+
+    const badgeStr = (document.getElementById('v20PassBadgeLabel') ? document.getElementById('v20PassBadgeLabel').value : 'FPS / VERIFIED').trim();
+    if (badgeStr) {
+      ctx.font = `700 16px 'Montserrat', sans-serif`;
+      const bw = ctx.measureText(badgeStr).width + 28;
+      const bx = W - padX - bw;
+      ctx.fillStyle = palette.accent + '22';
+      ctx.strokeStyle = palette.accent + '66';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(bx, headerY + 4, bw, 32, 16); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = palette.accent; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(badgeStr, bx + bw / 2, headerY + 20);
+    }
+    if (data.sinceYear) {
+      ctx.fillStyle = palette.labelColor;
+      ctx.font = `italic 400 18px ${data.fontFrontBrand || 'serif'}`;
+      ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      ctx.fillText(data.sinceYear, W - padX, headerY + 44);
+    }
+
+    ctx.fillStyle = palette.dividerColor;
+    ctx.fillRect(padX, 145, W - padX * 2, 2);
+
+    let curY = 175;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = palette.labelColor;
+    ctx.font = `700 15px 'Montserrat', sans-serif`;
+    ctx.fillText('NAME / REPRESENTATIVE', padX, curY);
+    curY += 26;
+
+    const fullName = [data.nameEn, data.nameZh].filter(Boolean).join('  ');
+    ctx.fillStyle = palette.text;
+    ctx.font = `700 44px ${data.fontFrontEn || "'Inter', sans-serif"}, ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.fillText(fullName || 'Centralfield Representative', padX, curY, W - padX * 2);
+    curY += 58;
+
+    const fullTitle = [data.titleEn, data.titleZh].filter(Boolean).join('  |  ');
+    ctx.fillStyle = palette.accent;
+    ctx.font = `600 24px ${data.fontFrontEn || "'Inter', sans-serif"}, ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.fillText(fullTitle || (data.companySubEn + ' ' + data.companySubZh), padX, curY, W - padX * 2);
+    curY += 48;
+
+    ctx.fillStyle = palette.dividerColor;
+    ctx.fillRect(padX, curY, W - padX * 2, 2);
+    curY += 28;
+
+    const col1X = padX, col2X = Math.round(W / 2) + 15, colW = Math.round(W / 2) - padX - 20;
+    function drawPassField(label, value, x, y, maxW) {
+      ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText(label, x, y);
+      ctx.fillStyle = palette.text; ctx.font = `600 20px ${data.fontFrontEn || "'Inter', sans-serif"}`;
+      ctx.fillText(value || '—', x, y + 22, maxW);
+    }
+
+    drawPassField('DIRECT / TEL', data.phone || '+852 2387 0273', col1X, curY, colW);
+    drawPassField('WHATSAPP / MOBILE', data.whatsapp || data.phone || '—', col2X, curY, colW);
+    curY += 74;
+    drawPassField('EMAIL ADDRESS', data.email || 'sales@centralfield.com', col1X, curY, colW);
+    drawPassField('OFFICIAL WEBSITE', data.website || 'www.centralfield.com', col2X, curY, colW);
+    curY += 74;
+
+    ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`;
+    ctx.fillText('LOCATION / STORE ADDRESS', col1X, curY);
+    curY += 22;
+    ctx.fillStyle = palette.text; ctx.font = `500 18px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.fillText((data.address || data.addressEn || '').replace(/\r?\n/g, ' '), col1X, curY, W - padX * 2);
+
+    // 底部掃碼卡座區
+    const qrBoxW = 360, qrBoxH = 360;
+    const qrBoxX = Math.round((W - qrBoxW) / 2), qrBoxY = 665;
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.22)'; ctx.shadowBlur = 25; ctx.shadowOffsetY = 8;
+    ctx.beginPath(); ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, 28); ctx.fill();
+    ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+    const qrSrcMode = document.getElementById('v20PassQrSource') ? document.getElementById('v20PassQrSource').value : 'vcard';
+    if (qrSrcMode === 'fps_img' && v20FpsCrispCanvas) {
+      // 直接繪製超高清銳化後的 FPS 轉數快圖檔 (不疊加中央遮擋物以確保高密度銀行碼 100% 秒掃)
+      ctx.save();
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(v20FpsCrispCanvas, qrBoxX + 18, qrBoxY + 18, 324, 324);
+      ctx.restore();
+    } else {
+      const actualMode = (qrSrcMode === 'front_sync' || qrSrcMode === 'fps_img') ? data.frontQrMode : qrSrcMode;
+      const qrPayload = window.buildQRPayload(actualMode, data.frontQrCustom, data);
+      const qrCanvas = document.createElement('canvas');
+      new QRious({ element: qrCanvas, value: qrPayload, size: 320, level: 'H', foreground: '#0F172A', background: '#FFFFFF', padding: 6 });
+      ctx.drawImage(qrCanvas, qrBoxX + 20, qrBoxY + 20, 320, 320);
+    }
+
+    const footerHint = document.getElementById('v20PassFooterHint') ? document.getElementById('v20PassFooterHint').value : '';
+    ctx.fillStyle = palette.text; ctx.font = `600 17px ${data.fontFrontZh || "'Noto Sans TC', sans-serif"}`;
+    ctx.textAlign = 'center';
+    ctx.fillText(footerHint, W / 2, 1052, W - 80);
+
+    ctx.fillStyle = palette.labelColor; ctx.font = `600 14px 'Montserrat', sans-serif`;
+    ctx.fillText(`${data.companySubEn || data.company}  •  ${data.companySubZh}`, W / 2, 1084);
+
+    ctx.strokeStyle = palette.isDark ? 'rgba(255,255,255,0.16)' : 'rgba(15,23,42,0.12)';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.roundRect(1.5, 1.5, W - 3, H - 3, 42); ctx.stroke();
+    ctx.restore();
+  };
+
+  window.v20RenderWalletPreview = function() {
+    const canvas = document.getElementById('v20WalletCanvas');
+    if (canvas) window.v20RenderPassOnCanvas(canvas);
+  };
+
+  window.v20OpenWalletModal = function() {
+    document.getElementById('v20WalletModal').classList.remove('hidden');
+    window.v20RenderWalletPreview();
+  };
+
+  window.v20CloseWalletModal = function() {
+    document.getElementById('v20WalletModal').classList.add('hidden');
+  };
+
+  window.v20DownloadPassImage = function() {
+    const canvas = document.getElementById('v20WalletCanvas');
+    window.v20RenderPassOnCanvas(canvas);
+    const data = window.getFormData();
+    const link = document.createElement('a');
+    link.download = `${(data.nameEn || data.nameZh || 'Card').replace(/\s+/g, '_')}_Wallet_Pass.png`;
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.click();
+  };
+
+  window.v20DownloadLockScreenWallpaper = function() {
+    const passCanvas = document.getElementById('v20WalletCanvas');
+    window.v20RenderPassOnCanvas(passCanvas);
+    const data = window.getFormData();
+
+    const wallCanvas = document.createElement('canvas');
+    const WW = 1290, WH = 2796;
+    wallCanvas.width = WW; wallCanvas.height = WH;
+    const wctx = wallCanvas.getContext('2d');
+
+    const bgGrad = wctx.createLinearGradient(0, 0, WW, WH);
+    bgGrad.addColorStop(0, '#040711'); bgGrad.addColorStop(0.5, '#0F172A'); bgGrad.addColorStop(1, '#040711');
+    wctx.fillStyle = bgGrad; wctx.fillRect(0, 0, WW, WH);
+
+    const cardDrawW = 980, cardDrawH = Math.round(cardDrawW * (1120 / 750));
+    wctx.save();
+    wctx.shadowColor = 'rgba(0, 0, 0, 0.75)'; wctx.shadowBlur = 65; wctx.shadowOffsetY = 25;
+    wctx.drawImage(passCanvas, Math.round((WW - cardDrawW) / 2), 920, cardDrawW, cardDrawH);
+    wctx.restore();
+
+    const link = document.createElement('a');
+    link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_LockScreen_Wallpaper.png`;
+    link.href = wallCanvas.toDataURL('image/png', 0.95);
+    link.click();
+  };
+
+  window.v20ExportPkpassBundle = async function() {
+    if (typeof JSZip === 'undefined') return alert('JSZip 載入中');
+    const data = window.getFormData();
+    const palette = getPassColorPalette(data);
+    const passCanvas = document.getElementById('v20WalletCanvas');
+    window.v20RenderPassOnCanvas(passCanvas);
+
+    const zip = new JSZip();
+    zip.file("pass.json", JSON.stringify({
+      formatVersion: 1,
+      passTypeIdentifier: "pass.com.centralfield.card",
+      organizationName: data.companySubEn || "Centralfield Computer Ltd.",
+      description: "Business Card & FPS Pass",
+      backgroundColor: `rgb(${palette.rgb.r}, ${palette.rgb.g}, ${palette.rgb.b})`
+    }, null, 2));
+    zip.file("Wallet_Pass_Preview.png", passCanvas.toDataURL('image/png').split(',')[1], { base64: true });
+    if (v20FpsCrispCanvas) {
+      zip.file("FPS_QR_2x2cm_236px.png", v20FpsCrispCanvas.toDataURL('image/png').split(',')[1], { base64: true });
+    }
+
+    const blob = await zip.generateAsync({ type: "blob" });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_PassKit.pkpass`;
+    link.click();
+  };
+
+  window.v20QuickExport = function(type) {
+    if (type === 'lockscreen') window.v20DownloadLockScreenWallpaper();
+    else window.v20DownloadPassImage();
+  };
+
+  function setupV20Integration() {
+    const v19Bar = document.getElementById('v19TextureBar');
+    const v18Bar = document.getElementById('v18QuickBar');
+    const headerEl = document.querySelector('header');
+    const wBar = document.getElementById('v20WalletBar');
+
+    const anchor = v19Bar || v18Bar || headerEl;
+    if (anchor && anchor.parentNode && wBar && anchor.nextSibling !== wBar) {
+      anchor.parentNode.insertBefore(wBar, anchor.nextSibling);
+    }
+
+    // 擴充原本 QR 尺寸滑桿上限至 280px，支援 236px (2cm × 2cm @ 300 DPI)
+    const sizeQrSlider = document.getElementById('sizeQr');
+    if (sizeQrSlider && parseInt(sizeQrSlider.max, 10) < 280) {
+      sizeQrSlider.max = '280';
+    }
+
+    // 追蹤當前正在渲染正面還是背面，並攔截 drawStyledQRCode 以替換為高清 FPS 轉數快收款碼
+    const origRF = window.renderFront;
+    if (typeof origRF === 'function') {
+      window.renderFront = function(data) {
+        v20CurrentRenderingSide = 'front';
+        origRF(data);
+      };
+    }
+
+    const origRB = window.renderBack;
+    if (typeof origRB === 'function') {
+      window.renderBack = function(data) {
+        v20CurrentRenderingSide = 'back';
+        origRB(data);
+      };
+    }
+
+    const origDrawQR = window.drawStyledQRCode;
+    if (typeof origDrawQR === 'function') {
+      window.drawStyledQRCode = function(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle) {
+        const target = document.getElementById('v20FpsApplyTarget') ? document.getElementById('v20FpsApplyTarget').value : 'none';
+        const useFpsHere = v20FpsCrispCanvas && (target === 'both' || target === v20CurrentRenderingSide);
+        if (useFpsHere) {
+          drawCrispFpsQrOnCard(ctx, x, y, qrSize, cardAccentHex);
+          return;
+        }
+        origDrawQR(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle);
+      };
+    }
+
+    loadFpsState();
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => setTimeout(setupV20Integration, 280));
+  } else {
+    setTimeout(setupV20Integration, 280);
+  }
+})();
+</script>
 </body>
 </html>
