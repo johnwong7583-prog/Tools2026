@@ -1,0 +1,3456 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI BrandCard Studio Pro v14.0 | 正背面中英文字體獨立切換與印刷級 PDF 系統</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- QRious: 生成高清 Canvas QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <!-- JSZip: 批量打包多張名片為單一 ZIP 壓縮檔 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- jsPDF: 生成雙頁 300 DPI 印刷級 PDF 與向量十字裁切線 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Google Fonts: 載入完整中西文專業字體庫 (襯線、無襯線、科技等寬、思源黑體、思源宋體、圓體、文楷) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=LXGW+WenKai+TC:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', 'Noto Sans TC', sans-serif; }
+    .canvas-shadow { box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.55), 0 0 1px 1px rgba(255, 255, 255, 0.12); }
+    input[type="range"] { accent-color: #6366f1; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- 頂部導航欄 -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-30 px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 via-cyan-500 to-emerald-400 flex items-center justify-center font-bold text-slate-950 text-xs shadow-lg shadow-cyan-500/20">V14</div>
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 class="font-bold text-base tracking-wide text-white">AI BrandCard Studio</h1>
+          <span class="text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">v14.0 正背面中英字體獨立切換版</span>
+          <span id="autoSaveBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-emerald-300 border border-slate-700 flex items-center gap-1 transition">
+            💾 自動保存已就緒
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">正背面 6 組中英文字體獨立控制 · 18款主題 · 12款正面構圖 · 雙頁印刷級 PDF</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- 頂部快速切換橫式/直式 -->
+      <div class="flex items-center bg-slate-950 border border-indigo-500/50 rounded-lg p-0.5">
+        <button type="button" id="btnOrientLandscape" onclick="setOrientation('landscape')" class="px-2.5 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition">
+          📐 橫式 90×54
+        </button>
+        <button type="button" id="btnOrientPortrait" onclick="setOrientation('portrait')" class="px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">
+          📏 直式 54×90
+        </button>
+      </div>
+
+      <!-- PDF 規格選擇器 + 一鍵導出雙頁印刷 PDF 按鈕 -->
+      <div class="flex items-center bg-slate-950 border border-rose-500/40 rounded-lg p-0.5 shadow-lg shadow-rose-950/30">
+        <select id="pdfSpecMode" onchange="renderAll()" class="bg-transparent text-xs text-slate-200 px-2 py-1.5 focus:outline-none cursor-pointer" title="選擇導出 PDF 的出血與裁切線規格">
+          <option value="crop_marks" class="bg-slate-900 text-white" selected>3mm出血 + 十字裁切線</option>
+          <option value="bleed_only" class="bg-slate-900 text-white">連3mm出血 (無裁切線)</option>
+          <option value="trim_only" class="bg-slate-900 text-white">淨尺寸 (數碼預覽)</option>
+        </select>
+        <button type="button" onclick="exportTwoPagePrintPDF()" class="bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-md transition flex items-center gap-1 shrink-0">
+          <span>📄 導出雙頁 PDF</span>
+        </button>
+      </div>
+
+      <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 px-2.5 py-1.5 rounded-lg cursor-pointer border border-slate-700 hover:border-slate-600 transition">
+        <input type="checkbox" id="showBleed" class="rounded bg-slate-900 border-slate-600 text-indigo-500 focus:ring-0" onchange="renderAll()">
+        <span>出血線</span>
+      </label>
+      <button type="button" onclick="downloadCard('front')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg transition">
+        正面 PNG
+      </button>
+      <button type="button" onclick="downloadCard('back')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg transition">
+        背面 PNG
+      </button>
+      <button type="button" onclick="resetCurrentOrientationLayout()" title="重置目前方向的排版位置與字級" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium px-2.5 py-1.5 rounded-lg transition">
+        ↺ 重置排版
+      </button>
+      <button type="button" onclick="clearSavedStorage()" title="清除瀏覽器保存的所有設定並還原初始狀態" class="bg-slate-800 hover:bg-rose-950/80 text-slate-400 hover:text-rose-300 border border-slate-700 text-xs font-medium px-2 py-1.5 rounded-lg transition">
+        🗑️
+      </button>
+    </div>
+  </header>
+
+  <!-- 主工作區 -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-5 grid grid-cols-1 lg:grid-cols-12 gap-7">
+    
+    <!-- 左側多功能控制面板 (5 Cols) -->
+    <div class="lg:col-span-5 flex flex-col space-y-3.5">
+
+      <!-- 一鍵套用大師級卡片模板庫 -->
+      <div class="bg-gradient-to-r from-indigo-950/80 via-slate-900 to-cyan-950/80 border border-cyan-500/40 rounded-xl p-3 space-y-2 shadow-lg">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+            <span>✨ 一鍵套用完整卡片模板 (配色 + 構圖 + 字體聯動)</span>
+          </label>
+          <button type="button" onclick="triggerAIRemix()" class="text-[11px] bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-500/40 px-2 py-0.5 rounded transition">
+            🎲 隨機靈感
+          </button>
+        </div>
+        <select id="masterTemplateSelect" onchange="applyMasterTemplate(this.value)" class="w-full bg-slate-950 border border-cyan-500/40 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+          <option value="">-- 點擊選擇「現代極簡白」或「AI 科技質感」完整套裝模板 --</option>
+          <optgroup label="🤍 現代白色系列 (Modern White Templates)">
+            <option value="tpl_white_bento">1. 【現代白 Bento 模組卡】純白微邊框資訊卡 + 背面 Bento 矩陣</option>
+            <option value="tpl_white_ai_lab">2. 【皓白 AI 實驗室】冷白底 + 電光藍神經網絡節點 + 背面算力核心</option>
+            <option value="tpl_white_crimson_corner">3. 【珍珠白精密紅標】純白底 + 中田紅精密角標刻度 + 背面硬件銘牌</option>
+            <option value="tpl_white_arch">4. 【現代建築黃金線條】純白極簡網格 + 建築比例分割線</option>
+            <option value="tpl_white_glacier">5. 【冰川白流光科技】冰川白底 + 柔和極光光帶 + 點陣紋理</option>
+          </optgroup>
+          <optgroup label="🤖 AI 科技質感系列 (AI & Tech Texture Templates)">
+            <option value="tpl_ai_neural_dark">6. 【AI 神經網絡深空】深空黑 + 青藍發光拓撲節點 + 背面 AI 算力核心</option>
+            <option value="tpl_ai_pcb_hud">7. 【高階硬件 PCB 電路】鈦黑底 + 45° 晶片走線與 HUD 準星 + 背面規格銘牌</option>
+            <option value="tpl_ai_compute_green">8. 【GPU 算力核心黑綠】曜石黑 + 翡翠綠微點陣列 + 背面五大方案清單</option>
+            <option value="tpl_ai_quantum_violet">9. 【量子計算流光紫】深邃紫黑 + 量子光暈與神經節點 + 背面 Bento 卡</option>
+          </optgroup>
+          <optgroup label="🏛️ 經典企業與商務系列 (Classic Enterprise)">
+            <option value="tpl_classic_cf">10. 【中田經典紅白】實體卡紅白雙欄 + 背面客群分類雙區版</option>
+            <option value="tpl_classic_directory">11. 【門市全分店名錄卡】經典紅白正面 + 背面高登/黃金全分店雙欄名錄</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <!-- 快速記憶槽與專案備份列 -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400 font-medium">記憶槽：</span>
+          <button type="button" onclick="saveSlot(1)" class="px-2 py-1 bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white rounded border border-slate-700 transition">存槽 1</button>
+          <button type="button" onclick="loadSlot(1)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-cyan-300 rounded border border-slate-800 transition">讀 1</button>
+          <button type="button" onclick="saveSlot(2)" class="px-2 py-1 bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white rounded border border-slate-700 transition">存槽 2</button>
+          <button type="button" onclick="loadSlot(2)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-cyan-300 rounded border border-slate-800 transition">讀 2</button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="exportProjectJson()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded border border-slate-700 transition">⬇ 備份 JSON</button>
+          <label class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded border border-slate-700 cursor-pointer transition">
+            ⬆ 載入 JSON
+            <input type="file" accept=".json" onchange="importProjectJson(event)" class="hidden">
+          </label>
+        </div>
+      </div>
+
+      <!-- 4 分頁切換器 -->
+      <div class="grid grid-cols-4 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-medium gap-1">
+        <button type="button" id="tabBtn-content" onclick="switchTab('content')" class="py-2 px-2 rounded-lg bg-indigo-600 text-white shadow transition text-center">
+          1. 正面與 Logo
+        </button>
+        <button type="button" id="tabBtn-back" onclick="switchTab('back')" class="py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center">
+          2. 背面設計
+        </button>
+        <button type="button" id="tabBtn-style" onclick="switchTab('style')" class="py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center">
+          3. 字體與主題
+        </button>
+        <button type="button" id="tabBtn-batch" onclick="switchTab('batch')" class="py-2 px-2 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
+          <span>4. 批量 CSV</span>
+          <span id="batchBadge" class="hidden px-1.5 py-0.2 bg-cyan-500/20 text-cyan-300 rounded-full text-[10px]">0</span>
+        </button>
+      </div>
+
+      <!-- ==================== 分頁 1：正面內容與 Logo 定位 ==================== -->
+      <section id="tab-content" class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span> 品牌 Logo 與正面資料
+          </h2>
+          <div class="flex gap-1.5">
+            <button type="button" onclick="fillDefaultCompanyInfo()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2 py-1 rounded border border-slate-700 transition">
+              填入預設公司資料
+            </button>
+            <button type="button" onclick="clearAllFields()" class="text-[11px] bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 px-2 py-1 rounded border border-slate-700 transition">
+              清空欄位
+            </button>
+          </div>
+        </div>
+
+        <!-- 品牌 Logo 上傳與零白邊淨化引擎設定 -->
+        <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-indigo-300">🖼️ 上傳公司 Logo (真透明零白邊淨化)</label>
+            <span id="logoStatusText" class="text-[11px] text-slate-500">目前使用文字標誌</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+            <button type="button" onclick="clearLogo()" class="text-xs text-slate-400 hover:text-rose-400 px-2.5 py-1 border border-slate-800 rounded-lg shrink-0 transition">
+              清除
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <button type="button" onclick="downloadTransparentCleanLogo()" class="text-[11px] bg-slate-800 hover:bg-indigo-900/60 text-indigo-300 px-2.5 py-1 rounded border border-slate-700 transition">
+              ✨ 下載去背無白邊透明 PNG
+            </button>
+            <span class="text-[10px] text-slate-400">支援任何深淺底色無縫貼合</span>
+          </div>
+
+          <!-- 正面 Logo 位置快速選擇 -->
+          <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-800/80">
+            <div>
+              <label class="block text-[11px] text-cyan-300 mb-1">📍 正面 Logo 對齊位置</label>
+              <select id="frontLogoPosPreset" onchange="applyFrontLogoPosition()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                <option value="top_right" selected>右上角 (橫式經典預設)</option>
+                <option value="top_center">頂部置中 (直式推薦)</option>
+                <option value="top_left">左上角</option>
+                <option value="bottom_right">右下角</option>
+                <option value="custom">畫布滑鼠自由拖曳</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-amber-300/90 mb-1">Logo 右下創立年份</label>
+              <input type="text" id="sinceYear" value="Since 1983" placeholder="Since 1983" oninput="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
+          </div>
+
+          <!-- 色彩淨化開關 -->
+          <div class="pt-1.5 border-t border-slate-800/80 space-y-1 text-xs">
+            <label class="flex items-center gap-2 text-cyan-300 cursor-pointer">
+              <input type="checkbox" id="blendLogoWhite" checked onchange="invalidateLogoCache(); renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+              <span>✨ 自動抽離 Logo 白底與消除邊緣粉白光暈</span>
+            </label>
+            <label class="flex items-center gap-2 text-amber-300 cursor-pointer">
+              <input type="checkbox" id="brightenLogoDark" checked onchange="invalidateLogoCache(); renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+              <span>🌙 深色或同色背景時，自動將 Logo 提亮或反白</span>
+            </label>
+            <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+              <input type="checkbox" id="forceWhiteLogo" onchange="invalidateLogoCache(); renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+              <span>⚪ 強制將整個 Logo 轉為純白反白效果</span>
+            </label>
+            <div class="flex items-center gap-3 text-[11px] text-slate-400 pt-1">
+              <span class="shrink-0">去白邊收縮強度</span>
+              <input type="range" id="whiteTolerance" min="10" max="115" value="60" oninput="invalidateLogoCache(); renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+              <span id="val-whiteTol" class="font-mono text-cyan-400 w-8 text-right">60</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 公司名稱 -->
+        <div class="grid grid-cols-12 gap-2">
+          <div class="col-span-5">
+            <label class="block text-[11px] text-slate-400 mb-1">主品牌字標 (無圖時顯示)</label>
+            <div class="flex items-center gap-1.5">
+              <input type="text" id="company" value="Centralfield" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+              <label class="flex items-center gap-1 text-[11px] text-slate-400 shrink-0 cursor-pointer">
+                <input type="checkbox" id="showTm" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">TM
+              </label>
+            </div>
+          </div>
+          <div class="col-span-7">
+            <label class="block text-[11px] text-slate-400 mb-1">英文公司全稱</label>
+            <input type="text" id="companySubEn" value="Centralfield Computer Ltd." oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-slate-400 mb-1">中文公司全稱</label>
+          <input type="text" id="companySubZh" value="中田數碼有限公司" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+        </div>
+
+        <!-- 個人姓名與職銜 -->
+        <div class="grid grid-cols-2 gap-2.5 pt-1 border-t border-slate-800/80">
+          <div>
+            <label class="block text-[11px] text-slate-300 font-medium mb-1">英文姓名 (主顯示)</label>
+            <input type="text" id="nameEn" value="" placeholder="例: Alvin Wong" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 font-medium mb-1">中文姓名</label>
+            <input type="text" id="nameZh" value="" placeholder="例: 黃佳鑫" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] text-slate-300 font-medium mb-1">英文職銜 (Title)</label>
+            <input type="text" id="titleEn" value="" placeholder="例: Sales Representative" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">中文職銜 (選填)</label>
+            <input type="text" id="titleZh" value="" placeholder="留空則只顯示英文職銜" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <!-- 6 大通訊欄 -->
+        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">✉️ 電郵地址 (Email)</label>
+            <input type="text" id="email" value="" placeholder="name@centralfield.com" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">🌐 官方網站 (Website)</label>
+            <input type="text" id="website" value="www.centralfield.com" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">📘 Facebook 專頁</label>
+            <input type="text" id="facebook" value="www.facebook.com/Centralfield/" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">☎️ 公司電話 (Tel)</label>
+            <input type="text" id="phone" value="+852 2387 0273" placeholder="+852 2387 0273" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">📠 傳真號碼 (Fax)</label>
+            <input type="text" id="fax" value="+852 2387 9057" placeholder="留空自動隱藏" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] text-emerald-400 mb-1">💬 WhatsApp / 手機</label>
+            <input type="text" id="whatsapp" value="" placeholder="例: +852 9131 7468" oninput="syncCurrentMemberFromInputs(); renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <!-- 雙語地址 -->
+        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">中文地址 (支援換行)</label>
+            <textarea id="address" rows="2" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">香港九龍深水埗高登電腦中心1/F,
+10-16A號舖</textarea>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">英文地址 (支援換行)</label>
+            <textarea id="addressEn" rows="2" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">Shop 10-16A, 1/F,
+Golden Computer Center, Sham Shui Po,
+Kowloon, Hong Kong</textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 分頁 2：背面設計與標語/全分店名錄選項 ==================== -->
+      <section id="tab-back" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3.5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 背面標語方案與 14 款版型設計
+          </h2>
+          <button type="button" onclick="resetBackPositions()" class="text-[11px] text-cyan-400 hover:text-cyan-300">
+            ↺ 重置背面位置
+          </button>
+        </div>
+
+        <!-- 背面標語與版面內容快速選單 -->
+        <div class="bg-indigo-950/40 border border-indigo-500/40 rounded-xl p-3 space-y-2">
+          <label class="block text-xs font-bold text-indigo-300">✨ 背面標語與內容方案快速套用 (自動適配橫式/直式)</label>
+          <select id="backContentPreset" onchange="applyBackContentPreset()" class="w-full bg-slate-900 border border-indigo-500/50 rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+            <option value="preset_img1" selected>方案 A (圖1)：【個人與玩家】＋【企業與專業】分類版 (配QR)</option>
+            <option value="preset_img2">方案 B (圖2)：極簡置中雙行版 (硬件零售/水冷/訂製 ＋ 企業IT/AI方案)</option>
+            <option value="preset_img3">方案 C (圖3)：五大業務垂直方塊清單 ＋ 深水埗門市・網上商店</option>
+            <option value="preset_img4">方案 D (圖4)：經典中田全分店及部門名錄 (高登/黃金/中小企/支援)</option>
+            <option value="preset_bilingual">方案 E：中英雙語國際化採購方案版 (Bilingual Corporate)</option>
+          </select>
+        </div>
+
+        <!-- 背面視覺構圖與背面 Logo 位置 -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs text-slate-300 font-medium mb-1">背面視覺版型 (14選1)</label>
+            <select id="backLayout" onchange="onBackLayoutChange()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <optgroup label="經典與實用業務版型">
+                <option value="segmented_groups" selected>1. 客群分類雙區版 (圖1頂線)</option>
+                <option value="centered_minimal">2. 極簡置中雙行版 (圖2置中)</option>
+                <option value="vertical_list_card">3. 五大業務清單+門市版 (圖3)</option>
+                <option value="branch_directory">4. 經典全分店名錄 (圖4實體卡)</option>
+                <option value="classic_center">5. 經典大字標置中 + 年份</option>
+                <option value="qr_showcase">6. 商務掃碼版 (Logo + 大QR)</option>
+                <option value="luxe_frame">7. 尊尚雙層邊框徽章版</option>
+                <option value="triple_features">8. 三大核心優勢展示版</option>
+                <option value="giant_qr_card">9. 滿版大 QR Code 快捷名片版</option>
+                <option value="diagonal_split">10. 現代斜切幾何分割版</option>
+              </optgroup>
+              <optgroup label="✨ 現代白 & AI 科技質感背面">
+                <option value="ai_circuit_core">11. AI 算力核心與神經網格版</option>
+                <option value="modern_white_bento">12. 現代極簡 Bento 資訊卡版</option>
+                <option value="hud_tech_spec">13. 高階硬件規格銘牌版 (HUD 螺絲框)</option>
+                <option value="minimal_arch_line">14. 建築級黃金比例極簡線條版</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-cyan-300 font-medium mb-1">📍 背面 Logo / 標題位置</label>
+            <select id="backLogoPosPreset" onchange="applyBackLogoPosition()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <option value="center">正中置中</option>
+              <option value="top_left" selected>左上角 (分類版預設)</option>
+              <option value="top_center">上方置中 (直式/置中版推薦)</option>
+              <option value="left_center">左側置中 (配右側QR)</option>
+              <option value="top_right">右上角</option>
+              <option value="custom">畫布滑鼠自由拖曳</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 背面主題配色 -->
+        <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2.5">
+          <div>
+            <label class="block text-xs text-emerald-300 font-medium mb-1">🎨 背面主題配色 (與正面共享相同 18 款主題)</label>
+            <select id="backThemePreset" onchange="applyBackPreset()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none">
+              <option value="sync" selected>🔗 與正面主題顏色完全一致 (自動同步)</option>
+              <option value="invert_accent">🔄 反轉：使用正面強調色作為滿版底色</option>
+              <optgroup label="🤍 現代白色系列 (Modern White)">
+                <option value="white_minimal_tech">純白極簡科技 (Pure White & Slate)</option>
+                <option value="white_ai_silver">皓白銀灰 AI 實驗室 (Arctic White AI)</option>
+                <option value="white_pearl_red">珍珠白配極簡紅點 (Pearl White & Red)</option>
+                <option value="white_architect">現代建築純白 Bento (Architectural White)</option>
+                <option value="white_glass_cyan">冰川白配冰藍光感 (Glacier White Cyan)</option>
+              </optgroup>
+              <optgroup label="🤖 AI 科技質感系列 (AI & Tech)">
+                <option value="ai_neural_dark">AI 神經網絡深空黑 (Neural Deep Space)</option>
+                <option value="ai_titanium_carbon">鍛造碳纖鈦灰 HUD (Carbon Titanium)</option>
+                <option value="ai_nvidia_green">算力核心黑綠矩陣 (Compute Core Green)</option>
+                <option value="ai_quantum_violet">量子計算紫青流光 (Quantum AI Violet)</option>
+                <option value="tech">科技賽博深色 (Tech Cyber)</option>
+              </optgroup>
+              <optgroup label="🏛️ 經典企業與質感灰系列">
+                <option value="classic_cf">經典企業紅白 (實體卡風格)</option>
+                <option value="platinum_grey">鉑金商務淺灰 (Platinum Grey)</option>
+                <option value="charcoal_grey">鈦金質感深灰 (Charcoal Grey)</option>
+                <option value="warm_ivory">溫潤米白配酒紅 (Ivory Warm)</option>
+                <option value="emerald_green">高雅翡翠綠 (Eco Emerald)</option>
+                <option value="modern_mono">現代極簡黑白 (Modern Mono)</option>
+                <option value="corporate">企業商務深藍 (Corporate Blue)</option>
+                <option value="luxe">黑金尊尚 (Executive Gold)</option>
+                <option value="minimal">極簡瑞士灰白 (Swiss Minimal)</option>
+              </optgroup>
+              <option value="custom">🎨 自訂背面專屬三色</option>
+            </select>
+          </div>
+
+          <div id="backCustomColorsBox" class="hidden grid grid-cols-3 gap-2.5 pt-1">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">背面底色</label>
+              <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded-lg p-1.5">
+                <input type="color" id="backColorBg" value="#FFFFFF" oninput="invalidateLogoCache(); renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="backColorBgText" class="text-[11px] font-mono text-slate-300">#FFFFFF</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">背面強調色</label>
+              <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded-lg p-1.5">
+                <input type="color" id="backColorAccent" value="#901E23" oninput="invalidateLogoCache(); renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="backColorAccentText" class="text-[11px] font-mono text-slate-300">#901E23</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">背面文字色</label>
+              <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded-lg p-1.5">
+                <input type="color" id="backColorText" value="#262626" oninput="renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="backColorTextText" class="text-[11px] font-mono text-slate-300">#262626</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 背面顯示元素開關 -->
+        <div class="grid grid-cols-2 gap-2 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 text-xs">
+          <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+            <input type="checkbox" id="showBackLogo" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+            <span>顯示背面頂部標題 / Logo</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+            <input type="checkbox" id="showBackQr" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+            <span>顯示背面 QR Code</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+            <input type="checkbox" id="showBackTagline" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+            <span>顯示背面標語 / 業務內容</span>
+          </label>
+          <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+            <input type="checkbox" id="showBackWeb" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+            <span>顯示背面底部網址</span>
+          </label>
+        </div>
+
+        <!-- 一般標語編輯框 -->
+        <div id="standardBackTextEditor" class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-[11px] text-slate-400">背面頂部標題列</label>
+            <label class="flex items-center gap-1.5 text-[11px] text-cyan-300 cursor-pointer">
+              <input type="checkbox" id="useImageLogoOnBack" onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+              <span>改為顯示圖片 Logo / 主字標</span>
+            </label>
+          </div>
+          <input type="text" id="backHeaderTitle" value="中田數碼有限公司  |  Since 1983" placeholder="例: 中田數碼有限公司 | Since 1983" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">背面標語 / 核心業務列表 (支援自由修改與換行)</label>
+            <textarea id="backTaglineText" rows="5" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono leading-relaxed focus:outline-none">【個人與玩家】
+• 電腦硬件零售    • 高階電腦訂製    • 高階水冷組裝
+
+【企業與專業】
+• 企業 IT 採購方案    • AI 工作站方案</textarea>
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">背面底部副標 (如：深水埗門市 • 網上商店)</label>
+            <input type="text" id="backFooterSub" value="" placeholder="例: 深水埗門市 • 網上商店" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          </div>
+        </div>
+
+        <!-- 經典全分店雙欄名錄編輯框 -->
+        <div id="directoryBackEditor" class="hidden space-y-2.5 pt-1 border-t border-slate-800">
+          <div class="text-[11px] text-amber-300 font-medium">📋 經典全分店與企業部門名錄內容 (支援自由修改)：</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">左欄/上段：總公司與高登分店</label>
+              <textarea id="dirLeftText" rows="7" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] text-white font-mono leading-snug focus:outline-none">TITLE: Centralfield Computer Ltd.
+SUB: Tablet, Notebook, DIY & BTO Computer Products
+Tel   : (852) 2387 - 0272
+Fax   : (852) 2741 - 9986
+E-mail : sales@centralfield.com
+[高登電腦中心總店 (組裝機, 電腦組件)]
+Shop 10-11, 58-60, 63-65, 1/F, Golden Computer
+Centre, Shamshuipo, Kowloon, HK
+[高登電腦中心分店 (數碼, 影音, 儲存, 網絡, 打印, 顯示器)]
+Shop 12-16, 67, 68, 98, 99, 1/F, Golden Computer
+Centre, Shamshuipo, Kowloon, HK
+[高登電腦中心分店 (手提電腦, 平板電腦, 智能手機)]
+Shop 37-39, 58-60, 1/F, Golden Computer Centre,
+Shamshuipo, Kowloon, HK</textarea>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">右欄/下段：黃金分店、企業部與支援</label>
+              <textarea id="dirRightText" rows="7" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] text-white font-mono leading-snug focus:outline-none">[黃金電腦商場分店 (組裝機, 電腦組件, 顯示器)]
+Shop 62, LG, Golden Computer Arcade,
+Shamshuipo, Kowloon, HK
+TITLE: Centralfield System Ltd.
+SUB: Government, Education, Corporate Solutions
+Tel   : (852) 2708 - 8083
+Fax   : (852) 2151 - 8221
+E-mail : sme@centralfield.com
+[中小企業部 (商務電腦, IT 方案)]
+Rm 4B-D, 4/F, Sui Sing Bld, 202-204 Cheung
+Sha Wan Rd, Shamshuipo, Kowloon, HK
+[客戶服務 / 技術支援中心]
+Rm 2B 2/F, Sui Sing Bld, 202-204 Cheung
+Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs pt-1">
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>背面標題 / Logo 尺寸</span>
+              <span id="val-backLogoSize" class="font-mono text-cyan-400">28 px</span>
+            </div>
+            <input type="range" id="sizeBackLogo" min="20" max="140" value="28" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>背面內文字級</span>
+              <span id="val-backTextSize" class="font-mono text-cyan-400">22 px</span>
+            </div>
+            <input type="range" id="sizeBackText" min="13" max="36" value="22" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 分頁 3：正背面中英文字體獨立切換、版型方向與 18款主題 ==================== -->
+      <section id="tab-style" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+
+        <!-- ✨ 新增：正面與背面中英文字體獨立切換選單 -->
+        <div class="bg-slate-950/90 border border-indigo-500/40 rounded-xl p-3.5 space-y-3 shadow-inner">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <span>🔤 正面與背面中英文字體獨立切換</span>
+            </h3>
+            <button type="button" onclick="syncBackFontsFromFront()" class="text-[11px] bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/40 px-2 py-0.5 rounded transition" title="將背面的中英文字體設為與正面相同">
+              🔗 背面同步正面字體
+            </button>
+          </div>
+
+          <!-- 字體風格快速組合 -->
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">✨ 快速字體風格配搭 (一鍵設定正背面6組字體)</label>
+            <select id="fontPairPreset" onchange="applyFontPairPreset(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-cyan-300 focus:outline-none">
+              <option value="classic_cf" selected>1. 【中田經典企業】Libre Baskerville 襯線字標 + Inter 英文 + 思源黑體中文</option>
+              <option value="ai_tech_modern">2. 【AI 科技現代】Space Grotesk 科技英文 + 思源黑體中文</option>
+              <option value="geek_mono">3. 【極客硬件工程】Montserrat 粗體字標 + JetBrains Mono 等寬英文 + 思源黑體</option>
+              <option value="luxe_serif">4. 【黑金尊尚權威】Playfair Display 時尚襯線 + 思源宋體 (明體) 中文</option>
+              <option value="humanist_kai">5. 【人文雅緻文楷】Cinzel 雕版襯線 + 霞鶩文楷繁體中文</option>
+              <option value="friendly_round">6. 【現代親和圓體】Montserrat 幾何英文 + 日式現代圓體中文</option>
+            </select>
+          </div>
+
+          <!-- 正面中英文字體獨立選單 (3組) -->
+          <div class="pt-2 border-t border-slate-800/90 space-y-2">
+            <div class="text-[11px] font-semibold text-cyan-300">▸ 正面 (Front Side) 獨立字體設定：</div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">正面品牌字標/英文公司</label>
+                <select id="fontFrontBrand" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Libre Baskerville', Georgia, serif" selected>Libre Baskerville (經典襯線)</option>
+                  <option value="'Playfair Display', Georgia, serif">Playfair Display (時尚襯線)</option>
+                  <option value="'Cinzel', Georgia, serif">Cinzel (尊尚羅馬襯線)</option>
+                  <option value="'Montserrat', sans-serif">Montserrat (現代幾何)</option>
+                  <option value="'Space Grotesk', sans-serif">Space Grotesk (AI 科技)</option>
+                  <option value="'Inter', sans-serif">Inter (極簡無襯線)</option>
+                  <option value="'JetBrains Mono', monospace">JetBrains Mono (等寬工程)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">正面英文(姓名/職銜/通訊)</label>
+                <select id="fontFrontEn" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Inter', sans-serif" selected>Inter (現代標準無襯線)</option>
+                  <option value="'Montserrat', sans-serif">Montserrat (幾何商務)</option>
+                  <option value="'Space Grotesk', sans-serif">Space Grotesk (AI 科技感)</option>
+                  <option value="'JetBrains Mono', monospace">JetBrains Mono (極客等寬)</option>
+                  <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville (古典襯線)</option>
+                  <option value="'Playfair Display', Georgia, serif">Playfair Display (高雅襯線)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">正面中文(姓名/公司/地址)</label>
+                <select id="fontFrontZh" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Noto Sans TC', sans-serif" selected>思源黑體 (現代黑體)</option>
+                  <option value="'Noto Serif TC', serif">思源宋體 (權威明體)</option>
+                  <option value="'LXGW WenKai TC', cursive, sans-serif">霞鶩文楷 (雅緻楷體)</option>
+                  <option value="'Zen Maru Gothic', sans-serif">日式圓體 (親和現代)</option>
+                  <option value="'PingFang HK', 'Microsoft JhengHei', sans-serif">系統蘋方 / 微軟正黑體</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 背面中英文字體獨立選單 (3組) -->
+          <div class="pt-2 border-t border-slate-800/90 space-y-2">
+            <div class="text-[11px] font-semibold text-emerald-300">▸ 背面 (Back Side) 獨立字體設定：</div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">背面頂部標題/字標</label>
+                <select id="fontBackHeader" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Noto Sans TC', sans-serif" selected>思源黑體 (現代黑體)</option>
+                  <option value="'Noto Serif TC', serif">思源宋體 (權威明體)</option>
+                  <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville (經典襯線)</option>
+                  <option value="'Montserrat', sans-serif">Montserrat (幾何粗體)</option>
+                  <option value="'Space Grotesk', sans-serif">Space Grotesk (AI 科技)</option>
+                  <option value="'Playfair Display', Georgia, serif">Playfair Display (時尚襯線)</option>
+                  <option value="'Cinzel', Georgia, serif">Cinzel (羅馬雕版)</option>
+                  <option value="'LXGW WenKai TC', cursive, sans-serif">霞鶩文楷 (人文楷體)</option>
+                  <option value="'Zen Maru Gothic', sans-serif">日式圓體 (親和圓體)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">背面英文(IT/AI/網址/名錄)</label>
+                <select id="fontBackEn" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Inter', sans-serif" selected>Inter (現代標準無襯線)</option>
+                  <option value="'Montserrat', sans-serif">Montserrat (幾何商務)</option>
+                  <option value="'Space Grotesk', sans-serif">Space Grotesk (AI 科技感)</option>
+                  <option value="'JetBrains Mono', monospace">JetBrains Mono (極客等寬)</option>
+                  <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville (古典襯線)</option>
+                  <option value="'Playfair Display', Georgia, serif">Playfair Display (高雅襯線)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">背面中文(標語/業務/分店)</label>
+                <select id="fontBackZh" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
+                  <option value="'Noto Sans TC', sans-serif" selected>思源黑體 (現代黑體)</option>
+                  <option value="'Noto Serif TC', serif">思源宋體 (權威明體)</option>
+                  <option value="'LXGW WenKai TC', cursive, sans-serif">霞鶩文楷 (雅緻楷體)</option>
+                  <option value="'Zen Maru Gothic', sans-serif">日式圓體 (親和現代)</option>
+                  <option value="'PingFang HK', 'Microsoft JhengHei', sans-serif">系統蘋方 / 微軟正黑體</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 版型方向與 18 款主題配色 -->
+        <div class="space-y-3 pt-2 border-t border-slate-800">
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-bold text-indigo-300 mb-1">📐 名片版面方向</label>
+              <select id="cardOrientation" onchange="setOrientation(this.value)" class="w-full bg-slate-950 border border-indigo-500/50 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+                <option value="landscape" selected>橫式標準 (90 × 54 mm)</option>
+                <option value="portrait">直式時尚 (54 × 90 mm)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-cyan-300 mb-1">📏 直式專屬排版風格</label>
+              <select id="portraitAlignStyle" onchange="applyPortraitAlignPreset()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+                <option value="classic_left" selected>1. 經典左對齊 + 橫紅線</option>
+                <option value="modern_center">2. 現代全置中對齊 (尊尚型)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 font-medium mb-1">正面主題風格 (18選1)</label>
+              <select id="brandPreset" onchange="applyPreset()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+                <optgroup label="🤍 現代白色系列 (Modern White)">
+                  <option value="white_minimal_tech">1. 純白極簡科技 (Pure White & Slate)</option>
+                  <option value="white_ai_silver">2. 皓白銀灰 AI 實驗室 (Arctic White AI)</option>
+                  <option value="white_pearl_red">3. 珍珠白配極簡紅點 (Pearl White & Red)</option>
+                  <option value="white_architect">4. 現代建築純白 Bento (Architectural White)</option>
+                  <option value="white_glass_cyan">5. 冰川白配冰藍光感 (Glacier White Cyan)</option>
+                </optgroup>
+                <optgroup label="🤖 AI 科技質感系列 (AI & Tech)">
+                  <option value="ai_neural_dark">6. AI 神經網絡深空黑 (Neural Deep Space)</option>
+                  <option value="ai_titanium_carbon">7. 鍛造碳纖鈦灰 HUD (Carbon Titanium)</option>
+                  <option value="ai_nvidia_green">8. 算力核心黑綠矩陣 (Compute Core Green)</option>
+                  <option value="ai_quantum_violet">9. 量子計算紫青流光 (Quantum AI Violet)</option>
+                  <option value="tech">10. 科技賽博深色 (Tech Cyber)</option>
+                </optgroup>
+                <optgroup label="🏛️ 經典企業與質感灰系列">
+                  <option value="classic_cf" selected>11. 經典企業紅白 (中田實體卡風格)</option>
+                  <option value="platinum_grey">12. 鉑金商務淺灰 (Platinum Grey)</option>
+                  <option value="charcoal_grey">13. 鈦金質感深灰 (Charcoal Grey)</option>
+                  <option value="warm_ivory">14. 溫潤米白配酒紅 (Ivory Warm)</option>
+                  <option value="emerald_green">15. 高雅翡翠綠 (Eco Emerald)</option>
+                  <option value="modern_mono">16. 現代極簡黑白 (Modern Mono)</option>
+                  <option value="corporate">17. 企業商務深藍 (Corporate Blue)</option>
+                  <option value="luxe">18. 黑金尊尚 (Executive Gold)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-medium mb-1">正面幾何與科技構圖 (12選1)</label>
+              <select id="layoutStyle" onchange="renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+                <optgroup label="✨ 現代白 & AI 科技質感構圖">
+                  <option value="bento_box_grid">1. 現代 Bento 模組化微邊框 (Bento UI)</option>
+                  <option value="ai_neural_nodes">2. AI 神經網絡拓撲節點 (Neural Nodes)</option>
+                  <option value="cyber_circuit_hud">3. 晶片電路與 HUD 準星 (PCB & HUD)</option>
+                  <option value="minimal_corner_accents">4. 極簡精密角標與刻度 (Minimal Tech)</option>
+                  <option value="dot_matrix_tech">5. 算力微點陣列與光暈 (Dot Matrix)</option>
+                  <option value="holo_gradient_card">6. 流光玻璃極光光帶 (Holo Glass)</option>
+                </optgroup>
+                <optgroup label="🏛️ 經典企業幾何構圖">
+                  <option value="classic_cf" selected>7. 經典分隔紅三角 (Classic Split)</option>
+                  <option value="top_banner">8. 頂部漸層光帶 (Top Bar)</option>
+                  <option value="duo_frame">9. 雙側對稱邊框 (Duo Frame)</option>
+                  <option value="sidebar_accent">10. 左側浮動色塊區 (Sidebar)</option>
+                  <option value="matrix">11. 科技斜切矩陣 (Tech Matrix)</option>
+                  <option value="swiss">12. 瑞士網格對齊 (Swiss Grid)</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <!-- 正面色彩選擇器 -->
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">正面主題底色</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="colorBg" value="#FFFFFF" oninput="invalidateLogoCache(); renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="colorBgText" class="text-xs font-mono text-slate-300">#FFFFFF</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">正面強調色</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="colorAccent" value="#901E23" oninput="invalidateLogoCache(); renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="colorAccentText" class="text-xs font-mono text-slate-300">#901E23</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">正面文字主色</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="colorText" value="#262626" oninput="renderAll()" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0">
+                <span id="colorTextText" class="text-xs font-mono text-slate-300">#262626</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 前後獨立 QR Code 資訊與同色系設定 -->
+        <div class="pt-3 border-t border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-semibold text-cyan-300">📱 前後 QR Code 獨立資訊與卡片同色設定</h3>
+            <label class="flex items-center gap-1.5 text-[11px] text-slate-300 cursor-pointer">
+              <input type="checkbox" id="showRightTriangle" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
+              <span>顯示邊緣紅三角識別</span>
+            </label>
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">QR Code 配色融合模式</label>
+            <select id="qrColorStyle" onchange="renderAll()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+              <option value="theme_accent" selected>✨ 與卡片顏色一致：品牌強調色碼點 + 卡片底色 (無縫融合)</option>
+              <option value="theme_text">✨ 與卡片顏色一致：文字主色碼點 + 卡片底色 (無縫融合)</option>
+              <option value="white_box">傳統高對比白底黑碼襯框</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+            <!-- 正面 QR 設定 -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-semibold text-indigo-300">正面 QR 顯示資訊</label>
+                <label class="flex items-center gap-1 text-[11px] text-slate-300 cursor-pointer">
+                  <input type="checkbox" id="showQrFront" onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">顯示
+                </label>
+              </div>
+              <select id="frontQrMode" onchange="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                <option value="vcard" selected>1. vCard 通訊錄 (一掃存人名電話)</option>
+                <option value="url">2. 官方網站 URL</option>
+                <option value="whatsapp">3. WhatsApp 直接對話連結</option>
+                <option value="facebook">4. Facebook 專頁連結</option>
+                <option value="map">5. Google Maps 門市導航</option>
+                <option value="email">6. 發送電郵 (mailto)</option>
+                <option value="custom">7. 自訂正面 QR 文字/連結</option>
+              </select>
+              <input type="text" id="frontQrCustom" placeholder="輸入正面自訂連結或文字..." oninput="renderAll()" class="hidden w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+            </div>
+
+            <!-- 背面 QR 設定 -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-semibold text-emerald-300">背面 QR 顯示資訊</label>
+                <label class="flex items-center gap-1 text-[11px] text-slate-300 cursor-pointer">
+                  <input type="checkbox" id="showBackQrSync" checked onchange="document.getElementById('showBackQr').checked = this.checked; renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">顯示
+                </label>
+              </div>
+              <select id="backQrMode" onchange="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                <option value="url" selected>1. 官方網站 URL</option>
+                <option value="vcard">2. vCard 通訊錄 (一掃存人名電話)</option>
+                <option value="whatsapp">3. WhatsApp 直接對話連結</option>
+                <option value="facebook">4. Facebook 專頁連結</option>
+                <option value="map">5. Google Maps 門市導航</option>
+                <option value="email">6. 發送電郵 (mailto)</option>
+                <option value="custom">7. 自訂背面 QR 文字/連結</option>
+              </select>
+              <input type="text" id="backQrCustom" placeholder="輸入背面自訂連結或文字..." oninput="renderAll()" class="hidden w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+            </div>
+          </div>
+        </div>
+
+        <!-- 字體大小微調 -->
+        <div class="pt-3 border-t border-slate-800 space-y-2.5 text-xs">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-white">正面字體與 QR 尺寸微調</h3>
+            <button type="button" onclick="resetCurrentOrientationLayout()" class="text-[11px] text-indigo-400 hover:text-indigo-300">還原預設尺寸與位置</button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>正面 Logo 高度 / 字級</span>
+                <span id="val-logoSize" class="font-mono text-cyan-400">72 px</span>
+              </div>
+              <input type="range" id="sizeLogo" min="32" max="135" value="72" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Since 年份字級</span>
+                <span id="val-sinceSize" class="font-mono text-cyan-400">19 px</span>
+              </div>
+              <input type="range" id="sizeSince" min="12" max="32" value="19" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>姓名主字級</span>
+                <span id="val-nameSize" class="font-mono text-cyan-400">42 px</span>
+              </div>
+              <input type="range" id="sizeName" min="26" max="64" value="42" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>職銜字級</span>
+                <span id="val-titleSize" class="font-mono text-cyan-400">22 px</span>
+              </div>
+              <input type="range" id="sizeTitle" min="14" max="36" value="22" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>聯絡清單與地址字級</span>
+                <span id="val-contactSize" class="font-mono text-cyan-400">19 px</span>
+              </div>
+              <input type="range" id="sizeContact" min="14" max="26" value="19" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>QR Code 尺寸</span>
+                <span id="val-qrSize" class="font-mono text-cyan-400">125 px</span>
+              </div>
+              <input type="range" id="sizeQr" min="85" max="210" value="125" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 分頁 4：批量 CSV ==================== -->
+      <section id="tab-batch" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 團隊 CSV 批量名片生成
+          </h2>
+          <button type="button" onclick="downloadCSVTemplate()" class="text-xs text-cyan-400 hover:text-cyan-300 underline">
+            ⬇ 下載 CSV 範本
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-400 leading-relaxed">
+          上傳 CSV 後，可選擇批量匯出 **全團隊多頁印刷級 PDF（自動套用正背面獨立字體、橫直比例與十字裁切線）** 或 **300 DPI PNG 壓縮檔 (.ZIP)**。
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <label class="flex-1 bg-slate-950 hover:bg-slate-800/80 border border-dashed border-slate-700 rounded-xl p-4 text-center cursor-pointer transition">
+            <span class="text-xs font-medium text-indigo-300 block">📂 選擇 CSV 檔案</span>
+            <input type="file" id="csvInput" accept=".csv" onchange="handleCSVUpload(event)" class="hidden">
+          </label>
+        </div>
+
+        <div id="teamManagerPanel" class="hidden space-y-3 pt-3 border-t border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-300 font-medium">已載入 <span id="teamCountText" class="text-cyan-400 font-bold">0</span> 位成員：</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="stepMember(-1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs">◀</button>
+              <button type="button" onclick="stepMember(1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs">▶</button>
+            </div>
+          </div>
+          <select id="memberSelect" onchange="selectMember(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none"></select>
+
+          <div class="grid grid-cols-1 gap-2">
+            <button type="button" id="btnBatchPdf" onclick="exportTeamBatchPDF()" class="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:opacity-95 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+              <span>📄 一鍵生成全團隊多頁印刷級 PDF (正背面連裁切線)</span>
+            </button>
+            <button type="button" id="btnBatchZip" onclick="exportTeamZip()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-slate-950 font-bold text-xs py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+              <span>📦 一鍵打包下載全團隊 PNG 圖檔 (.ZIP)</span>
+            </button>
+          </div>
+          <p id="batchStatus" class="text-[11px] text-center text-cyan-400 hidden"></p>
+        </div>
+      </section>
+
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 text-xs text-slate-400 flex items-center justify-between">
+        <span>✋ 橫式與直式畫布皆支援滑鼠直接按住左鍵拖拉排版</span>
+        <span id="dragCoordHint" class="font-mono text-[11px] text-cyan-400 shrink-0 ml-2">就緒</span>
+      </div>
+    </div>
+
+    <!-- 右側即時雙面預覽區 (7 Cols) -->
+    <div class="lg:col-span-7 flex flex-col items-center justify-start space-y-6">
+      
+      <!-- 正面預覽 -->
+      <div class="w-full max-w-2xl space-y-2">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+          <span class="font-medium text-slate-200 flex items-center gap-2">
+            正面預覽 (PDF 第 1 頁)
+            <span class="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">滑鼠移上可直接拖曳各區塊</span>
+          </span>
+          <span id="frontCanvasDimText">90 × 54 mm (1063 × 638 px @ 300 DPI)</span>
+        </div>
+        <div id="frontCanvasWrapper" class="relative w-full aspect-[1063/638] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto">
+          <canvas id="canvasFront" width="1063" height="638" class="w-full h-full object-contain cursor-default"></canvas>
+        </div>
+      </div>
+
+      <!-- 背面預覽 -->
+      <div class="w-full max-w-2xl space-y-2">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+          <span class="font-medium text-slate-200 flex items-center gap-2">
+            背面預覽 (PDF 第 2 頁)
+            <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">獨立中英字體與 14 款版型切換</span>
+          </span>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="switchTab('style')" class="text-xs text-indigo-400 hover:underline">🔤 切換字體</button>
+            <button type="button" onclick="switchTab('back')" class="text-xs text-cyan-400 hover:underline">⚙ 切換背面版型</button>
+          </div>
+        </div>
+        <div id="backCanvasWrapper" class="relative w-full aspect-[1063/638] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto">
+          <canvas id="canvasBack" width="1063" height="638" class="w-full h-full object-contain cursor-default"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // 確保所有瀏覽器皆支援 ctx.roundRect
+    if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        const radius = typeof r === 'number' ? r : (Array.isArray(r) ? r[0] : 0);
+        const rad = Math.max(0, Math.min(radius, Math.min(w, h) / 2));
+        this.moveTo(x + rad, y);
+        this.arcTo(x + w, y, x + w, y + h, rad);
+        this.arcTo(x + w, y + h, x, y + h, rad);
+        this.arcTo(x, y + h, x, y, rad);
+        this.arcTo(x, y, x + w, y, rad);
+        this.closePath();
+        return this;
+      };
+    }
+
+    const STORAGE_KEY_STATE = 'CF_BRANDCARD_STUDIO_V14_STATE';
+    const STORAGE_KEY_LOGO  = 'CF_BRANDCARD_STUDIO_V14_LOGO';
+    const LEGACY_STATE_KEYS = [
+      'CF_BRANDCARD_STUDIO_V13_STATE',
+      'CF_BRANDCARD_STUDIO_V12_STATE'
+    ];
+    const LEGACY_LOGO_KEYS  = [
+      'CF_BRANDCARD_STUDIO_V13_LOGO',
+      'CF_BRANDCARD_STUDIO_V12_LOGO',
+      'CF_BRANDCARD_STUDIO_V11_1_LOGO',
+      'CF_BRANDCARD_STUDIO_V11_LOGO',
+      'CF_BRANDCARD_STUDIO_V10_LOGO',
+      'CF_BRANDCARD_STUDIO_V9_LOGO'
+    ];
+
+    // 6 款快速字體風格配搭預設
+    const FONT_PAIR_PRESETS = {
+      classic_cf: {
+        frontBrand: "'Libre Baskerville', Georgia, serif",
+        frontEn: "'Inter', sans-serif",
+        frontZh: "'Noto Sans TC', sans-serif",
+        backHeader: "'Noto Sans TC', sans-serif",
+        backEn: "'Inter', sans-serif",
+        backZh: "'Noto Sans TC', sans-serif"
+      },
+      ai_tech_modern: {
+        frontBrand: "'Space Grotesk', sans-serif",
+        frontEn: "'Space Grotesk', sans-serif",
+        frontZh: "'Noto Sans TC', sans-serif",
+        backHeader: "'Space Grotesk', sans-serif",
+        backEn: "'Space Grotesk', sans-serif",
+        backZh: "'Noto Sans TC', sans-serif"
+      },
+      geek_mono: {
+        frontBrand: "'Montserrat', sans-serif",
+        frontEn: "'JetBrains Mono', monospace",
+        frontZh: "'Noto Sans TC', sans-serif",
+        backHeader: "'Montserrat', sans-serif",
+        backEn: "'JetBrains Mono', monospace",
+        backZh: "'Noto Sans TC', sans-serif"
+      },
+      luxe_serif: {
+        frontBrand: "'Playfair Display', Georgia, serif",
+        frontEn: "'Libre Baskerville', Georgia, serif",
+        frontZh: "'Noto Serif TC', serif",
+        backHeader: "'Noto Serif TC', serif",
+        backEn: "'Libre Baskerville', Georgia, serif",
+        backZh: "'Noto Serif TC', serif"
+      },
+      humanist_kai: {
+        frontBrand: "'Cinzel', Georgia, serif",
+        frontEn: "'Inter', sans-serif",
+        frontZh: "'LXGW WenKai TC', cursive, sans-serif",
+        backHeader: "'LXGW WenKai TC', cursive, sans-serif",
+        backEn: "'Inter', sans-serif",
+        backZh: "'LXGW WenKai TC', cursive, sans-serif"
+      },
+      friendly_round: {
+        frontBrand: "'Montserrat', sans-serif",
+        frontEn: "'Montserrat', sans-serif",
+        frontZh: "'Zen Maru Gothic', sans-serif",
+        backHeader: "'Zen Maru Gothic', sans-serif",
+        backEn: "'Montserrat', sans-serif",
+        backZh: "'Zen Maru Gothic', sans-serif"
+      }
+    };
+
+    // 18 款專業行業主題配色
+    const BRAND_PRESETS = {
+      white_minimal_tech: { bg: '#FFFFFF', accent: '#0F172A', text: '#334155', layout: 'minimal_corner_accents' },
+      white_ai_silver:    { bg: '#F8FAFC', accent: '#2563EB', text: '#0F172A', layout: 'ai_neural_nodes' },
+      white_pearl_red:    { bg: '#FCFCFD', accent: '#991B1B', text: '#18181B', layout: 'minimal_corner_accents' },
+      white_architect:    { bg: '#FFFFFF', accent: '#18181B', text: '#27272A', layout: 'bento_box_grid' },
+      white_glass_cyan:   { bg: '#F4F9FC', accent: '#0284C7', text: '#0F172A', layout: 'holo_gradient_card' },
+
+      ai_neural_dark:     { bg: '#060913', accent: '#38BDF8', text: '#F1F5F9', layout: 'ai_neural_nodes' },
+      ai_titanium_carbon: { bg: '#141417', accent: '#F43F5E', text: '#F4F4F5', layout: 'cyber_circuit_hud' },
+      ai_nvidia_green:    { bg: '#080C0A', accent: '#10B981', text: '#ECFDF5', layout: 'dot_matrix_tech' },
+      ai_quantum_violet:  { bg: '#090714', accent: '#8B5CF6', text: '#F8FAFC', layout: 'ai_neural_nodes' },
+      tech:               { bg: '#0B0F19', accent: '#06B6D4', text: '#F8FAFC', layout: 'matrix' },
+
+      classic_cf:         { bg: '#FFFFFF', accent: '#901E23', text: '#262626', layout: 'classic_cf' },
+      platinum_grey:      { bg: '#E5E7EB', accent: '#901E23', text: '#1E293B', layout: 'classic_cf' },
+      charcoal_grey:      { bg: '#27272A', accent: '#F87171', text: '#F8FAFC', layout: 'classic_cf' },
+      warm_ivory:         { bg: '#FAF7F2', accent: '#8C1D24', text: '#1F2937', layout: 'classic_cf' },
+      emerald_green:      { bg: '#F4FBF7', accent: '#0D6C42', text: '#111827', layout: 'sidebar_accent' },
+      modern_mono:        { bg: '#FFFFFF', accent: '#111827', text: '#374151', layout: 'swiss' },
+      corporate:          { bg: '#0F172A', accent: '#3B82F6', text: '#FFFFFF', layout: 'top_banner' },
+      luxe:               { bg: '#141413', accent: '#D4AF37', text: '#F5F5F0', layout: 'duo_frame' },
+      minimal:            { bg: '#F1F5F9', accent: '#2563EB', text: '#0F172A', layout: 'swiss' }
+    };
+
+    // 一鍵套用完整正背面模板定義 (含對應字體風格)
+    const MASTER_TEMPLATES = {
+      tpl_white_bento: {
+        frontPreset: 'white_architect', layout: 'bento_box_grid',
+        backTheme: 'sync', backLayout: 'modern_white_bento', backContent: 'preset_img1', fontPreset: 'ai_tech_modern'
+      },
+      tpl_white_ai_lab: {
+        frontPreset: 'white_ai_silver', layout: 'ai_neural_nodes',
+        backTheme: 'sync', backLayout: 'ai_circuit_core', backContent: 'preset_img1', fontPreset: 'ai_tech_modern'
+      },
+      tpl_white_crimson_corner: {
+        frontPreset: 'white_pearl_red', layout: 'minimal_corner_accents',
+        backTheme: 'sync', backLayout: 'hud_tech_spec', backContent: 'preset_img3', fontPreset: 'classic_cf'
+      },
+      tpl_white_arch: {
+        frontPreset: 'white_minimal_tech', layout: 'swiss',
+        backTheme: 'sync', backLayout: 'minimal_arch_line', backContent: 'preset_img2', fontPreset: 'luxe_serif'
+      },
+      tpl_white_glacier: {
+        frontPreset: 'white_glass_cyan', layout: 'holo_gradient_card',
+        backTheme: 'sync', backLayout: 'modern_white_bento', backContent: 'preset_img1', fontPreset: 'friendly_round'
+      },
+      tpl_ai_neural_dark: {
+        frontPreset: 'ai_neural_dark', layout: 'ai_neural_nodes',
+        backTheme: 'sync', backLayout: 'ai_circuit_core', backContent: 'preset_img1', fontPreset: 'ai_tech_modern'
+      },
+      tpl_ai_pcb_hud: {
+        frontPreset: 'ai_titanium_carbon', layout: 'cyber_circuit_hud',
+        backTheme: 'sync', backLayout: 'hud_tech_spec', backContent: 'preset_img1', fontPreset: 'geek_mono'
+      },
+      tpl_ai_compute_green: {
+        frontPreset: 'ai_nvidia_green', layout: 'dot_matrix_tech',
+        backTheme: 'sync', backLayout: 'hud_tech_spec', backContent: 'preset_img3', fontPreset: 'geek_mono'
+      },
+      tpl_ai_quantum_violet: {
+        frontPreset: 'ai_quantum_violet', layout: 'ai_neural_nodes',
+        backTheme: 'sync', backLayout: 'modern_white_bento', backContent: 'preset_img1', fontPreset: 'ai_tech_modern'
+      },
+      tpl_classic_cf: {
+        frontPreset: 'classic_cf', layout: 'classic_cf',
+        backTheme: 'sync', backLayout: 'segmented_groups', backContent: 'preset_img1', fontPreset: 'classic_cf'
+      },
+      tpl_classic_directory: {
+        frontPreset: 'classic_cf', layout: 'classic_cf',
+        backTheme: 'sync', backLayout: 'branch_directory', backContent: 'preset_img4', fontPreset: 'classic_cf'
+      }
+    };
+
+    // ==================== 字體切換與 WebFont 即時預載引擎 ====================
+    function applyFontPairPreset(presetKey) {
+      const fp = FONT_PAIR_PRESETS[presetKey];
+      if (!fp) return;
+      document.getElementById('fontFrontBrand').value = fp.frontBrand;
+      document.getElementById('fontFrontEn').value = fp.frontEn;
+      document.getElementById('fontFrontZh').value = fp.frontZh;
+      document.getElementById('fontBackHeader').value = fp.backHeader;
+      document.getElementById('fontBackEn').value = fp.backEn;
+      document.getElementById('fontBackZh').value = fp.backZh;
+      switchFontAndRender();
+    }
+
+    function syncBackFontsFromFront() {
+      document.getElementById('fontBackHeader').value = document.getElementById('fontFrontBrand').value;
+      document.getElementById('fontBackEn').value = document.getElementById('fontFrontEn').value;
+      document.getElementById('fontBackZh').value = document.getElementById('fontFrontZh').value;
+      switchFontAndRender();
+      showAutoSaveFeedback('🔗 已將正面字體同步至背面');
+    }
+
+    // 主動預載所選字體並在載入完成後自動重繪 Canvas
+    function switchFontAndRender() {
+      renderAll();
+      if (document.fonts && document.fonts.load) {
+        const fontIds = ['fontFrontBrand', 'fontFrontEn', 'fontFrontZh', 'fontBackHeader', 'fontBackEn', 'fontBackZh'];
+        const promises = [];
+        fontIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.value) {
+            promises.push(document.fonts.load(`400 24px ${el.value}`).catch(() => {}));
+            promises.push(document.fonts.load(`700 32px ${el.value}`).catch(() => {}));
+          }
+        });
+        Promise.all(promises).then(() => {
+          renderAll(true);
+          setTimeout(() => renderAll(true), 180);
+        });
+      }
+    }
+
+    // 組合英文與中文字體形成混合 Fallback 字體串 (確保英文/數字使用 enFont，中文使用 zhFont)
+    function buildMixedFontFamily(enFont, zhFont) {
+      const cleanEn = (enFont || "'Inter', sans-serif").replace(/,\s*(sans-serif|serif|monospace|cursive)/gi, '');
+      return `${cleanEn}, ${zhFont || "'Noto Sans TC', sans-serif"}`;
+    }
+
+    function applyMasterTemplate(tplKey) {
+      const cleanKey = (tplKey || '').trim();
+      const tpl = MASTER_TEMPLATES[cleanKey];
+      if (!tpl) return;
+
+      document.getElementById('brandPreset').value = tpl.frontPreset;
+      const preset = BRAND_PRESETS[tpl.frontPreset];
+      if (preset) {
+        document.getElementById('colorBg').value = preset.bg;
+        document.getElementById('colorAccent').value = preset.accent;
+        document.getElementById('colorText').value = preset.text;
+      }
+      document.getElementById('layoutStyle').value = tpl.layout;
+      document.getElementById('backThemePreset').value = tpl.backTheme;
+      document.getElementById('backCustomColorsBox').classList.add('hidden');
+      document.getElementById('backContentPreset').value = tpl.backContent;
+      applyBackContentPreset();
+      document.getElementById('backLayout').value = tpl.backLayout;
+      onBackLayoutChange();
+
+      if (tpl.fontPreset && FONT_PAIR_PRESETS[tpl.fontPreset]) {
+        document.getElementById('fontPairPreset').value = tpl.fontPreset;
+        applyFontPairPreset(tpl.fontPreset);
+      }
+
+      invalidateLogoCache();
+      switchFontAndRender();
+      showAutoSaveFeedback('✨ 已套用精選卡片模板');
+    }
+
+    // 橫式 (1063 x 638) 預設正面座標
+    function getDefaultLandscapeFront() {
+      return {
+        profile:      { x: 68,  y: 56,  w: 440, h: 215, label: '左上公司與姓名職銜', centered: false },
+        brand:        { x: 548, y: 64,  w: 440, h: 110, label: '正面 Logo 與年份', centered: false, autoRight: true },
+        contacts:     { x: 68,  y: 348, w: 465, h: 235, label: '左下通訊圖示清單', centered: false },
+        addressBlock: { x: 584, y: 354, w: 430, h: 225, label: '右下中英雙語地址', centered: false },
+        qrcode:       { x: 865, y: 195, w: 125, h: 125, label: '正面 QR Code', centered: false }
+      };
+    }
+
+    // 直式 (638 x 1063) 預設正面座標
+    function getDefaultPortraitFront(alignStyle = 'classic_left') {
+      if (alignStyle === 'modern_center') {
+        return {
+          brand:        { x: 319, y: 64,  w: 420, h: 95,  label: '頂部置中 Logo', centered: true, autoRight: false },
+          profile:      { x: 319, y: 205, w: 510, h: 210, label: '置中姓名與職銜', centered: true },
+          contacts:     { x: 85,  y: 465, w: 470, h: 235, label: '中下通訊圖示清單', centered: false },
+          addressBlock: { x: 85,  y: 745, w: 350, h: 220, label: '底部中英雙語地址', centered: false },
+          qrcode:       { x: 455, y: 755, w: 125, h: 125, label: '右下 QR Code', centered: false }
+        };
+      }
+      return {
+        brand:        { x: 319, y: 62,  w: 420, h: 95,  label: '頂部置中 Logo', centered: true, autoRight: false },
+        profile:      { x: 64,  y: 200, w: 510, h: 210, label: '中段公司與姓名職銜', centered: false },
+        contacts:     { x: 64,  y: 455, w: 510, h: 235, label: '中下通訊圖示清單', centered: false },
+        addressBlock: { x: 64,  y: 740, w: 365, h: 220, label: '底部中英雙語地址', centered: false },
+        qrcode:       { x: 455, y: 755, w: 125, h: 125, label: '右下 QR Code', centered: false }
+      };
+    }
+
+    // 橫式背面預設座標
+    function getDefaultLandscapeBack(bLayout) {
+      const map = {
+        segmented_groups: {
+          backBrand:   { x: 76,  y: 62,  w: 520, h: 48,  label: '背面頂部標題/Logo', centered: false },
+          backTagline: { x: 76,  y: 185, w: 780, h: 260, label: '客群分類業務內容', centered: false },
+          backQr:      { x: 855, y: 440, w: 125, h: 125, label: '背面右下 QR Code' }
+        },
+        centered_minimal: {
+          backBrand:   { x: 531, y: 105, w: 480, h: 90,  label: '背面置中標題/Logo', centered: true },
+          backTagline: { x: 531, y: 280, w: 800, h: 150, label: '置中雙行業務內容', centered: true },
+          backQr:      { x: 865, y: 445, w: 125, h: 125, label: '背面 QR Code' }
+        },
+        vertical_list_card: {
+          backBrand:   { x: 531, y: 64,  w: 480, h: 80,  label: '背面頂部標題', centered: true },
+          backTagline: { x: 340, y: 185, w: 420, h: 245, label: '五大業務垂直清單', centered: false },
+          backQr:      { x: 780, y: 215, w: 155, h: 155, label: '背面 QR Code' }
+        },
+        branch_directory: {
+          backBrand:   { x: 52,  y: 42,  w: 960, h: 550, label: '雙欄全分店名錄', centered: false },
+          backTagline: { x: 52,  y: 42,  w: 480, h: 500, label: '全分店名錄區', centered: false },
+          backQr:      { x: 895, y: 485, w: 115, h: 115, label: '名錄右下 QR Code' }
+        },
+        classic_center: {
+          backBrand:   { x: 531, y: 205, w: 420, h: 120, label: '背面品牌標誌', centered: true },
+          backTagline: { x: 531, y: 365, w: 680, h: 80,  label: '背面標語/業務', centered: true },
+          backQr:      { x: 855, y: 425, w: 125, h: 125, label: '背面 QR Code' }
+        },
+        qr_showcase: {
+          backBrand:   { x: 95,  y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: false },
+          backTagline: { x: 95,  y: 330, w: 480, h: 120, label: '背面標語/業務', centered: false },
+          backQr:      { x: 700, y: 175, w: 230, h: 230, label: '背面大型 QR Code' }
+        },
+        luxe_frame: {
+          backBrand:   { x: 531, y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: true },
+          backTagline: { x: 531, y: 340, w: 680, h: 110, label: '背面標語/業務', centered: true },
+          backQr:      { x: 840, y: 400, w: 125, h: 125, label: '背面 QR Code' }
+        },
+        triple_features: {
+          backBrand:   { x: 531, y: 95,  w: 420, h: 90,  label: '背面品牌標誌', centered: true },
+          backTagline: { x: 531, y: 255, w: 820, h: 200, label: '三大業務特點', centered: true },
+          backQr:      { x: 855, y: 455, w: 120, h: 120, label: '背面 QR Code' }
+        },
+        giant_qr_card: {
+          backBrand:   { x: 110, y: 190, w: 380, h: 100, label: '背面品牌標誌', centered: false },
+          backTagline: { x: 110, y: 325, w: 420, h: 120, label: '背面標語', centered: false },
+          backQr:      { x: 650, y: 135, w: 290, h: 290, label: '巨型 QR Code' }
+        },
+        diagonal_split: {
+          backBrand:   { x: 531, y: 195, w: 360, h: 100, label: '背面品牌標誌', centered: true },
+          backTagline: { x: 531, y: 345, w: 400, h: 100, label: '斜切區標語', centered: true },
+          backQr:      { x: 830, y: 410, w: 140, h: 140, label: '斜切區 QR Code' }
+        },
+        ai_circuit_core: {
+          backBrand:   { x: 82,  y: 72,  w: 520, h: 50,  label: 'AI 核心標題/Logo', centered: false },
+          backTagline: { x: 82,  y: 195, w: 720, h: 260, label: 'AI 業務範疇內容', centered: false },
+          backQr:      { x: 845, y: 425, w: 130, h: 130, label: '背面 QR Code' }
+        },
+        modern_white_bento: {
+          backBrand:   { x: 82,  y: 72,  w: 520, h: 50,  label: 'Bento 標題/Logo', centered: false },
+          backTagline: { x: 82,  y: 190, w: 690, h: 265, label: 'Bento 業務模組卡', centered: false },
+          backQr:      { x: 835, y: 225, w: 140, h: 140, label: 'Bento 掃碼區' }
+        },
+        hud_tech_spec: {
+          backBrand:   { x: 84,  y: 78,  w: 520, h: 50,  label: '銘牌標題/Logo', centered: false },
+          backTagline: { x: 84,  y: 195, w: 720, h: 260, label: '銘牌業務規格', centered: false },
+          backQr:      { x: 840, y: 415, w: 130, h: 130, label: '銘牌 QR Code' }
+        },
+        minimal_arch_line: {
+          backBrand:   { x: 531, y: 105, w: 480, h: 80,  label: '黃金比例標題/Logo', centered: true },
+          backTagline: { x: 531, y: 270, w: 780, h: 170, label: '黃金比例業務內容', centered: true },
+          backQr:      { x: 855, y: 435, w: 125, h: 125, label: '背面 QR Code' }
+        }
+      };
+      return JSON.parse(JSON.stringify(map[bLayout] || map.segmented_groups));
+    }
+
+    // 直式背面預設座標
+    function getDefaultPortraitBack(bLayout) {
+      if (bLayout === 'segmented_groups' || bLayout === 'ai_circuit_core' || bLayout === 'modern_white_bento' || bLayout === 'hud_tech_spec') {
+        return {
+          backBrand:   { x: 64,  y: 74,  w: 510, h: 50,  label: '背面頂部標題/Logo', centered: false },
+          backTagline: { x: 64,  y: 198, w: 510, h: 420, label: '背面業務內容區', centered: false },
+          backQr:      { x: 244, y: 735, w: 150, h: 150, label: '背面置中 QR Code' }
+        };
+      } else if (bLayout === 'vertical_list_card') {
+        return {
+          backBrand:   { x: 319, y: 75,  w: 480, h: 80,  label: '背面頂部標題', centered: true },
+          backTagline: { x: 165, y: 225, w: 360, h: 290, label: '五大業務垂直清單', centered: false },
+          backQr:      { x: 244, y: 635, w: 150, h: 150, label: '背面置中 QR Code' }
+        };
+      }
+      return {
+        backBrand:   { x: 319, y: 140, w: 460, h: 110, label: '背面品牌標誌', centered: true },
+        backTagline: { x: 319, y: 330, w: 510, h: 260, label: '背面標語/業務', centered: true },
+        backQr:      { x: 244, y: 690, w: 150, h: 150, label: '背面 QR Code' }
+      };
+    }
+
+    let landscapeFrontPos = getDefaultLandscapeFront();
+    let portraitFrontPos  = getDefaultPortraitFront('classic_left');
+    let landscapeBackPos  = getDefaultLandscapeBack('segmented_groups');
+    let portraitBackPos   = getDefaultPortraitBack('segmented_groups');
+
+    function getActiveFrontPos() { return isPortrait() ? portraitFrontPos : landscapeFrontPos; }
+    function getActiveBackPos()  { return isPortrait() ? portraitBackPos  : landscapeBackPos; }
+
+    let hoveredFrontKey = null, draggingFrontKey = null;
+    let hoveredBackKey = null, draggingBackKey = null;
+    let dragOffset = { x: 0, y: 0 };
+    let isExportingClean = false;
+    let isRestoringState = false;
+
+    let uploadedLogo = null;
+    let uploadedLogoDataUrl = '';
+    let processedLogoCache = {};
+
+    let teamList = [];
+    let currentMemberIdx = -1;
+    let saveIndicatorTimeout = null;
+
+    function isPortrait() {
+      const el = document.getElementById('cardOrientation');
+      return el && el.value === 'portrait';
+    }
+
+    function setOrientation(orientVal) {
+      document.getElementById('cardOrientation').value = orientVal;
+      const portrait = orientVal === 'portrait';
+
+      const btnL = document.getElementById('btnOrientLandscape');
+      const btnP = document.getElementById('btnOrientPortrait');
+      if (btnL && btnP) {
+        btnL.className = !portrait ? 'px-2.5 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition' : 'px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition';
+        btnP.className = portrait ? 'px-2.5 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition' : 'px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition';
+      }
+
+      const fCanvas = document.getElementById('canvasFront');
+      const bCanvas = document.getElementById('canvasBack');
+      const wrapF = document.getElementById('frontCanvasWrapper');
+      const wrapB = document.getElementById('backCanvasWrapper');
+      const dimF = document.getElementById('frontCanvasDimText');
+
+      if (portrait) {
+        fCanvas.width = 638; fCanvas.height = 1063;
+        bCanvas.width = 638; bCanvas.height = 1063;
+        wrapF.className = "relative w-full max-w-[390px] aspect-[638/1063] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto";
+        wrapB.className = "relative w-full max-w-[390px] aspect-[638/1063] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto";
+        if (dimF) dimF.textContent = "54 × 90 mm (638 × 1063 px @ 300 DPI 直式)";
+      } else {
+        fCanvas.width = 1063; fCanvas.height = 638;
+        bCanvas.width = 1063; bCanvas.height = 638;
+        wrapF.className = "relative w-full aspect-[1063/638] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto";
+        wrapB.className = "relative w-full aspect-[1063/638] rounded-xl overflow-hidden canvas-shadow border border-slate-800 bg-slate-900 select-none flex items-center justify-center mx-auto";
+        if (dimF) dimF.textContent = "90 × 54 mm (1063 × 638 px @ 300 DPI 橫式)";
+      }
+
+      if (!isRestoringState) {
+        adaptBackPresetTextForOrientation();
+      }
+      renderAll();
+    }
+
+    function applyPortraitAlignPreset() {
+      const alignStyle = document.getElementById('portraitAlignStyle').value;
+      portraitFrontPos = getDefaultPortraitFront(alignStyle);
+      if (!isPortrait()) setOrientation('portrait');
+      else renderAll();
+    }
+
+    // ==================== 自動保存與讀取引擎 ====================
+    const FORM_FIELD_IDS = [
+      'fontPairPreset', 'fontFrontBrand', 'fontFrontEn', 'fontFrontZh', 'fontBackHeader', 'fontBackEn', 'fontBackZh',
+      'cardOrientation', 'portraitAlignStyle', 'pdfSpecMode', 'frontLogoPosPreset', 'sinceYear',
+      'blendLogoWhite', 'brightenLogoDark', 'forceWhiteLogo', 'whiteTolerance',
+      'company', 'showTm', 'companySubEn', 'companySubZh', 'nameEn', 'nameZh', 'titleEn', 'titleZh',
+      'email', 'website', 'facebook', 'phone', 'fax', 'whatsapp', 'address', 'addressEn',
+      'backContentPreset', 'backLayout', 'backLogoPosPreset', 'backThemePreset',
+      'backColorBg', 'backColorAccent', 'backColorText',
+      'showBackLogo', 'showBackQr', 'showBackTagline', 'showBackWeb', 'useImageLogoOnBack',
+      'backHeaderTitle', 'backTaglineText', 'backFooterSub', 'dirLeftText', 'dirRightText',
+      'sizeBackLogo', 'sizeBackText',
+      'brandPreset', 'layoutStyle', 'colorBg', 'colorAccent', 'colorText',
+      'showRightTriangle', 'qrColorStyle', 'showQrFront', 'frontQrMode', 'frontQrCustom',
+      'showBackQrSync', 'backQrMode', 'backQrCustom',
+      'sizeLogo', 'sizeSince', 'sizeName', 'sizeTitle', 'sizeContact', 'sizeQr', 'showBleed'
+    ];
+
+    function collectFullState() {
+      const fields = {};
+      FORM_FIELD_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        fields[id] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+      return {
+        version: '14.0',
+        timestamp: Date.now(),
+        fields,
+        landscapeFrontPos,
+        portraitFrontPos,
+        landscapeBackPos,
+        portraitBackPos
+      };
+    }
+
+    function saveStateToStorage() {
+      if (isRestoringState) return;
+      try {
+        const state = collectFullState();
+        localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(state));
+        showAutoSaveFeedback(uploadedLogo ? '💾 已自動保存 (含 Logo 與字體)' : '💾 已自動保存設定與字體');
+      } catch (e) {
+        console.warn('AutoSave error:', e);
+      }
+    }
+
+    function saveLogoToStorage(dataUrl, fileName = '品牌 Logo') {
+      try {
+        if (dataUrl) {
+          localStorage.setItem(STORAGE_KEY_LOGO, JSON.stringify({ dataUrl, fileName }));
+        } else {
+          localStorage.removeItem(STORAGE_KEY_LOGO);
+          LEGACY_LOGO_KEYS.forEach(k => localStorage.removeItem(k));
+        }
+        showAutoSaveFeedback('💾 Logo 已自動保存');
+      } catch (e) {
+        console.warn('Logo 儲存提示:', e);
+      }
+    }
+
+    function showAutoSaveFeedback(msg) {
+      const badge = document.getElementById('autoSaveBadge');
+      if (!badge) return;
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      badge.textContent = `${msg} (${timeStr})`;
+      badge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 transition';
+      clearTimeout(saveIndicatorTimeout);
+      saveIndicatorTimeout = setTimeout(() => {
+        badge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-cyan-300 border border-slate-700 flex items-center gap-1 transition';
+      }, 1500);
+    }
+
+    function sanitizePosMap(posMap, maxW, maxH, fallbackMap) {
+      if (!posMap || typeof posMap !== 'object') return fallbackMap;
+      const out = JSON.parse(JSON.stringify(fallbackMap));
+      Object.keys(out).forEach(k => {
+        if (posMap[k] && typeof posMap[k].x === 'number' && !isNaN(posMap[k].x) && typeof posMap[k].y === 'number' && !isNaN(posMap[k].y)) {
+          out[k].x = Math.max(15, Math.min(maxW - 40, posMap[k].x));
+          out[k].y = Math.max(15, Math.min(maxH - 30, posMap[k].y));
+          if (typeof posMap[k].centered === 'boolean') out[k].centered = posMap[k].centered;
+          if (typeof posMap[k].autoRight === 'boolean') out[k].autoRight = posMap[k].autoRight;
+        }
+      });
+      return out;
+    }
+
+    function applyStateObject(stateObj) {
+      if (!stateObj || !stateObj.fields) return;
+      isRestoringState = true;
+      Object.keys(stateObj.fields).forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.type === 'checkbox') el.checked = !!stateObj.fields[id];
+        else el.value = stateObj.fields[id];
+      });
+
+      const bLayout = document.getElementById('backLayout').value || 'segmented_groups';
+      const pAlign = document.getElementById('portraitAlignStyle').value || 'classic_left';
+
+      landscapeFrontPos = sanitizePosMap(stateObj.landscapeFrontPos, 1063, 638, getDefaultLandscapeFront());
+      portraitFrontPos  = sanitizePosMap(stateObj.portraitFrontPos, 638, 1063, getDefaultPortraitFront(pAlign));
+      landscapeBackPos  = sanitizePosMap(stateObj.landscapeBackPos, 1063, 638, getDefaultLandscapeBack(bLayout));
+      portraitBackPos   = sanitizePosMap(stateObj.portraitBackPos, 638, 1063, getDefaultPortraitBack(bLayout));
+
+      const isDir = bLayout === 'branch_directory';
+      document.getElementById('standardBackTextEditor').classList.toggle('hidden', isDir);
+      document.getElementById('directoryBackEditor').classList.toggle('hidden', !isDir);
+
+      const backThemeKey = document.getElementById('backThemePreset').value;
+      document.getElementById('backCustomColorsBox').classList.toggle('hidden', backThemeKey === 'sync' || backThemeKey === 'invert_accent');
+
+      setOrientation(document.getElementById('cardOrientation').value || 'landscape');
+      isRestoringState = false;
+    }
+
+    function loadSavedStateFromStorage() {
+      try {
+        let rawState = localStorage.getItem(STORAGE_KEY_STATE);
+        if (!rawState) {
+          for (const k of LEGACY_STATE_KEYS) {
+            const legacyS = localStorage.getItem(k);
+            if (legacyS) { rawState = legacyS; break; }
+          }
+        }
+        if (rawState) {
+          applyStateObject(JSON.parse(rawState));
+        }
+        let rawLogo = localStorage.getItem(STORAGE_KEY_LOGO);
+        if (!rawLogo) {
+          for (const k of LEGACY_LOGO_KEYS) {
+            const legacy = localStorage.getItem(k);
+            if (legacy) { rawLogo = legacy; break; }
+          }
+        }
+        if (rawLogo) {
+          const parsedLogo = JSON.parse(rawLogo);
+          if (parsedLogo && parsedLogo.dataUrl) {
+            const img = new Image();
+            img.onload = function() {
+              uploadedLogo = img;
+              uploadedLogoDataUrl = parsedLogo.dataUrl;
+              invalidateLogoCache();
+              const statusEl = document.getElementById('logoStatusText');
+              statusEl.textContent = `✅ 已自動載入: ${parsedLogo.fileName || '品牌 Logo'}`;
+              statusEl.className = 'text-[11px] text-emerald-400 font-medium';
+              renderAll(true);
+            };
+            img.src = parsedLogo.dataUrl;
+          }
+        }
+      } catch (e) {
+        console.warn('Load saved state error:', e);
+      }
+    }
+
+    function saveSlot(slotNum) {
+      try {
+        const state = collectFullState();
+        state.logoDataUrl = uploadedLogoDataUrl || '';
+        localStorage.setItem(`${STORAGE_KEY_STATE}_SLOT_${slotNum}`, JSON.stringify(state));
+        showAutoSaveFeedback(`✅ 已存入記憶槽 ${slotNum}`);
+      } catch (e) {
+        alert('儲存插槽失敗，可能瀏覽器儲存空間已滿。');
+      }
+    }
+
+    function loadSlot(slotNum) {
+      try {
+        const raw = localStorage.getItem(`${STORAGE_KEY_STATE}_SLOT_${slotNum}`);
+        if (!raw) return alert(`記憶槽 ${slotNum} 尚無紀錄！請先按「存槽 ${slotNum}」。`);
+        const state = JSON.parse(raw);
+        applyStateObject(state);
+        if (state.logoDataUrl) {
+          const img = new Image();
+          img.onload = function() {
+            uploadedLogo = img;
+            uploadedLogoDataUrl = state.logoDataUrl;
+            saveLogoToStorage(uploadedLogoDataUrl, `記憶槽 ${slotNum} Logo`);
+            invalidateLogoCache();
+            switchFontAndRender();
+          };
+          img.src = state.logoDataUrl;
+        } else {
+          switchFontAndRender();
+        }
+        showAutoSaveFeedback(`📂 已載入記憶槽 ${slotNum}`);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function exportProjectJson() {
+      const state = collectFullState();
+      state.logoDataUrl = uploadedLogoDataUrl || '';
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `BrandCard_Project_v14.json`;
+      link.click();
+    }
+
+    function importProjectJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const state = JSON.parse(e.target.result);
+          applyStateObject(state);
+          if (state.logoDataUrl) {
+            const img = new Image();
+            img.onload = function() {
+              uploadedLogo = img;
+              uploadedLogoDataUrl = state.logoDataUrl;
+              saveLogoToStorage(uploadedLogoDataUrl, '專案備份 Logo');
+              document.getElementById('logoStatusText').textContent = '✅ 已還原備份 Logo';
+              document.getElementById('logoStatusText').className = 'text-[11px] text-emerald-400 font-medium';
+              invalidateLogoCache();
+              switchFontAndRender();
+            };
+            img.src = state.logoDataUrl;
+          } else {
+            switchFontAndRender();
+          }
+          showAutoSaveFeedback('✅ 已匯入專案備份');
+        } catch (err) {
+          alert('專案備份檔格式錯誤！');
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+
+    function clearSavedStorage() {
+      if (!confirm('確定要清除瀏覽器保存的所有設定並還原初始狀態嗎？')) return;
+      localStorage.removeItem(STORAGE_KEY_STATE);
+      localStorage.removeItem(STORAGE_KEY_LOGO);
+      LEGACY_STATE_KEYS.forEach(k => localStorage.removeItem(k));
+      LEGACY_LOGO_KEYS.forEach(k => localStorage.removeItem(k));
+      location.reload();
+    }
+
+    function switchTab(tabName) {
+      ['content', 'back', 'style', 'batch'].forEach(t => {
+        const section = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (section && btn) {
+          section.classList.toggle('hidden', t !== tabName);
+          btn.className = t === tabName
+            ? 'py-2 px-2 rounded-lg bg-indigo-600 text-white shadow transition text-center flex items-center justify-center gap-1'
+            : 'py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center flex items-center justify-center gap-1';
+        }
+      });
+    }
+
+    function invalidateLogoCache() { processedLogoCache = {}; }
+
+    function hexToRgb(hex) {
+      const clean = (hex || '#FFFFFF').replace('#', '');
+      const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
+      const num = parseInt(full, 16) || 0;
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+
+    // ==================== 真・透明通道零白邊引擎 (True Alpha Decontamination) ====================
+    function getProcessedLogo(targetBgHex, blendEnabled, tolerance, brightenDarkEnabled, forceWhiteEnabled) {
+      if (!uploadedLogo) return null;
+      if (!blendEnabled && !brightenDarkEnabled && !forceWhiteEnabled) return uploadedLogo;
+
+      const cacheKey = `V14_TRUEALPHA_${targetBgHex}_${blendEnabled}_${tolerance}_${brightenDarkEnabled}_${forceWhiteEnabled}`;
+      if (processedLogoCache[cacheKey]) return processedLogoCache[cacheKey];
+
+      const offCanvas = document.createElement('canvas');
+      const w = uploadedLogo.width, h = uploadedLogo.height;
+      offCanvas.width = w; offCanvas.height = h;
+      const octx = offCanvas.getContext('2d');
+      octx.drawImage(uploadedLogo, 0, 0);
+
+      const imgData = octx.getImageData(0, 0, w, h);
+      const d = imgData.data;
+
+      const sampleIdxs = [0, (w - 1) * 4, (h - 1) * w * 4, ((h - 1) * w + (w - 1)) * 4];
+      let baseW_R = 0, baseW_G = 0, baseW_B = 0;
+      sampleIdxs.forEach(idx => { baseW_R += d[idx]; baseW_G += d[idx + 1]; baseW_B += d[idx + 2]; });
+      baseW_R = Math.max(225, Math.round(baseW_R / 4));
+      baseW_G = Math.max(225, Math.round(baseW_G / 4));
+      baseW_B = Math.max(225, Math.round(baseW_B / 4));
+
+      const bgRgb = hexToRgb(targetBgHex);
+      const bgLum = (0.299 * bgRgb.r + 0.587 * bgRgb.g + 0.114 * bgRgb.b) / 255;
+      const isDarkBg = bgLum < 0.45;
+      const chokeFloor = Math.max(0.05, (tolerance - 10) / 250);
+
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i + 1], b = d[i + 2], origA = d[i + 3];
+        if (origA === 0) continue;
+
+        const inkR = Math.max(0, (baseW_R - r) / baseW_R);
+        const inkG = Math.max(0, (baseW_G - g) / baseW_G);
+        const inkB = Math.max(0, (baseW_B - b) / baseW_B);
+        let rawAlpha = Math.max(inkR, inkG, inkB);
+
+        let fgAlpha = (rawAlpha - chokeFloor) / (1 - chokeFloor);
+        fgAlpha = Math.max(0, Math.min(1, fgAlpha));
+        fgAlpha = Math.pow(fgAlpha, 1.38);
+
+        if (blendEnabled && fgAlpha <= 0.01) {
+          d[i + 3] = 0;
+          continue;
+        }
+
+        const safeRaw = Math.max(0.05, rawAlpha);
+        let pureR = Math.max(0, Math.min(255, Math.round(baseW_R - (baseW_R - r) / safeRaw)));
+        let pureG = Math.max(0, Math.min(255, Math.round(baseW_G - (baseW_G - g) / safeRaw)));
+        let pureB = Math.max(0, Math.min(255, Math.round(baseW_B - (baseW_B - b) / safeRaw)));
+        let fgR = blendEnabled ? pureR : r;
+        let fgG = blendEnabled ? pureG : g;
+        let fgB = blendEnabled ? pureB : b;
+
+        if (forceWhiteEnabled) {
+          fgR = 255; fgG = 255; fgB = 255;
+        } else if (brightenDarkEnabled && isDarkBg) {
+          const pxLum = (0.299 * fgR + 0.587 * fgG + 0.114 * fgB) / 255;
+          const saturation = Math.max(fgR, fgG, fgB) - Math.min(fgR, fgG, fgB);
+          const distFromBg = Math.sqrt((fgR - bgRgb.r) ** 2 + (fgG - bgRgb.g) ** 2 + (fgB - bgRgb.b) ** 2);
+
+          if (pxLum < 0.36 && saturation < 55) {
+            fgR = 255; fgG = 255; fgB = 255;
+          } else if (distFromBg < 95) {
+            fgR = 255; fgG = 255; fgB = 255;
+          } else if (pxLum < 0.48) {
+            fgR = Math.min(255, Math.round(fgR * 1.18 + 20));
+            fgG = Math.min(255, Math.round(fgG * 1.05 + 8));
+            fgB = Math.min(255, Math.round(fgB * 1.05 + 8));
+          }
+        }
+
+        d[i]     = fgR;
+        d[i + 1] = fgG;
+        d[i + 2] = fgB;
+        if (blendEnabled) {
+          d[i + 3] = Math.round((origA / 255) * fgAlpha * 255);
+        }
+      }
+
+      octx.putImageData(imgData, 0, 0);
+      processedLogoCache[cacheKey] = offCanvas;
+      return offCanvas;
+    }
+
+    function downloadTransparentCleanLogo() {
+      if (!uploadedLogo) return alert('請先在左側上傳你的白底 Logo 檔案！');
+      const tolerance = parseInt(document.getElementById('whiteTolerance').value, 10) || 60;
+      const cleanCanvas = getProcessedLogo('#FFFFFF', true, tolerance, false, false);
+      const link = document.createElement('a');
+      link.download = 'Centralfield_Logo_Transparent_Clean.png';
+      link.href = cleanCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // ==================== 300 DPI 現代白色與 AI 科技質感正面背景繪圖引擎 ====================
+    function drawFrontTechAndWhiteEffects(ctx, W, H, data, pos, portrait) {
+      const layout = data.layout;
+      const bgRgb = hexToRgb(data.bg);
+      const isDark = (0.299 * bgRgb.r + 0.587 * bgRgb.g + 0.114 * bgRgb.b) / 255 < 0.48;
+
+      ctx.save();
+
+      if (layout === 'bento_box_grid') {
+        const cardFill = isDark ? 'rgba(255, 255, 255, 0.035)' : 'rgba(15, 23, 42, 0.024)';
+        const borderCol = isDark ? data.accent + '38' : 'rgba(15, 23, 42, 0.09)';
+
+        ctx.fillStyle = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.045)';
+        for (let gx = 36; gx < W - 30; gx += 36) {
+          for (let gy = 36; gy < H - 30; gy += 36) {
+            ctx.fillRect(gx, gy, 1.5, 1.5);
+          }
+        }
+
+        const boxes = portrait
+          ? [
+              { x: 44, y: pos.contacts.y - 20, w: W - 88, h: 250 },
+              { x: 44, y: pos.addressBlock.y - 20, w: W - 88, h: 235 }
+            ]
+          : [
+              { x: 48, y: pos.contacts.y - 22, w: 495, h: 245 },
+              { x: 560, y: pos.addressBlock.y - 22, w: 455, h: 245 }
+            ];
+
+        boxes.forEach(b => {
+          ctx.fillStyle = cardFill;
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(b.x, b.y, b.w, b.h, 16);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = data.accent;
+          ctx.beginPath();
+          ctx.roundRect(b.x + 18, b.y - 1.5, 36, 3, 1.5);
+          ctx.fill();
+        });
+      } else if (layout === 'ai_neural_nodes') {
+        const glowGrad = ctx.createRadialGradient(W * 0.82, H * 0.28, 10, W * 0.82, H * 0.28, W * 0.55);
+        glowGrad.addColorStop(0, data.accent + (isDark ? '26' : '16'));
+        glowGrad.addColorStop(1, data.accent + '00');
+        ctx.fillStyle = glowGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        const pts = [
+          { x: W * 0.55, y: H * 0.12 },
+          { x: W * 0.72, y: H * 0.08 },
+          { x: W * 0.88, y: H * 0.16 },
+          { x: W * 0.94, y: H * 0.34 },
+          { x: W * 0.78, y: H * 0.32 },
+          { x: W * 0.64, y: H * 0.28 },
+          { x: W * 0.86, y: H * 0.52 },
+          { x: W * 0.68, y: H * 0.48 },
+          { x: W * 0.12, y: H * 0.88 },
+          { x: W * 0.28, y: H * 0.94 }
+        ];
+
+        ctx.strokeStyle = data.accent + (isDark ? '32' : '24');
+        ctx.lineWidth = 1.4;
+        for (let i = 0; i < pts.length; i++) {
+          for (let j = i + 1; j < pts.length; j++) {
+            const dist = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+            if (dist < W * 0.26) {
+              ctx.beginPath();
+              ctx.moveTo(pts[i].x, pts[i].y);
+              ctx.lineTo(pts[j].x, pts[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        pts.forEach((p, idx) => {
+          ctx.fillStyle = data.accent + (isDark ? '88' : '66');
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, idx % 3 === 0 ? 4.5 : 3, 0, Math.PI * 2);
+          ctx.fill();
+          if (idx % 3 === 0) {
+            ctx.strokeStyle = data.accent + '44';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        });
+
+        const lineY = portrait ? pos.contacts.y - 24 : 322;
+        const lineGrad = ctx.createLinearGradient(64, lineY, W - 64, lineY);
+        lineGrad.addColorStop(0, data.accent);
+        lineGrad.addColorStop(0.5, data.accent + '44');
+        lineGrad.addColorStop(1, data.accent + '05');
+        ctx.fillStyle = lineGrad;
+        ctx.fillRect(64, lineY, W - 128, 2.5);
+      } else if (layout === 'cyber_circuit_hud') {
+        ctx.strokeStyle = data.accent + (isDark ? '35' : '28');
+        ctx.fillStyle = data.accent + (isDark ? '55' : '40');
+        ctx.lineWidth = 1.6;
+
+        const traces = [
+          [[W, H * 0.18], [W - 90, H * 0.18], [W - 135, H * 0.26], [W - 240, H * 0.26]],
+          [[W, H * 0.24], [W - 60, H * 0.24], [W - 95, H * 0.31], [W - 170, H * 0.31]],
+          [[0, H * 0.52], [45, H * 0.52], [75, H * 0.47], [190, H * 0.47]],
+          [[W * 0.52, H], [W * 0.52, H - 45], [W * 0.56, H - 75], [W * 0.56, H - 260]]
+        ];
+
+        traces.forEach(path => {
+          ctx.beginPath();
+          path.forEach((pt, i) => {
+            if (i === 0) ctx.moveTo(pt[0], pt[1]);
+            else ctx.lineTo(pt[0], pt[1]);
+          });
+          ctx.stroke();
+          const last = path[path.length - 1];
+          ctx.beginPath();
+          ctx.arc(last[0], last[1], 4, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+
+        const pad = 28, bLen = 22;
+        ctx.strokeStyle = data.accent + '88';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(pad, pad + bLen); ctx.lineTo(pad, pad); ctx.lineTo(pad + bLen, pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(W - pad - bLen, pad); ctx.lineTo(W - pad, pad); ctx.lineTo(W - pad, pad + bLen); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(pad, H - pad - bLen); ctx.lineTo(pad, H - pad); ctx.lineTo(pad + bLen, H - pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(W - pad - bLen, H - pad); ctx.lineTo(W - pad, H - pad); ctx.lineTo(W - pad, H - pad - bLen); ctx.stroke();
+
+        ctx.fillStyle = data.text + '55';
+        ctx.font = `600 10px 'JetBrains Mono', monospace`;
+        ctx.fillText('SYS // AI-NODE-83', pad + 8, pad + 14);
+      } else if (layout === 'minimal_corner_accents') {
+        const pad = 34, len = 18;
+        ctx.strokeStyle = data.accent;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(pad, pad + len); ctx.lineTo(pad, pad); ctx.lineTo(pad + len, pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(W - pad - len, H - pad); ctx.lineTo(W - pad, H - pad); ctx.lineTo(W - pad, H - pad - len); ctx.stroke();
+
+        const divY = portrait ? pos.contacts.y - 26 : 322;
+        ctx.fillStyle = data.text + '18';
+        ctx.fillRect(64, divY, W - 128, 1.5);
+        ctx.fillStyle = data.accent;
+        ctx.fillRect(64, divY - 1, 72, 3.5);
+
+        if (!portrait) {
+          const vDivX = Math.round(pos.addressBlock.x - 28);
+          ctx.fillStyle = data.text + '18';
+          ctx.fillRect(vDivX, divY + 18, 1.5, 215);
+          ctx.fillStyle = data.accent;
+          ctx.fillRect(vDivX - 1, divY + 18, 3.5, 36);
+        }
+      } else if (layout === 'dot_matrix_tech') {
+        const cols = 14, rows = 9;
+        const startX = W - 360, startY = 36;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const radius = Math.max(0.8, ((c + r) / (cols + rows)) * 3.2);
+            ctx.fillStyle = data.accent + (isDark ? '38' : '28');
+            ctx.beginPath();
+            ctx.arc(startX + c * 24, startY + r * 24, radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.fillStyle = data.accent;
+        ctx.fillRect(0, 0, 12, H);
+        ctx.fillStyle = data.accent + '33';
+        ctx.fillRect(18, 0, 3, H);
+      } else if (layout === 'holo_gradient_card') {
+        const grad = ctx.createLinearGradient(0, 0, W, H * 0.45);
+        grad.addColorStop(0, data.accent + (isDark ? '35' : '1E'));
+        grad.addColorStop(0.5, '#38BDF8' + (isDark ? '22' : '14'));
+        grad.addColorStop(1, data.bg + '00');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        const topGrad = ctx.createLinearGradient(0, 0, W, 0);
+        topGrad.addColorStop(0, data.accent);
+        topGrad.addColorStop(0.6, '#06B6D4');
+        topGrad.addColorStop(1, data.accent);
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(0, 0, W, 10);
+
+        const divY = portrait ? pos.contacts.y - 24 : 322;
+        ctx.fillStyle = data.accent + '33';
+        ctx.fillRect(64, divY, W - 128, 1.5);
+      } else if (layout === 'classic_cf') {
+        if (portrait) {
+          const divY = Math.round(pos.addressBlock.y - 22);
+          ctx.fillStyle = data.accent;
+          ctx.beginPath(); ctx.roundRect(64, divY, W - 128, 4.5, 2.5); ctx.fill();
+          if (data.showRightTriangle) {
+            ctx.fillStyle = data.accent;
+            ctx.beginPath(); ctx.moveTo(W, 425 - 42); ctx.lineTo(W - 46, 425); ctx.lineTo(W, 425 + 42); ctx.closePath(); ctx.fill();
+          }
+        } else {
+          const dividerX = Math.round(pos.addressBlock.x - 28);
+          const dividerTop = Math.round(Math.min(pos.contacts.y, pos.addressBlock.y) - 6);
+          ctx.fillStyle = data.accent;
+          ctx.beginPath(); ctx.roundRect(dividerX, dividerTop, 5.5, 200, 3); ctx.fill();
+          if (data.showRightTriangle) {
+            ctx.fillStyle = data.accent;
+            ctx.beginPath(); ctx.moveTo(W, 268 - 56); ctx.lineTo(W - 62, 268); ctx.lineTo(W, 268 + 56); ctx.closePath(); ctx.fill();
+          }
+        }
+      } else if (layout === 'top_banner') {
+        ctx.fillStyle = data.accent; ctx.fillRect(0, 0, W, 16);
+      } else if (layout === 'duo_frame') {
+        ctx.strokeStyle = data.accent; ctx.lineWidth = 3; ctx.strokeRect(32, 32, W - 64, H - 64);
+      } else if (layout === 'sidebar_accent') {
+        ctx.fillStyle = data.accent; ctx.fillRect(0, 0, 18, H);
+      } else if (layout === 'matrix') {
+        const grad = ctx.createLinearGradient(W * 0.5, 0, W, H);
+        grad.addColorStop(0, data.accent + '22'); grad.addColorStop(1, data.accent + '05');
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.moveTo(W * 0.65, 0); ctx.lineTo(W, 0); ctx.lineTo(W, H); ctx.lineTo(W * 0.45, H); ctx.closePath(); ctx.fill();
+      } else if (layout === 'swiss') {
+        ctx.fillStyle = data.accent;
+        ctx.fillRect(64, portrait ? 430 : 315, W - 128, 3);
+      }
+
+      ctx.restore();
+    }
+
+    // 根據當前方向自動調整預設標語斷行
+    function adaptBackPresetTextForOrientation() {
+      const key = document.getElementById('backContentPreset').value;
+      const portrait = isPortrait();
+      const taglineEl = document.getElementById('backTaglineText');
+
+      if (key === 'preset_img1') {
+        taglineEl.value = portrait
+          ? '【個人與玩家】\n• 電腦硬件零售\n• 高階電腦訂製\n• 高階水冷組裝\n\n【企業與專業】\n• 企業 IT 採購方案\n• AI 工作站方案'
+          : '【個人與玩家】\n• 電腦硬件零售    • 高階電腦訂製    • 高階水冷組裝\n\n【企業與專業】\n• 企業 IT 採購方案    • AI 工作站方案';
+      } else if (key === 'preset_img2') {
+        taglineEl.value = portrait
+          ? '電腦硬件零售  •  高階水冷組裝\n高階電腦訂製\n\n企業 IT 採購方案  •  AI 工作站方案'
+          : '電腦硬件零售  •  高階水冷組裝  •  高階電腦訂製\n\n企業 IT 採購方案  •  AI 工作站方案';
+      } else if (key === 'preset_bilingual') {
+        taglineEl.value = portrait
+          ? '【Gaming & Custom PC】\n• 電腦硬件零售 PC Hardware Retail\n• 高階水冷訂製 Custom Liquid Cooling\n\n【Enterprise & AI Solutions】\n• 企業 IT 採購 Corporate IT\n• AI 工作站方案 AI Workstation'
+          : '【Gaming & Custom PC | 個人與高階玩家】\n• PC Hardware Retail 電腦硬件零售   • Custom Liquid Cooling 高階水冷訂製\n\n【Enterprise & AI Solutions | 企業與專案採購】\n• Corporate IT Procurement 企業採購   • AI Workstation Solutions AI 工作站方案';
+      }
+    }
+
+    function applyBackContentPreset() {
+      const key = document.getElementById('backContentPreset').value;
+      const headerEl = document.getElementById('backHeaderTitle');
+      const taglineEl = document.getElementById('backTaglineText');
+      const footerSubEl = document.getElementById('backFooterSub');
+      const layoutEl = document.getElementById('backLayout');
+      const logoPosEl = document.getElementById('backLogoPosPreset');
+
+      if (key === 'preset_img1') {
+        layoutEl.value = 'segmented_groups'; logoPosEl.value = 'top_left';
+        headerEl.value = '中田數碼有限公司  |  Since 1983';
+        footerSubEl.value = '';
+        document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
+        adaptBackPresetTextForOrientation();
+      } else if (key === 'preset_img2') {
+        layoutEl.value = 'centered_minimal'; logoPosEl.value = 'top_center';
+        headerEl.value = '中 田 數 碼 有 限 公 司\nSINCE 1983';
+        footerSubEl.value = '';
+        document.getElementById('showBackQr').checked = false; document.getElementById('showBackQrSync').checked = false;
+        adaptBackPresetTextForOrientation();
+      } else if (key === 'preset_img3') {
+        layoutEl.value = 'vertical_list_card'; logoPosEl.value = 'top_center';
+        headerEl.value = '中田數碼有限公司\nSINCE 1983';
+        taglineEl.value = '■ AI 工作站方案\n■ 企業 IT 採購\n■ 高階電腦訂製\n■ 高階水冷組裝\n■ 電腦硬件零售';
+        footerSubEl.value = '深水埗門市  •  網上商店';
+        document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
+      } else if (key === 'preset_img4') {
+        layoutEl.value = 'branch_directory';
+        document.getElementById('showBackQr').checked = false; document.getElementById('showBackQrSync').checked = false;
+      } else if (key === 'preset_bilingual') {
+        layoutEl.value = 'segmented_groups'; logoPosEl.value = 'top_left';
+        headerEl.value = 'Centralfield Computer Ltd.  |  中田數碼有限公司';
+        footerSubEl.value = '';
+        document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
+        adaptBackPresetTextForOrientation();
+      }
+      onBackLayoutChange();
+    }
+
+    function applyFrontLogoPosition() {
+      const preset = document.getElementById('frontLogoPosPreset').value;
+      if (preset === 'custom') return;
+      const portrait = isPortrait();
+      const W = portrait ? 638 : 1063;
+      const H = portrait ? 1063 : 638;
+      const pos = getActiveFrontPos();
+
+      if (preset === 'top_right') {
+        pos.brand.y = 64; pos.brand.centered = false; pos.brand.autoRight = true;
+        if (!portrait) { pos.profile.x = 68; pos.profile.y = 56; }
+      } else if (preset === 'top_left') {
+        pos.brand.x = 64; pos.brand.y = 56; pos.brand.centered = false; pos.brand.autoRight = false;
+        pos.profile.x = 64; pos.profile.y = portrait ? 195 : 165;
+      } else if (preset === 'top_center') {
+        pos.brand.x = Math.round(W / 2); pos.brand.y = 58; pos.brand.centered = true; pos.brand.autoRight = false;
+        if (!portrait) { pos.profile.x = 68; pos.profile.y = 165; }
+      } else if (preset === 'bottom_right') {
+        pos.brand.y = H - 150; pos.brand.centered = false; pos.brand.autoRight = true;
+      }
+      renderAll();
+    }
+
+    function applyBackLogoPosition() {
+      const preset = document.getElementById('backLogoPosPreset').value;
+      if (preset === 'custom') return;
+      const W = isPortrait() ? 638 : 1063;
+      const H = isPortrait() ? 1063 : 638;
+      const bPos = getActiveBackPos();
+
+      if (preset === 'center') { bPos.backBrand.x = Math.round(W / 2); bPos.backBrand.y = Math.round(H * 0.32); bPos.backBrand.centered = true; }
+      else if (preset === 'top_center') { bPos.backBrand.x = Math.round(W / 2); bPos.backBrand.y = 75; bPos.backBrand.centered = true; }
+      else if (preset === 'left_center') { bPos.backBrand.x = 76; bPos.backBrand.y = Math.round(H * 0.3); bPos.backBrand.centered = false; }
+      else if (preset === 'top_right') { bPos.backBrand.x = W - 360; bPos.backBrand.y = 64; bPos.backBrand.centered = false; }
+      else if (preset === 'top_left') { bPos.backBrand.x = 68; bPos.backBrand.y = 64; bPos.backBrand.centered = false; }
+      renderAll();
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          let finalDataUrl = e.target.result;
+          if (img.width > 1200) {
+            const scaleCanvas = document.createElement('canvas');
+            const ratio = 1200 / img.width;
+            scaleCanvas.width = 1200; scaleCanvas.height = Math.round(img.height * ratio);
+            scaleCanvas.getContext('2d').drawImage(img, 0, 0, scaleCanvas.width, scaleCanvas.height);
+            finalDataUrl = scaleCanvas.toDataURL('image/png');
+          }
+          uploadedLogo = img; uploadedLogoDataUrl = finalDataUrl;
+          saveLogoToStorage(uploadedLogoDataUrl, file.name);
+          invalidateLogoCache();
+          document.getElementById('logoStatusText').textContent = `✅ 已自動保存: ${file.name}`;
+          document.getElementById('logoStatusText').className = 'text-[11px] text-emerald-400 font-medium';
+          renderAll();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearLogo() {
+      uploadedLogo = null; uploadedLogoDataUrl = ''; saveLogoToStorage('');
+      invalidateLogoCache();
+      document.getElementById('logoInput').value = '';
+      document.getElementById('logoStatusText').textContent = '目前使用文字標誌';
+      document.getElementById('logoStatusText').className = 'text-[11px] text-slate-500';
+      renderAll();
+    }
+
+    function onBackLayoutChange() {
+      const bLayout = document.getElementById('backLayout').value;
+      landscapeBackPos = getDefaultLandscapeBack(bLayout);
+      portraitBackPos  = getDefaultPortraitBack(bLayout);
+      const isDir = bLayout === 'branch_directory';
+      document.getElementById('standardBackTextEditor').classList.toggle('hidden', isDir);
+      document.getElementById('directoryBackEditor').classList.toggle('hidden', !isDir);
+      renderAll();
+    }
+
+    function resetBackPositions() {
+      const bLayout = document.getElementById('backLayout').value;
+      if (isPortrait()) portraitBackPos = getDefaultPortraitBack(bLayout);
+      else landscapeBackPos = getDefaultLandscapeBack(bLayout);
+      renderAll();
+    }
+
+    function resetCurrentOrientationLayout() {
+      const bLayout = document.getElementById('backLayout').value;
+      if (isPortrait()) {
+        const alignStyle = document.getElementById('portraitAlignStyle').value || 'classic_left';
+        portraitFrontPos = getDefaultPortraitFront(alignStyle);
+        portraitBackPos  = getDefaultPortraitBack(bLayout);
+        document.getElementById('frontLogoPosPreset').value = 'top_center';
+      } else {
+        landscapeFrontPos = getDefaultLandscapeFront();
+        landscapeBackPos  = getDefaultLandscapeBack(bLayout);
+        document.getElementById('frontLogoPosPreset').value = 'top_right';
+      }
+      document.getElementById('sizeLogo').value = 72;
+      document.getElementById('sizeSince').value = 19;
+      document.getElementById('sizeName').value = 42;
+      document.getElementById('sizeTitle').value = 22;
+      document.getElementById('sizeContact').value = 19;
+      document.getElementById('sizeQr').value = 125;
+      renderAll();
+    }
+
+    function fillDefaultCompanyInfo() {
+      document.getElementById('company').value = 'Centralfield';
+      document.getElementById('companySubEn').value = 'Centralfield Computer Ltd.';
+      document.getElementById('companySubZh').value = '中田數碼有限公司';
+      document.getElementById('sinceYear').value = 'Since 1983';
+      document.getElementById('website').value = 'www.centralfield.com';
+      document.getElementById('facebook').value = 'www.facebook.com/Centralfield/';
+      document.getElementById('phone').value = '+852 2387 0273';
+      document.getElementById('fax').value = '+852 2387 9057';
+      document.getElementById('address').value = '香港九龍深水埗高登電腦中心1/F,\n10-16A號舖';
+      document.getElementById('addressEn').value = 'Shop 10-16A, 1/F,\nGolden Computer Center, Sham Shui Po,\nKowloon, Hong Kong';
+      renderAll();
+    }
+
+    function clearAllFields() {
+      ['company', 'companySubEn', 'companySubZh', 'sinceYear', 'nameEn', 'nameZh', 'titleEn', 'titleZh', 'email', 'website', 'facebook', 'phone', 'fax', 'whatsapp', 'address', 'addressEn'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      renderAll();
+    }
+
+    function applyPreset() {
+      const key = document.getElementById('brandPreset').value;
+      const preset = BRAND_PRESETS[key];
+      if (!preset) return;
+      document.getElementById('colorBg').value = preset.bg;
+      document.getElementById('colorAccent').value = preset.accent;
+      document.getElementById('colorText').value = preset.text;
+      document.getElementById('layoutStyle').value = preset.layout;
+      invalidateLogoCache(); renderAll();
+    }
+
+    function applyBackPreset() {
+      const key = document.getElementById('backThemePreset').value;
+      const customBox = document.getElementById('backCustomColorsBox');
+      if (key === 'sync' || key === 'invert_accent') customBox.classList.add('hidden');
+      else if (key === 'custom') customBox.classList.remove('hidden');
+      else if (BRAND_PRESETS[key]) {
+        customBox.classList.remove('hidden');
+        document.getElementById('backColorBg').value = BRAND_PRESETS[key].bg;
+        document.getElementById('backColorAccent').value = BRAND_PRESETS[key].accent;
+        document.getElementById('backColorText').value = BRAND_PRESETS[key].text;
+      }
+      invalidateLogoCache(); renderAll();
+    }
+
+    function triggerAIRemix() {
+      const keys = Object.keys(BRAND_PRESETS);
+      document.getElementById('brandPreset').value = keys[Math.floor(Math.random() * keys.length)];
+      applyPreset();
+    }
+
+    function getFormData() {
+      const bg = document.getElementById('colorBg').value || '#FFFFFF';
+      const accent = document.getElementById('colorAccent').value || '#901E23';
+      const text = document.getElementById('colorText').value || '#262626';
+
+      document.getElementById('colorBgText').textContent = bg.toUpperCase();
+      document.getElementById('colorAccentText').textContent = accent.toUpperCase();
+      document.getElementById('colorTextText').textContent = text.toUpperCase();
+
+      const whiteTolerance = parseInt(document.getElementById('whiteTolerance').value, 10) || 60;
+      document.getElementById('val-whiteTol').textContent = whiteTolerance;
+
+      const sizeLogo = parseInt(document.getElementById('sizeLogo').value, 10) || 72;
+      const sizeSince = parseInt(document.getElementById('sizeSince').value, 10) || 19;
+      const sizeName = parseInt(document.getElementById('sizeName').value, 10) || 42;
+      const sizeTitle = parseInt(document.getElementById('sizeTitle').value, 10) || 22;
+      const sizeContact = parseInt(document.getElementById('sizeContact').value, 10) || 19;
+      const sizeQr = parseInt(document.getElementById('sizeQr').value, 10) || 125;
+      const sizeBackLogo = parseInt(document.getElementById('sizeBackLogo').value, 10) || 28;
+      const sizeBackText = parseInt(document.getElementById('sizeBackText').value, 10) || 22;
+
+      document.getElementById('val-logoSize').textContent = `${sizeLogo} px`;
+      document.getElementById('val-sinceSize').textContent = `${sizeSince} px`;
+      document.getElementById('val-nameSize').textContent = `${sizeName} px`;
+      document.getElementById('val-titleSize').textContent = `${sizeTitle} px`;
+      document.getElementById('val-contactSize').textContent = `${sizeContact} px`;
+      document.getElementById('val-qrSize').textContent = `${sizeQr} px`;
+      document.getElementById('val-backLogoSize').textContent = `${sizeBackLogo} px`;
+      document.getElementById('val-backTextSize').textContent = `${sizeBackText} px`;
+
+      document.getElementById('frontQrCustom').classList.toggle('hidden', document.getElementById('frontQrMode').value !== 'custom');
+      document.getElementById('backQrCustom').classList.toggle('hidden', document.getElementById('backQrMode').value !== 'custom');
+      document.getElementById('showBackQrSync').checked = document.getElementById('showBackQr').checked;
+
+      const backColorBg = document.getElementById('backColorBg').value || '#FFFFFF';
+      const backColorAccent = document.getElementById('backColorAccent').value || '#901E23';
+      const backColorText = document.getElementById('backColorText').value || '#262626';
+      document.getElementById('backColorBgText').textContent = backColorBg.toUpperCase();
+      document.getElementById('backColorAccentText').textContent = backColorAccent.toUpperCase();
+      document.getElementById('backColorTextText').textContent = backColorText.toUpperCase();
+
+      return {
+        bg, accent, text,
+        // 正背面 6 組獨立字體設定
+        fontFrontBrand: document.getElementById('fontFrontBrand').value || "'Libre Baskerville', Georgia, serif",
+        fontFrontEn: document.getElementById('fontFrontEn').value || "'Inter', sans-serif",
+        fontFrontZh: document.getElementById('fontFrontZh').value || "'Noto Sans TC', sans-serif",
+        fontBackHeader: document.getElementById('fontBackHeader').value || "'Noto Sans TC', sans-serif",
+        fontBackEn: document.getElementById('fontBackEn').value || "'Inter', sans-serif",
+        fontBackZh: document.getElementById('fontBackZh').value || "'Noto Sans TC', sans-serif",
+
+        blendLogoWhite: document.getElementById('blendLogoWhite').checked,
+        brightenLogoDark: document.getElementById('brightenLogoDark').checked,
+        forceWhiteLogo: document.getElementById('forceWhiteLogo').checked,
+        whiteTolerance,
+        layout: document.getElementById('layoutStyle').value,
+        company: document.getElementById('company').value.trim(),
+        showTm: document.getElementById('showTm').checked,
+        companySubEn: document.getElementById('companySubEn').value.trim(),
+        companySubZh: document.getElementById('companySubZh').value.trim(),
+        sinceYear: document.getElementById('sinceYear').value.trim(),
+        nameEn: document.getElementById('nameEn').value.trim(),
+        nameZh: document.getElementById('nameZh').value.trim(),
+        titleEn: document.getElementById('titleEn').value.trim(),
+        titleZh: document.getElementById('titleZh').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        website: document.getElementById('website').value.trim(),
+        facebook: document.getElementById('facebook').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        fax: document.getElementById('fax').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        address: document.getElementById('address').value,
+        addressEn: document.getElementById('addressEn').value,
+        qrColorStyle: document.getElementById('qrColorStyle').value,
+        frontQrMode: document.getElementById('frontQrMode').value,
+        frontQrCustom: document.getElementById('frontQrCustom').value.trim(),
+        backQrMode: document.getElementById('backQrMode').value,
+        backQrCustom: document.getElementById('backQrCustom').value.trim(),
+        showRightTriangle: document.getElementById('showRightTriangle').checked,
+        showQrFront: document.getElementById('showQrFront').checked,
+        showBleed: document.getElementById('showBleed').checked,
+        sizeLogo, sizeSince, sizeName, sizeTitle, sizeContact, sizeQr,
+        backLayout: document.getElementById('backLayout').value,
+        backThemePreset: document.getElementById('backThemePreset').value,
+        backColorBg, backColorAccent, backColorText,
+        showBackLogo: document.getElementById('showBackLogo').checked,
+        showBackQr: document.getElementById('showBackQr').checked,
+        showBackTagline: document.getElementById('showBackTagline').checked,
+        showBackWeb: document.getElementById('showBackWeb').checked,
+        useImageLogoOnBack: document.getElementById('useImageLogoOnBack').checked,
+        backHeaderTitle: document.getElementById('backHeaderTitle').value,
+        backTaglineText: document.getElementById('backTaglineText').value,
+        backFooterSub: document.getElementById('backFooterSub').value.trim(),
+        dirLeftText: document.getElementById('dirLeftText').value,
+        dirRightText: document.getElementById('dirRightText').value,
+        sizeBackLogo, sizeBackText
+      };
+    }
+
+    function drawContactIcon(ctx, type, x, y, size, accentColor) {
+      ctx.save();
+      const r = size / 2, cx = x + r, cy = y + r;
+      if (type === 'whatsapp') {
+        ctx.fillStyle = '#25D366';
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x + 2, y + size - 1); ctx.lineTo(x + 7, y + size - 3); ctx.lineTo(x + 4, y + size - 7); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.arc(cx, cy, r * 0.48, 0.25 * Math.PI, 1.15 * Math.PI); ctx.stroke();
+      } else if (type === 'facebook') {
+        ctx.fillStyle = accentColor;
+        ctx.beginPath(); ctx.roundRect(x, y, size, size, 4); ctx.fill();
+        ctx.fillStyle = '#FFFFFF'; ctx.font = `800 ${Math.round(size * 0.82)}px 'Inter', sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText('f', cx + 1.5, y + size - 2);
+      } else if (type === 'email') {
+        ctx.fillStyle = accentColor;
+        const eh = size * 0.76, ey = y + (size - eh) / 2;
+        ctx.beginPath(); ctx.roundRect(x, ey, size, eh, 3); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.moveTo(x + 2, ey + 2); ctx.lineTo(cx, cy + 1); ctx.lineTo(x + size - 2, ey + 2); ctx.stroke();
+      } else if (type === 'web') {
+        ctx.strokeStyle = accentColor; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.arc(cx, cy, r - 1, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(cx, cy, (r - 1) * 0.48, r - 1, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 2, cy); ctx.lineTo(x + size - 2, cy); ctx.stroke();
+      } else if (type === 'tel') {
+        ctx.fillStyle = accentColor;
+        ctx.beginPath(); ctx.roundRect(x + 1, y + 2, size - 2, size - 4, 4); ctx.fill();
+        ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy + 2, r * 0.35, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x + 4, y + 6); ctx.lineTo(x + size - 4, y + 6); ctx.stroke();
+      } else if (type === 'fax') {
+        ctx.fillStyle = accentColor;
+        ctx.beginPath(); ctx.roundRect(x + 1, cy - 2, size - 2, r + 1, 3); ctx.fill();
+        ctx.strokeStyle = accentColor; ctx.lineWidth = 1.8;
+        ctx.strokeRect(x + 4, y + 1, size - 8, r - 2);
+        ctx.fillStyle = '#FFFFFF'; ctx.fillRect(x + 5, cy + 2, size - 10, 3);
+      }
+      ctx.restore();
+    }
+
+    function drawBrandAndSince(ctx, x, y, logoSize, sinceSize, data, isCentered, surfaceBgColor, brandColorOverride, sinceColorOverride, maxAllowedW = 920, brandFontOverride = null) {
+      ctx.save();
+      let totalW = 0, logoH = logoSize, actualDrawX = x;
+      const mainColor = data.forceWhiteLogo ? '#FFFFFF' : (brandColorOverride || data.accent);
+      const subColor = data.forceWhiteLogo ? '#FFFFFF' : (sinceColorOverride || data.text);
+      const activeBrandFont = brandFontOverride || data.fontFrontBrand;
+
+      if (uploadedLogo) {
+        const processedImg = getProcessedLogo(surfaceBgColor, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
+        const ratio = uploadedLogo.width / uploadedLogo.height;
+        let drawH = logoSize;
+        let drawW = drawH * ratio;
+        if (drawW > maxAllowedW) {
+          drawW = maxAllowedW;
+          drawH = drawW / ratio;
+        }
+        actualDrawX = isCentered ? x - drawW / 2 : x;
+        ctx.drawImage(processedImg, actualDrawX, y, drawW, drawH);
+        totalW = drawW; logoH = drawH;
+
+        if (data.sinceYear) {
+          ctx.fillStyle = subColor;
+          ctx.font = `italic 400 ${sinceSize}px ${activeBrandFont}`;
+          ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+          ctx.fillText(data.sinceYear, actualDrawX + drawW, y + drawH + 6);
+        }
+      } else if (data.company) {
+        ctx.fillStyle = mainColor;
+        let fontSz = logoSize;
+        ctx.font = `700 ${fontSz}px ${activeBrandFont}`;
+        let wordW = ctx.measureText(data.company).width;
+        if (wordW > maxAllowedW) {
+          fontSz = Math.round(fontSz * (maxAllowedW / wordW));
+          ctx.font = `700 ${fontSz}px ${activeBrandFont}`;
+          wordW = ctx.measureText(data.company).width;
+        }
+        actualDrawX = isCentered ? x - wordW / 2 : x;
+
+        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText(data.company, actualDrawX, y);
+        totalW = wordW; logoH = fontSz;
+
+        if (data.showTm) {
+          const tmSize = Math.max(11, Math.round(fontSz * 0.21));
+          ctx.font = `700 ${tmSize}px ${data.fontFrontEn}`;
+          ctx.fillText('TM', actualDrawX + wordW + 4, y + 4);
+          totalW += tmSize + 8;
+        }
+
+        if (data.sinceYear) {
+          ctx.fillStyle = subColor;
+          ctx.font = `italic 400 ${sinceSize}px ${activeBrandFont}`;
+          ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+          ctx.fillText(data.sinceYear, actualDrawX + wordW, y + Math.round(fontSz * 0.94));
+        }
+      }
+      ctx.restore();
+      return { drawX: actualDrawX, w: Math.max(120, totalW), h: logoH + (data.sinceYear ? sinceSize + 12 : 0) };
+    }
+
+    function buildQRPayload(mode, customText, data) {
+      const rawWeb = data.website || 'www.centralfield.com';
+      const fullWeb = rawWeb.startsWith('http') ? rawWeb : `https://${rawWeb}`;
+      if (mode === 'vcard') {
+        return ['BEGIN:VCARD', 'VERSION:3.0', `FN:${(data.nameEn + ' ' + data.nameZh).trim() || data.company}`, `ORG:${data.companySubEn || data.company}`, `TITLE:${data.titleEn}`, `TEL;TYPE=WORK,VOICE:${data.phone}`, `TEL;TYPE=CELL,VOICE:${data.whatsapp}`, `EMAIL:${data.email}`, `URL:${fullWeb}`, 'END:VCARD'].join('\n');
+      } else if (mode === 'whatsapp') {
+        return `https://wa.me/${(data.whatsapp || data.phone || '85291317468').replace(/[^0-9]/g, '')}`;
+      } else if (mode === 'facebook') {
+        const rawFb = data.facebook || 'www.facebook.com/Centralfield/';
+        return rawFb.startsWith('http') ? rawFb : `https://${rawFb}`;
+      } else if (mode === 'map') {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((data.address || data.company).replace(/\n/g, ' '))}`;
+      } else if (mode === 'email') {
+        return `mailto:${data.email || 'sales@centralfield.com'}`;
+      } else if (mode === 'custom') {
+        return customText || fullWeb;
+      }
+      return fullWeb;
+    }
+
+    function drawStyledQRCode(ctx, x, y, qrSize, qrPayload, cardBgHex, cardAccentHex, cardTextHex, qrColorStyle) {
+      let fgColor = cardAccentHex, bgColor = cardBgHex;
+      if (qrColorStyle === 'theme_text') fgColor = cardTextHex;
+      else if (qrColorStyle === 'white_box') { fgColor = '#111827'; bgColor = '#FFFFFF'; }
+      else {
+        const bgRgb = hexToRgb(cardBgHex), acRgb = hexToRgb(cardAccentHex);
+        if (Math.sqrt((bgRgb.r - acRgb.r) ** 2 + (bgRgb.g - acRgb.g) ** 2 + (bgRgb.b - acRgb.b) ** 2) < 75) fgColor = cardTextHex;
+      }
+
+      const qrCanvas = document.createElement('canvas');
+      new QRious({ element: qrCanvas, value: qrPayload, size: 280, level: 'M', foreground: fgColor, background: bgColor, padding: qrColorStyle === 'white_box' ? 10 : 4 });
+
+      ctx.save();
+      if (qrColorStyle === 'white_box') {
+        ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = cardAccentHex + '44'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(x - 6, y - 6, qrSize + 12, qrSize + 12, 10); ctx.fill(); ctx.stroke();
+      } else {
+        ctx.fillStyle = bgColor; ctx.strokeStyle = fgColor + '35'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(x - 4, y - 4, qrSize + 8, qrSize + 8, 8); ctx.fill(); ctx.stroke();
+      }
+      ctx.drawImage(qrCanvas, x, y, qrSize, qrSize);
+      ctx.restore();
+    }
+
+    function drawBleedGuide(ctx, w, h) {
+      const bleed = 35;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.65)';
+      ctx.lineWidth = 2; ctx.setLineDash([10, 8]);
+      ctx.strokeRect(bleed, bleed, w - bleed * 2, h - bleed * 2);
+      ctx.restore();
+    }
+
+    // ==================== 渲染正面 (套用正面獨立中英文字體) ====================
+    function renderFront(data) {
+      const canvas = document.getElementById('canvasFront');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const portrait = isPortrait();
+      const pos = getActiveFrontPos();
+      const frontMixedFont = buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh);
+
+      ctx.fillStyle = data.bg; ctx.fillRect(0, 0, W, H);
+
+      // 繪製 12 款正面現代白與 AI 科技幾何構圖
+      drawFrontTechAndWhiteEffects(ctx, W, H, data, pos, portrait);
+
+      // 1. 繪製 Logo 與 Since 1983 (套用 fontFrontBrand)
+      const bPos = pos.brand;
+      const maxLogoW = portrait ? (W - 110) : 470;
+      if (bPos.autoRight && !bPos.centered) {
+        let estW = 280;
+        if (uploadedLogo) {
+          estW = Math.min(maxLogoW, data.sizeLogo * (uploadedLogo.width / uploadedLogo.height));
+        } else if (data.company) {
+          ctx.save(); ctx.font = `700 ${data.sizeLogo}px ${data.fontFrontBrand}`;
+          estW = Math.min(maxLogoW, ctx.measureText(data.company).width + (data.showTm ? 24 : 0)); ctx.restore();
+        }
+        bPos.x = Math.round(W - 64 - estW);
+      }
+
+      const brandMetrics = drawBrandAndSince(ctx, bPos.x, bPos.y, data.sizeLogo, data.sizeSince, data, !!bPos.centered, data.bg, null, null, maxLogoW, data.fontFrontBrand);
+      bPos.drawX = brandMetrics.drawX; bPos.w = brandMetrics.w; bPos.h = brandMetrics.h;
+
+      // 2. 繪製公司雙語副標 + 姓名 + 職銜 (套用 fontFrontBrand / fontFrontEn / fontFrontZh)
+      const pPos = pos.profile;
+      const pCenter = !!pPos.centered;
+      ctx.save();
+      ctx.textBaseline = 'top';
+      ctx.textAlign = pCenter ? 'center' : 'left';
+      let curY = pPos.y, maxProfileW = 220;
+
+      if (data.companySubEn) {
+        ctx.fillStyle = data.accent; ctx.font = `700 19px ${data.fontFrontBrand}`;
+        ctx.fillText(data.companySubEn, pPos.x, curY);
+        maxProfileW = Math.max(maxProfileW, ctx.measureText(data.companySubEn).width);
+        curY += 25;
+      }
+      if (data.companySubZh) {
+        ctx.fillStyle = data.text; ctx.font = `500 19px ${data.fontFrontZh}`;
+        ctx.fillText(data.companySubZh, pPos.x, curY);
+        maxProfileW = Math.max(maxProfileW, ctx.measureText(data.companySubZh).width);
+        curY += 34;
+      }
+      if (data.nameEn) {
+        ctx.fillStyle = data.text; ctx.font = `700 ${data.sizeName}px ${data.fontFrontEn}`;
+        ctx.fillText(data.nameEn, pPos.x, curY);
+        maxProfileW = Math.max(maxProfileW, ctx.measureText(data.nameEn).width);
+        curY += data.sizeName + 8;
+      }
+      if (data.nameZh) {
+        const zhSize = data.nameEn ? Math.round(data.sizeName * 0.78) : data.sizeName;
+        ctx.fillStyle = data.text; ctx.font = `500 ${zhSize}px ${data.fontFrontZh}`;
+        ctx.fillText(data.nameZh, pPos.x, curY);
+        maxProfileW = Math.max(maxProfileW, ctx.measureText(data.nameZh).width);
+        curY += zhSize + 12;
+      }
+      const titleStr = [data.titleEn, data.titleZh].filter(Boolean).join('  |  ');
+      if (titleStr) {
+        ctx.fillStyle = data.text; ctx.font = `400 ${data.sizeTitle}px ${frontMixedFont}`;
+        ctx.fillText(titleStr, pPos.x, curY);
+        maxProfileW = Math.max(maxProfileW, ctx.measureText(titleStr).width);
+        curY += data.sizeTitle + 6;
+      }
+      pPos.w = maxProfileW; pPos.h = Math.max(80, curY - pPos.y);
+      pPos.drawX = pCenter ? pPos.x - maxProfileW / 2 : pPos.x;
+      ctx.restore();
+
+      // 3. 繪製 6 列精緻圖示聯絡清單 (套用 frontMixedFont)
+      const cPos = pos.contacts;
+      const contactRows = [{ type: 'email', val: data.email }, { type: 'web', val: data.website }, { type: 'facebook', val: data.facebook }, { type: 'tel', val: data.phone }, { type: 'fax', val: data.fax }, { type: 'whatsapp', val: data.whatsapp }].filter(item => item.val);
+      const lineH = Math.round(data.sizeContact * 1.88), iconSize = Math.round(data.sizeContact * 1.05);
+      ctx.save(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      let maxContactW = 240;
+      contactRows.forEach((item, idx) => {
+        const rowY = cPos.y + idx * lineH;
+        drawContactIcon(ctx, item.type, cPos.x, rowY, iconSize, data.accent);
+        ctx.fillStyle = data.text; ctx.font = `400 ${data.sizeContact}px ${frontMixedFont}`;
+        ctx.fillText(item.val, cPos.x + iconSize + 14, rowY + iconSize / 2 + 1);
+        maxContactW = Math.max(maxContactW, iconSize + 14 + ctx.measureText(item.val).width);
+      });
+      cPos.w = maxContactW; cPos.h = Math.max(50, contactRows.length * lineH); cPos.drawX = cPos.x;
+      ctx.restore();
+
+      // 4. 繪製中英雙語地址欄 (中文地址套用 fontFrontZh，英文地址套用 fontFrontEn)
+      const aPos = pos.addressBlock;
+      ctx.save(); ctx.fillStyle = data.text; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+      const addrFontSz = portrait ? Math.min(18, data.sizeContact) : data.sizeContact;
+      const addrLineH = Math.round(addrFontSz * 1.45);
+      let addrY = aPos.y, maxAddrW = 220;
+      const zhLines = data.address.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      ctx.font = `400 ${addrFontSz}px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
+      zhLines.forEach(line => { ctx.fillText(line, aPos.x, addrY); maxAddrW = Math.max(maxAddrW, ctx.measureText(line).width); addrY += addrLineH; });
+      if (zhLines.length > 0 && data.addressEn.trim()) addrY += 10;
+      const enLines = data.addressEn.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      ctx.font = `400 ${addrFontSz}px ${data.fontFrontEn}`;
+      enLines.forEach(line => { ctx.fillText(line, aPos.x, addrY); maxAddrW = Math.max(maxAddrW, ctx.measureText(line).width); addrY += addrLineH; });
+      aPos.w = maxAddrW; aPos.h = Math.max(60, addrY - aPos.y); aPos.drawX = aPos.x;
+      ctx.restore();
+
+      // 5. 繪製正面 QR Code
+      if (data.showQrFront) {
+        const qPos = pos.qrcode;
+        qPos.w = data.sizeQr; qPos.h = data.sizeQr; qPos.drawX = qPos.x;
+        drawStyledQRCode(ctx, qPos.x, qPos.y, data.sizeQr, buildQRPayload(data.frontQrMode, data.frontQrCustom, data), data.bg, data.accent, data.text, data.qrColorStyle);
+      }
+
+      if (!isExportingClean) {
+        if (data.showBleed) drawBleedGuide(ctx, W, H);
+        const activeKey = draggingFrontKey || hoveredFrontKey;
+        if (activeKey && pos[activeKey] && (activeKey !== 'qrcode' || data.showQrFront)) {
+          const b = pos[activeKey];
+          drawInteractiveBox(ctx, b.drawX !== undefined ? b.drawX : b.x, b.y, b.w, b.h, b.label);
+        }
+      }
+    }
+
+    function drawInteractiveBox(ctx, x, y, w, h, label) {
+      ctx.save(); ctx.strokeStyle = '#0891B2'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+      ctx.strokeRect(x - 8, y - 8, w + 16, h + 16);
+      ctx.fillStyle = '#0891B2'; ctx.setLineDash([]); ctx.fillRect(x - 8, y - 30, 165, 22);
+      ctx.fillStyle = '#FFFFFF'; ctx.font = `600 12px 'Noto Sans TC', sans-serif`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.fillText(`✥ ${label}`, x, y - 19); ctx.restore();
+    }
+
+    // ==================== 繪製經典全分店名錄背面 (套用背面獨立中英文字體) ====================
+    function renderBranchDirectoryBack(ctx, W, H, data, backBg, backBrandColor, backTextColor) {
+      const bgRgb = hexToRgb(backBg);
+      const isDark = (0.299 * bgRgb.r + 0.587 * bgRgb.g + 0.114 * bgRgb.b) / 255 < 0.45;
+      const subBlueColor = isDark ? '#60A5FA' : '#1E3A8A';
+      const barBgColor = isDark ? 'rgba(255,255,255,0.12)' : '#D6D9DF';
+      const portrait = isPortrait();
+      const backMixedFont = buildMixedFontFamily(data.fontBackEn, data.fontBackZh);
+
+      function drawDirectoryColumn(rawText, startX, startY, colWidth, fontScale = 1.0) {
+        let curY = startY;
+        const lines = rawText.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        ctx.save(); ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+        lines.forEach(line => {
+          if (line.startsWith('TITLE:')) {
+            if (curY > startY + 15) curY += Math.round(6 * fontScale);
+            ctx.fillStyle = backBrandColor; ctx.font = `700 ${Math.round(24 * fontScale)}px ${data.fontBackHeader}`;
+            ctx.fillText(line.replace('TITLE:', '').trim(), startX, curY); curY += Math.round(28 * fontScale);
+          } else if (line.startsWith('SUB:')) {
+            ctx.fillStyle = subBlueColor; ctx.font = `700 ${Math.round(15 * fontScale)}px ${data.fontBackEn}`;
+            ctx.fillText(line.replace('SUB:', '').trim(), startX, curY); curY += Math.round(21 * fontScale);
+          } else if (line.startsWith('[') && line.endsWith(']')) {
+            curY += Math.round(4 * fontScale);
+            ctx.fillStyle = barBgColor; ctx.fillRect(startX - 2, curY - 1, colWidth, Math.round(22 * fontScale));
+            ctx.fillStyle = backTextColor; ctx.font = `700 ${Math.round(15 * fontScale)}px ${data.fontBackZh}`;
+            ctx.fillText(line.slice(1, -1).trim(), startX + 2, curY + 2); curY += Math.round(24 * fontScale);
+          } else {
+            ctx.fillStyle = backTextColor; ctx.font = `500 ${Math.round(15 * fontScale)}px ${backMixedFont}`;
+            ctx.fillText(line, startX, curY); curY += Math.round(19.5 * fontScale);
+          }
+        });
+        ctx.restore();
+        return curY;
+      }
+
+      if (portrait) {
+        const nextY = drawDirectoryColumn(data.dirLeftText, 48, 42, W - 96, 0.88);
+        drawDirectoryColumn(data.dirRightText, 48, nextY + 10, W - 96, 0.88);
+      } else {
+        drawDirectoryColumn(data.dirLeftText, 54, 42, 465, 1.0);
+        drawDirectoryColumn(data.dirRightText, 552, 42, 460, 1.0);
+      }
+
+      if (data.showBackWeb && data.website) {
+        ctx.save();
+        const webUrl = data.website.startsWith('http') ? data.website : `http://${data.website}`;
+        ctx.fillStyle = backBrandColor; ctx.font = `700 ${portrait ? 24 : 29}px ${data.fontBackEn}`; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+        const wx = portrait ? 48 : 54, wy = H - 38;
+        ctx.fillText(webUrl, wx, wy);
+        const urlW = ctx.measureText(webUrl).width;
+        const ax = wx + urlW + 12, ay = wy - 18;
+        ctx.strokeStyle = backTextColor; ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(ax, ay + 18); ctx.lineTo(ax + 5, ay); ctx.lineTo(ax + 18, ay + 12); ctx.lineTo(ax + 11, ay + 14); ctx.lineTo(ax + 15, ay + 21); ctx.lineTo(ax + 11, ay + 23); ctx.lineTo(ax + 7, ay + 16); ctx.closePath(); ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function getBackColorScheme(data) {
+      let backBg = data.bg, backBrandColor = data.accent, backTextColor = data.text;
+      if (data.backThemePreset === 'invert_accent') {
+        backBg = data.accent; backBrandColor = '#FFFFFF'; backTextColor = '#F8FAFC';
+      } else if (data.backThemePreset !== 'sync') {
+        backBg = data.backColorBg; backBrandColor = data.backColorAccent; backTextColor = data.backColorText;
+      }
+      return { backBg, backBrandColor, backTextColor };
+    }
+
+    // ==================== 渲染背面 (套用背面獨立中英文字體與 14 款版型) ====================
+    function renderBack(data) {
+      const canvas = document.getElementById('canvasBack');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const portrait = isPortrait();
+      const bPos = getActiveBackPos();
+      const backMixedFont = buildMixedFontFamily(data.fontBackEn, data.fontBackZh);
+      const backHeaderMixedFont = buildMixedFontFamily(data.fontBackHeader, data.fontBackZh);
+
+      const { backBg, backBrandColor, backTextColor } = getBackColorScheme(data);
+      const bgRgb = hexToRgb(backBg);
+      const isDark = (0.299 * bgRgb.r + 0.587 * bgRgb.g + 0.114 * bgRgb.b) / 255 < 0.48;
+
+      ctx.fillStyle = backBg; ctx.fillRect(0, 0, W, H);
+
+      if (data.backLayout === 'branch_directory') {
+        renderBranchDirectoryBack(ctx, W, H, data, backBg, backBrandColor, backTextColor);
+        if (data.showBackQr) {
+          const qp = bPos.backQr;
+          drawStyledQRCode(ctx, portrait ? W - 155 : qp.x, portrait ? H - 155 : qp.y, 110, buildQRPayload(data.backQrMode, data.backQrCustom, data), backBg, backBrandColor, backTextColor, data.qrColorStyle);
+        }
+        if (!isExportingClean && data.showBleed) drawBleedGuide(ctx, W, H);
+        return;
+      }
+
+      // 繪製背面幾何與 AI 科技紋理
+      ctx.save();
+      if (data.backLayout === 'segmented_groups') {
+        ctx.fillStyle = backBrandColor; ctx.fillRect(60, bPos.backBrand.y + data.sizeBackLogo + 28, W - 120, 2.5);
+      } else if (data.backLayout === 'vertical_list_card') {
+        ctx.fillStyle = backBrandColor;
+        ctx.fillRect(68, 165, W - 136, 2.5);
+        ctx.fillRect(68, H - 175, W - 136, 2.5);
+      } else if (data.backLayout === 'classic_center') {
+        ctx.fillStyle = backBrandColor; ctx.fillRect(0, H - 16, W, 16);
+      } else if (data.backLayout === 'qr_showcase') {
+        ctx.fillStyle = backBrandColor; ctx.fillRect(0, 0, 20, H);
+      } else if (data.backLayout === 'luxe_frame') {
+        ctx.strokeStyle = backBrandColor; ctx.lineWidth = 3; ctx.strokeRect(38, 38, W - 76, H - 76);
+      } else if (data.backLayout === 'diagonal_split') {
+        ctx.fillStyle = backBrandColor + '18';
+        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W * 0.55, 0); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
+      } else if (data.backLayout === 'ai_circuit_core') {
+        const cx = portrait ? W * 0.5 : W * 0.82;
+        const cy = portrait ? H * 0.76 : H * 0.46;
+        const radGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 260);
+        radGrad.addColorStop(0, backBrandColor + (isDark ? '32' : '1E'));
+        radGrad.addColorStop(1, backBrandColor + '00');
+        ctx.fillStyle = radGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = backBrandColor + '33';
+        ctx.lineWidth = 1.5;
+        [75, 125, 175].forEach((r, idx) => {
+          ctx.beginPath();
+          if (idx === 1) ctx.setLineDash([8, 6]);
+          else ctx.setLineDash([]);
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.fillStyle = backBrandColor;
+        ctx.fillRect(64, bPos.backBrand.y + data.sizeBackLogo + 24, W - 128, 2);
+      } else if (data.backLayout === 'modern_white_bento') {
+        const cardFill = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.026)';
+        const borderCol = isDark ? backBrandColor + '38' : 'rgba(15,23,42,0.1)';
+        ctx.fillStyle = cardFill;
+        ctx.strokeStyle = borderCol;
+        ctx.lineWidth = 1.5;
+
+        if (portrait) {
+          ctx.beginPath(); ctx.roundRect(44, 52, W - 88, 92, 16); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.roundRect(44, 168, W - 88, 520, 18); ctx.fill(); ctx.stroke();
+        } else {
+          ctx.beginPath(); ctx.roundRect(54, 48, W - 108, 92, 16); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.roundRect(54, 162, W - 310, 380, 18); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.roundRect(W - 235, 162, 181, 380, 18); ctx.fill(); ctx.stroke();
+        }
+      } else if (data.backLayout === 'hud_tech_spec') {
+        const pad = 34;
+        ctx.strokeStyle = backBrandColor + '66';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2);
+
+        const corners = [[pad + 18, pad + 18], [W - pad - 18, pad + 18], [pad + 18, H - pad - 18], [W - pad - 18, H - pad - 18]];
+        corners.forEach(([sx, sy]) => {
+          ctx.strokeStyle = backBrandColor;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(sx, sy, 6, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(sx - 3.5, sy); ctx.lineTo(sx + 3.5, sy); ctx.moveTo(sx, sy - 3.5); ctx.lineTo(sx, sy + 3.5); ctx.stroke();
+        });
+
+        ctx.fillStyle = backBrandColor;
+        ctx.fillRect(pad + 36, bPos.backBrand.y + data.sizeBackLogo + 22, W - (pad + 36) * 2, 2);
+        ctx.fillStyle = backTextColor + '66';
+        ctx.font = `600 11px 'JetBrains Mono', monospace`;
+        ctx.fillText('SPEC // ENTERPRISE & AI SOLUTIONS', pad + 36, H - pad - 14);
+      } else if (data.backLayout === 'minimal_arch_line') {
+        ctx.strokeStyle = backTextColor + '22';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(48, 185); ctx.lineTo(W - 48, 185);
+        ctx.moveTo(48, H - 105); ctx.lineTo(W - 48, H - 105);
+        ctx.stroke();
+        ctx.fillStyle = backBrandColor;
+        ctx.fillRect(W / 2 - 45, 183.5, 90, 4);
+      }
+      ctx.restore();
+
+      // 1. 繪製背面頂部標題或 Logo (套用 fontBackHeader 與 fontBackZh)
+      if (data.showBackLogo) {
+        const bp = bPos.backBrand;
+        const maxBackLogoW = W - 110;
+        if (data.backHeaderTitle && data.backHeaderTitle.trim() && !data.useImageLogoOnBack) {
+          ctx.save(); ctx.fillStyle = backTextColor; ctx.textAlign = bp.centered ? 'center' : 'left'; ctx.textBaseline = 'top';
+          const hLines = data.backHeaderTitle.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          let maxHW = 240;
+          hLines.forEach((hl, i) => {
+            let fSize = i === 0 ? data.sizeBackLogo : Math.round(data.sizeBackLogo * 0.78);
+            const activeHFont = i === 0 ? backHeaderMixedFont : buildMixedFontFamily(data.fontBackEn, data.fontBackZh);
+            ctx.font = `${i === 0 ? 700 : 600} ${fSize}px ${activeHFont}`;
+            let lw = ctx.measureText(hl).width;
+            if (lw > maxBackLogoW) {
+              fSize = Math.round(fSize * (maxBackLogoW / lw));
+              ctx.font = `${i === 0 ? 700 : 600} ${fSize}px ${activeHFont}`;
+              lw = ctx.measureText(hl).width;
+            }
+            ctx.fillStyle = i === 0 ? backTextColor : backBrandColor;
+            ctx.fillText(hl, bp.x, bp.y + i * (data.sizeBackLogo + 10));
+            maxHW = Math.max(maxHW, lw);
+          });
+          bp.w = maxHW; bp.h = hLines.length * (data.sizeBackLogo + 10); bp.drawX = bp.centered ? bp.x - maxHW / 2 : bp.x;
+          ctx.restore();
+        } else {
+          const m = drawBrandAndSince(ctx, bp.x, bp.y, Math.max(48, data.sizeBackLogo), Math.round(data.sizeSince * 1.05), data, !!bp.centered, backBg, backBrandColor, backTextColor, maxBackLogoW, data.fontBackHeader);
+          bp.drawX = m.drawX; bp.w = m.w; bp.h = m.h;
+        }
+      }
+
+      // 2. 繪製背面標語與分類業務內容 (套用 backMixedFont: 英文/數字用 fontBackEn，中文用 fontBackZh)
+      if (data.showBackTagline && data.backTaglineText.trim()) {
+        const tp = bPos.backTagline;
+        const maxLineW = W - (tp.centered ? 90 : tp.x + 50);
+        ctx.save(); ctx.textBaseline = 'top';
+        if (data.backLayout === 'triple_features') {
+          ctx.textAlign = 'center';
+          const cols = ['⚡ 高效能運算方案', '🛡️ 原廠信心保證', '💡 專業技術支援'];
+          cols.forEach((colTitle, idx) => {
+            if (portrait) {
+              const cy = tp.y + idx * 105;
+              ctx.fillStyle = backBrandColor; ctx.font = `700 21px ${backMixedFont}`; ctx.fillText(colTitle, W / 2, cy);
+              ctx.fillStyle = backTextColor + 'CC'; ctx.font = `400 16px ${backMixedFont}`; ctx.fillText('嚴選頂級硬件規格 · 滿足專業需求', W / 2, cy + 32);
+            } else {
+              const cx = (W / 3) * idx + (W / 3) / 2;
+              ctx.fillStyle = backBrandColor; ctx.font = `700 20px ${backMixedFont}`; ctx.fillText(colTitle, cx, tp.y);
+              ctx.fillStyle = backTextColor + 'CC'; ctx.font = `400 15px ${backMixedFont}`; ctx.fillText('嚴選頂級硬件規格 · 滿足專業需求', cx, tp.y + 34);
+            }
+          });
+          tp.w = W - 100; tp.h = portrait ? 310 : 90; tp.drawX = 50;
+        } else {
+          ctx.textAlign = tp.centered ? 'center' : 'left';
+          const rawLines = data.backTaglineText.split(/\r?\n/);
+          const lineH = Math.round(data.sizeBackText * 1.62);
+          let curY = tp.y, maxW = 240;
+          rawLines.forEach(rawLine => {
+            const line = rawLine.trim();
+            if (!line) { curY += Math.round(lineH * 0.45); return; }
+            const isHeader = line.startsWith('【') && line.includes('】');
+            let fSz = data.sizeBackText;
+            ctx.font = `${isHeader ? 700 : 500} ${fSz}px ${backMixedFont}`;
+            let measured = ctx.measureText(line).width;
+            if (measured > maxLineW && maxLineW > 120) {
+              fSz = Math.max(13, Math.floor(fSz * (maxLineW / measured)));
+              ctx.font = `${isHeader ? 700 : 500} ${fSz}px ${backMixedFont}`;
+              measured = ctx.measureText(line).width;
+            }
+            ctx.fillStyle = isHeader ? backBrandColor : backTextColor;
+            ctx.fillText(line, tp.x, curY);
+            maxW = Math.max(maxW, measured);
+            curY += lineH;
+          });
+          tp.w = maxW; tp.h = Math.max(45, curY - tp.y); tp.drawX = tp.centered ? tp.x - maxW / 2 : tp.x;
+        }
+        ctx.restore();
+      }
+
+      if (data.backFooterSub) {
+        ctx.save(); ctx.fillStyle = backTextColor; ctx.font = `600 20px ${backMixedFont}`;
+        ctx.textAlign = (data.backLayout === 'segmented_groups' && !portrait) ? 'left' : 'center';
+        ctx.fillText(data.backFooterSub, (data.backLayout === 'segmented_groups' && !portrait) ? 68 : W / 2, H - 96);
+        ctx.restore();
+      }
+
+      if (data.showBackWeb && data.website) {
+        ctx.save(); ctx.fillStyle = backTextColor; ctx.font = `600 20px ${data.fontBackEn}`;
+        const isLeftWeb = (data.backLayout === 'segmented_groups' || data.backLayout === 'ai_circuit_core' || data.backLayout === 'modern_white_bento') && !portrait;
+        ctx.textAlign = isLeftWeb ? 'left' : 'center';
+        ctx.fillText(data.website, isLeftWeb ? 76 : W / 2, H - 52);
+        ctx.restore();
+      }
+
+      if (data.showBackQr) {
+        const qp = bPos.backQr;
+        const qrSize = (data.backLayout === 'qr_showcase' || data.backLayout === 'giant_qr_card') ? Math.max(185, data.sizeQr + 50) : data.sizeQr;
+        qp.w = qrSize; qp.h = qrSize; qp.drawX = qp.x;
+        drawStyledQRCode(ctx, qp.x, qp.y, qrSize, buildQRPayload(data.backQrMode, data.backQrCustom, data), backBg, backBrandColor, backTextColor, data.qrColorStyle);
+      }
+
+      if (!isExportingClean) {
+        if (data.showBleed) drawBleedGuide(ctx, W, H);
+        const activeKey = draggingBackKey || hoveredBackKey;
+        if (activeKey && bPos[activeKey]) {
+          const b = bPos[activeKey];
+          drawInteractiveBox(ctx, b.drawX !== undefined ? b.drawX : b.x, b.y, b.w, b.h, b.label);
+        }
+      }
+    }
+
+    function renderAll(skipSave = false) {
+      try {
+        const data = getFormData();
+        renderFront(data);
+        renderBack(data);
+        if (!skipSave && !isExportingClean) saveStateToStorage();
+      } catch (err) { console.error('Render error:', err); }
+    }
+
+    // ==================== 雙頁印刷級 PDF 導出引擎 ====================
+    function createFullBleedCanvas(sourceCanvas, side, data) {
+      const bleedPx = 35.5;
+      const bleedW = Math.round(sourceCanvas.width + bleedPx * 2);
+      const bleedH = Math.round(sourceCanvas.height + bleedPx * 2);
+      const c = document.createElement('canvas');
+      c.width = bleedW; c.height = bleedH;
+      const ctx = c.getContext('2d');
+      const { backBg, backBrandColor } = getBackColorScheme(data);
+      const baseBg = side === 'front' ? data.bg : backBg;
+      const baseAccent = side === 'front' ? data.accent : backBrandColor;
+
+      ctx.fillStyle = baseBg; ctx.fillRect(0, 0, bleedW, bleedH);
+      ctx.save();
+      if (side === 'front') {
+        if (data.layout === 'top_banner') { ctx.fillStyle = baseAccent; ctx.fillRect(0, 0, bleedW, bleedPx + 16); }
+        else if (data.layout === 'sidebar_accent' || data.layout === 'dot_matrix_tech') { ctx.fillStyle = baseAccent; ctx.fillRect(0, 0, bleedPx + 14, bleedH); }
+      } else {
+        if (data.backLayout === 'classic_center') { ctx.fillStyle = baseAccent; ctx.fillRect(0, bleedH - bleedPx - 16, bleedW, bleedPx + 16); }
+        else if (data.backLayout === 'qr_showcase') { ctx.fillStyle = baseAccent; ctx.fillRect(0, 0, bleedPx + 20, bleedH); }
+      }
+      ctx.restore();
+
+      ctx.drawImage(sourceCanvas, bleedPx, bleedPx);
+      if (side === 'front' && data.layout === 'classic_cf' && data.showRightTriangle) {
+        const triY = isPortrait() ? 425 - 42 : 268 - 56;
+        const triH = isPortrait() ? 84 : 112;
+        ctx.fillStyle = data.accent;
+        ctx.fillRect(bleedPx + sourceCanvas.width - 1, bleedPx + triY, bleedPx + 2, triH);
+      }
+      return c;
+    }
+
+    function drawPDFVectorCropMarks(doc, trimX, trimY, trimW, trimH, bleedMm) {
+      const offset = bleedMm + 0.8, markLen = 3.6;
+      const x1 = trimX, x2 = trimX + trimW, y1 = trimY, y2 = trimY + trimH;
+      doc.setDrawColor(30, 30, 30); doc.setLineWidth(0.18);
+      doc.line(x1 - offset - markLen, y1, x1 - offset, y1); doc.line(x1, y1 - offset - markLen, x1, y1 - offset);
+      doc.line(x2 + offset, y1, x2 + offset + markLen, y1); doc.line(x2, y1 - offset - markLen, x2, y1 - offset);
+      doc.line(x1 - offset - markLen, y2, x1 - offset, y2); doc.line(x1, y2 + offset, x1, y2 + offset + markLen);
+      doc.line(x2 + offset, y2, x2 + offset + markLen, y2); doc.line(x2, y2 + offset, x2, y2 + offset + markLen);
+    }
+
+    function appendCardPairToPDF(doc, data, specMode, isFirstPair) {
+      const frontCanvas = document.getElementById('canvasFront');
+      const backCanvas = document.getElementById('canvasBack');
+      const portrait = isPortrait();
+      const orient = portrait ? 'portrait' : 'landscape';
+
+      const trimW = portrait ? 54 : 90;
+      const trimH = portrait ? 90 : 54;
+      const bleedW = trimW + 6;
+      const bleedH = trimH + 6;
+      const pageW = trimW + 16;
+      const pageH = trimH + 16;
+
+      if (specMode === 'trim_only') {
+        if (!isFirstPair) doc.addPage([trimW, trimH], orient);
+        doc.addImage(frontCanvas.toDataURL('image/png', 1.0), 'PNG', 0, 0, trimW, trimH);
+        doc.addPage([trimW, trimH], orient);
+        doc.addImage(backCanvas.toDataURL('image/png', 1.0), 'PNG', 0, 0, trimW, trimH);
+      } else if (specMode === 'bleed_only') {
+        const bleedFront = createFullBleedCanvas(frontCanvas, 'front', data);
+        const bleedBack = createFullBleedCanvas(backCanvas, 'back', data);
+        if (!isFirstPair) doc.addPage([bleedW, bleedH], orient);
+        doc.addImage(bleedFront.toDataURL('image/png', 1.0), 'PNG', 0, 0, bleedW, bleedH);
+        doc.addPage([bleedW, bleedH], orient);
+        doc.addImage(bleedBack.toDataURL('image/png', 1.0), 'PNG', 0, 0, bleedW, bleedH);
+      } else {
+        const bleedFront = createFullBleedCanvas(frontCanvas, 'front', data);
+        const bleedBack = createFullBleedCanvas(backCanvas, 'back', data);
+        if (!isFirstPair) doc.addPage([pageW, pageH], orient);
+        doc.addImage(bleedFront.toDataURL('image/png', 1.0), 'PNG', 5, 5, bleedW, bleedH);
+        drawPDFVectorCropMarks(doc, 8, 8, trimW, trimH, 3);
+        doc.addPage([pageW, pageH], orient);
+        doc.addImage(bleedBack.toDataURL('image/png', 1.0), 'PNG', 5, 5, bleedW, bleedH);
+        drawPDFVectorCropMarks(doc, 8, 8, trimW, trimH, 3);
+      }
+    }
+
+    function exportTwoPagePrintPDF() {
+      if (!window.jspdf || !window.jspdf.jsPDF) return alert('PDF 引擎載入中，請稍候！');
+      const { jsPDF } = window.jspdf;
+      const specMode = document.getElementById('pdfSpecMode').value;
+      const portrait = isPortrait();
+      const orient = portrait ? 'portrait' : 'landscape';
+      const trimW = portrait ? 54 : 90, trimH = portrait ? 90 : 54;
+      const fmt = specMode === 'bleed_only' ? [trimW + 6, trimH + 6] : (specMode === 'trim_only' ? [trimW, trimH] : [trimW + 16, trimH + 16]);
+
+      isExportingClean = true; renderAll(true);
+      const data = getFormData();
+      const doc = new jsPDF({ orientation: orient, unit: 'mm', format: fmt, compress: true });
+      appendCardPairToPDF(doc, data, specMode, true);
+      doc.save(`${(data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_')}_${portrait ? 'Portrait' : 'Landscape'}_2Pages.pdf`);
+      isExportingClean = false; renderAll(true);
+      showAutoSaveFeedback('📄 已成功導出雙頁印刷級 PDF');
+    }
+
+    async function exportTeamBatchPDF() {
+      if (!teamList.length) return;
+      const statusEl = document.getElementById('batchStatus'), btn = document.getElementById('btnBatchPdf');
+      statusEl.classList.remove('hidden'); btn.disabled = true;
+      const { jsPDF } = window.jspdf;
+      const specMode = document.getElementById('pdfSpecMode').value;
+      const portrait = isPortrait();
+      const orient = portrait ? 'portrait' : 'landscape';
+      const trimW = portrait ? 54 : 90, trimH = portrait ? 90 : 54;
+      const fmt = specMode === 'bleed_only' ? [trimW + 6, trimH + 6] : (specMode === 'trim_only' ? [trimW, trimH] : [trimW + 16, trimH + 16]);
+
+      const doc = new jsPDF({ orientation: orient, unit: 'mm', format: fmt, compress: true });
+      const savedIdx = currentMemberIdx; isExportingClean = true;
+
+      for (let i = 0; i < teamList.length; i++) {
+        statusEl.textContent = `正在渲染第 ${i + 1} / ${teamList.length} 位成員 PDF...`;
+        selectMember(i); await new Promise(r => setTimeout(r, 45));
+        appendCardPairToPDF(doc, getFormData(), specMode, i === 0);
+      }
+      doc.save(`Team_BusinessCards_${teamList.length}p_PrintReady.pdf`);
+      isExportingClean = false; selectMember(savedIdx); btn.disabled = false;
+      statusEl.textContent = `✅ 成功導出全團隊 ${teamList.length} 位成員印刷級 PDF！`;
+    }
+
+    // ==================== 雙畫布滑鼠拖曳引擎 ====================
+    const frontCanvas = document.getElementById('canvasFront');
+    const backCanvas = document.getElementById('canvasBack');
+
+    function getCanvasMousePt(canvasEl, e) {
+      const rect = canvasEl.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: (clientX - rect.left) * (canvasEl.width / rect.width), y: (clientY - rect.top) * (canvasEl.height / rect.height) };
+    }
+
+    function hitTestFront(x, y) {
+      const showQr = document.getElementById('showQrFront').checked;
+      const pos = getActiveFrontPos();
+      for (const key of ['qrcode', 'addressBlock', 'contacts', 'brand', 'profile']) {
+        if (key === 'qrcode' && !showQr) continue;
+        const b = pos[key], bx = b.drawX !== undefined ? b.drawX : b.x;
+        if (x >= bx - 10 && x <= bx + b.w + 10 && y >= b.y - 10 && y <= b.y + b.h + 10) return key;
+      }
+      return null;
+    }
+
+    function hitTestBack(x, y) {
+      if (document.getElementById('backLayout').value === 'branch_directory') return null;
+      const bPos = getActiveBackPos();
+      for (const key of ['backQr', 'backTagline', 'backBrand']) {
+        if (key === 'backBrand' && !document.getElementById('showBackLogo').checked) continue;
+        if (key === 'backTagline' && !document.getElementById('showBackTagline').checked) continue;
+        if (key === 'backQr' && !document.getElementById('showBackQr').checked) continue;
+        const b = bPos[key], bx = b.drawX !== undefined ? b.drawX : b.x;
+        if (x >= bx - 10 && x <= bx + b.w + 10 && y >= b.y - 10 && y <= b.y + b.h + 10) return key;
+      }
+      return null;
+    }
+
+    frontCanvas.addEventListener('mousedown', (e) => {
+      const pt = getCanvasMousePt(frontCanvas, e), hit = hitTestFront(pt.x, pt.y);
+      if (hit) {
+        const pos = getActiveFrontPos();
+        draggingFrontKey = hit;
+        if (hit === 'brand') {
+          pos.brand.autoRight = false;
+          document.getElementById('frontLogoPosPreset').value = 'custom';
+        }
+        dragOffset.x = pt.x - pos[hit].x;
+        dragOffset.y = pt.y - pos[hit].y;
+        frontCanvas.style.cursor = 'grabbing';
+        renderAll(true);
+      }
+    });
+
+    frontCanvas.addEventListener('mousemove', (e) => {
+      const pt = getCanvasMousePt(frontCanvas, e);
+      if (draggingFrontKey) {
+        const pos = getActiveFrontPos();
+        const b = pos[draggingFrontKey];
+        b.x = Math.round(Math.max(20, Math.min(frontCanvas.width - 40, pt.x - dragOffset.x)));
+        b.y = Math.round(Math.max(20, Math.min(frontCanvas.height - 30, pt.y - dragOffset.y)));
+        document.getElementById('dragCoordHint').textContent = `${b.label} (X:${b.x}, Y:${b.y})`;
+        renderAll(true);
+      } else {
+        const hit = hitTestFront(pt.x, pt.y);
+        if (hit !== hoveredFrontKey) {
+          hoveredFrontKey = hit;
+          frontCanvas.style.cursor = hit ? 'grab' : 'default';
+          renderAll(true);
+        }
+      }
+    });
+
+    backCanvas.addEventListener('mousedown', (e) => {
+      const pt = getCanvasMousePt(backCanvas, e), hit = hitTestBack(pt.x, pt.y);
+      if (hit) {
+        const bPos = getActiveBackPos();
+        draggingBackKey = hit;
+        if (hit === 'backBrand') document.getElementById('backLogoPosPreset').value = 'custom';
+        dragOffset.x = pt.x - bPos[hit].x;
+        dragOffset.y = pt.y - bPos[hit].y;
+        backCanvas.style.cursor = 'grabbing';
+        renderAll(true);
+      }
+    });
+
+    backCanvas.addEventListener('mousemove', (e) => {
+      const pt = getCanvasMousePt(backCanvas, e);
+      if (draggingBackKey) {
+        const bPos = getActiveBackPos();
+        const b = bPos[draggingBackKey];
+        b.x = Math.round(Math.max(30, Math.min(backCanvas.width - 40, pt.x - dragOffset.x)));
+        b.y = Math.round(Math.max(25, Math.min(backCanvas.height - 30, pt.y - dragOffset.y)));
+        document.getElementById('dragCoordHint').textContent = `${b.label} (X:${b.x}, Y:${b.y})`;
+        renderAll(true);
+      } else {
+        const hit = hitTestBack(pt.x, pt.y);
+        if (hit !== hoveredBackKey) {
+          hoveredBackKey = hit;
+          backCanvas.style.cursor = hit ? 'grab' : 'default';
+          renderAll(true);
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (draggingFrontKey || draggingBackKey) {
+        draggingFrontKey = null; draggingBackKey = null;
+        frontCanvas.style.cursor = hoveredFrontKey ? 'grab' : 'default';
+        backCanvas.style.cursor = hoveredBackKey ? 'grab' : 'default';
+        renderAll(false);
+      }
+    });
+
+    function downloadCard(side) {
+      isExportingClean = true; renderAll(true);
+      const canvas = document.getElementById(side === 'front' ? 'canvasFront' : 'canvasBack');
+      const namePart = (document.getElementById('nameEn').value.trim() || document.getElementById('nameZh').value.trim() || 'Card').replace(/\s+/g, '_');
+      const orientPart = isPortrait() ? 'Portrait' : 'Landscape';
+      const link = document.createElement('a');
+      link.download = `${namePart}_${orientPart}_${side}_300dpi.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+      isExportingClean = false; renderAll(true);
+    }
+
+    // ==================== 團隊 CSV 批量匯入與導出 (支援含引號之 CSV 欄位解析) ====================
+    function downloadCSVTemplate() {
+      const csvContent = '\uFEFF' + ['英文姓名,中文姓名,英文職銜,中文職銜,電郵地址,公司電話,傳真號碼,WhatsApp號碼', 'Alvin Wong,黃佳鑫,Sales Representative,,Alvinwong@centralfield.com,+852 2387 0273,+852 2387 9057,+852 9131 7468'].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Team_Cards_Template.csv'; link.click();
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = '', inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') inQuotes = !inQuotes;
+        else if (ch === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+      result.push(cur.trim());
+      return result;
+    }
+
+    function handleCSVUpload(event) {
+      const file = event.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length < 2) return alert('CSV 格式錯誤或沒有資料列');
+        const parsed = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = parseCSVLine(lines[i]);
+          if (cols.length >= 2) parsed.push({ nameEn: cols[0] || '', nameZh: cols[1] || '', titleEn: cols[2] || '', titleZh: cols[3] || '', email: cols[4] || '', phone: cols[5] || '', fax: cols[6] || '', whatsapp: cols[7] || '' });
+        }
+        if (parsed.length > 0) setTeamList(parsed);
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+
+    function setTeamList(list) {
+      teamList = list; currentMemberIdx = 0;
+      document.getElementById('batchBadge').textContent = list.length; document.getElementById('batchBadge').classList.remove('hidden');
+      document.getElementById('teamManagerPanel').classList.remove('hidden'); document.getElementById('teamCountText').textContent = list.length;
+      rebuildMemberDropdown(); selectMember(0);
+    }
+
+    function rebuildMemberDropdown() {
+      const sel = document.getElementById('memberSelect'); sel.innerHTML = '';
+      teamList.forEach((m, idx) => { const opt = document.createElement('option'); opt.value = idx; opt.textContent = `${String(idx + 1).padStart(2, '0')}. ${m.nameEn} ${m.nameZh} — ${m.titleEn}`; sel.appendChild(opt); });
+    }
+
+    function selectMember(index) {
+      const idx = parseInt(index, 10);
+      if (idx < 0 || idx >= teamList.length) return;
+      currentMemberIdx = idx;
+      document.getElementById('memberSelect').value = idx;
+      const m = teamList[idx];
+      document.getElementById('nameEn').value = m.nameEn || ''; document.getElementById('nameZh').value = m.nameZh || '';
+      document.getElementById('titleEn').value = m.titleEn || ''; document.getElementById('titleZh').value = m.titleZh || '';
+      document.getElementById('email').value = m.email || ''; document.getElementById('phone').value = m.phone || '';
+      document.getElementById('fax').value = m.fax || ''; document.getElementById('whatsapp').value = m.whatsapp || '';
+      renderAll();
+    }
+
+    function stepMember(delta) { if (!teamList.length) return; selectMember((currentMemberIdx + delta + teamList.length) % teamList.length); }
+
+    function syncCurrentMemberFromInputs() {
+      if (currentMemberIdx >= 0 && teamList[currentMemberIdx]) {
+        teamList[currentMemberIdx] = {
+          nameEn: document.getElementById('nameEn').value.trim(),
+          nameZh: document.getElementById('nameZh').value.trim(),
+          titleEn: document.getElementById('titleEn').value.trim(),
+          titleZh: document.getElementById('titleZh').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          fax: document.getElementById('fax').value.trim(),
+          whatsapp: document.getElementById('whatsapp').value.trim()
+        };
+        rebuildMemberDropdown();
+        document.getElementById('memberSelect').value = currentMemberIdx;
+      }
+    }
+
+    async function exportTeamZip() {
+      if (!teamList.length) return;
+      const statusEl = document.getElementById('batchStatus'), btn = document.getElementById('btnBatchZip');
+      statusEl.classList.remove('hidden'); btn.disabled = true;
+      const zip = new JSZip(), folder = zip.folder('BusinessCards_300DPI');
+      const savedIdx = currentMemberIdx; isExportingClean = true;
+
+      for (let i = 0; i < teamList.length; i++) {
+        statusEl.textContent = `正在渲染第 ${i + 1} / ${teamList.length} 位成員...`;
+        selectMember(i); await new Promise(r => setTimeout(r, 45));
+        const safeName = `${String(i + 1).padStart(2, '0')}_${teamList[i].nameZh || 'Card'}_${(teamList[i].nameEn || '').replace(/\s+/g, '_')}`;
+        folder.file(`${safeName}_Front_300dpi.png`, document.getElementById('canvasFront').toDataURL('image/png', 1.0).split(',')[1], { base64: true });
+        folder.file(`${safeName}_Back_300dpi.png`, document.getElementById('canvasBack').toDataURL('image/png', 1.0).split(',')[1], { base64: true });
+      }
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      const link = document.createElement('a'); link.href = URL.createObjectURL(content); link.download = `BusinessCards_300DPI_${teamList.length}p.zip`; link.click();
+      isExportingClean = false; selectMember(savedIdx); btn.disabled = false; statusEl.textContent = `✅ 成功打包 ${teamList.length} 位成員名片！`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedStateFromStorage();
+      renderAll(true);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => { renderAll(true); });
+      }
+    });
+  </script>
+<!-- ==================== V15 擴充外掛模組：A4 十連模拼版 PDF + 3D 實體翻轉預覽 ==================== -->
+<style>
+  .perspective-stage { perspective: 1400px; }
+  .card-3d-wrap {
+    width: 100%; height: 100%; position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  }
+  .card-3d-wrap.flipped { transform: rotateY(180deg); }
+  .card-3d-face {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255,255,255,0.15);
+  }
+  .card-3d-back { transform: rotateY(180deg); }
+  .uv-glare {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 35%, transparent 70%);
+    mix-blend-mode: overlay; opacity: 0; transition: opacity 0.2s;
+  }
+</style>
+
+<!-- 3D 預覽互動彈窗 -->
+<div id="modal3DPreview" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 select-none">
+  <div class="max-w-3xl w-full flex items-center justify-between mb-5">
+    <div>
+      <h3 class="text-base font-bold text-white flex items-center gap-2">
+        ✨ 3D 實體名片模擬檢視 <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">350g 啞膠卡 + 局部 UV 光澤模擬</span>
+      </h3>
+      <p class="text-xs text-slate-400">移動滑鼠可檢視紙張反光角度 · 點擊卡片或下方按鈕可 180° 翻轉正背面</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" onclick="toggle3DFlip()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-lg transition">
+        🔄 翻轉正背面 (Flip)
+      </button>
+      <button type="button" onclick="close3DModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg border border-slate-700">
+        ✕ 關閉
+      </button>
+    </div>
+  </div>
+
+  <div id="stage3DContainer" class="perspective-stage flex items-center justify-center w-full py-6">
+    <div id="card3DBox" onclick="toggle3DFlip()" class="card-3d-wrap cursor-pointer" style="width: 540px; height: 324px;">
+      <div class="card-3d-face">
+        <img id="img3DFront" class="w-full h-full object-contain bg-white" alt="Front">
+        <div id="glareFront" class="uv-glare"></div>
+      </div>
+      <div class="card-3d-face card-3d-back">
+        <img id="img3DBack" class="w-full h-full object-contain bg-white" alt="Back">
+        <div id="glareBack" class="uv-glare"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 自動將新功能按鈕掛載至頂部導航欄
+  window.addEventListener('DOMContentLoaded', () => {
+    const headerBtnGroup = document.querySelector('header > div:last-child');
+    if (headerBtnGroup) {
+      const pluginWrapper = document.createElement('div');
+      pluginWrapper.className = 'flex items-center gap-1.5';
+      pluginWrapper.innerHTML = `
+        <button type="button" onclick="exportA4ImpositionPDF()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-lg shadow-amber-500/20 flex items-center gap-1" title="生成 A4 十連模雙面拼版 PDF，支援辦公室打印機直接雙面列印裁切">
+          <span>🖨️ A4 十模拼版 PDF</span>
+        </button>
+        <button type="button" onclick="open3DModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+          <span>🕶️ 3D 預覽</span>
+        </button>
+      `;
+      headerBtnGroup.insertBefore(pluginWrapper, headerBtnGroup.firstChild);
+    }
+  });
+
+  // 1. A4 十連模 (2欄 x 5列 = 10張/頁) 雙面精準對位拼版 PDF 導出引擎
+  function exportA4ImpositionPDF() {
+    if (!window.jspdf || !window.jspdf.jsPDF) return alert('PDF 引擎載入中，請稍候！');
+    const { jsPDF } = window.jspdf;
+
+    isExportingClean = true;
+    renderAll(true);
+
+    const frontCanvas = document.getElementById('canvasFront');
+    const backCanvas = document.getElementById('canvasBack');
+    const portrait = isPortrait();
+
+    // 若為直式名片，自動旋轉 90 度排入 A4 標準 90x54mm 十連模刀模網格，確保正背面 100% 鏡像對齊
+    function getLandscapeDataUrl(srcCanvas) {
+      if (!portrait) return srcCanvas.toDataURL('image/png', 1.0);
+      const tmp = document.createElement('canvas');
+      tmp.width = 1063; tmp.height = 638;
+      const tctx = tmp.getContext('2d');
+      tctx.translate(tmp.width / 2, tmp.height / 2);
+      tctx.rotate(-Math.PI / 2);
+      tctx.drawImage(srcCanvas, -srcCanvas.width / 2, -srcCanvas.height / 2);
+      return tmp.toDataURL('image/png', 1.0);
+    }
+
+    const frontImg = getLandscapeDataUrl(frontCanvas);
+    const backImg  = getLandscapeDataUrl(backCanvas);
+
+    // 建立 A4 直向 (210 x 297 mm) 雙頁 PDF
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+    const cols = 2, rows = 5;
+    const cardW = 90, cardH = 54;
+    // 置中計算：左右邊距各 15mm (15 + 90*2 + 15 = 210mm)，上下邊距各 13.5mm (13.5 + 54*5 + 13.5 = 297mm)
+    const startX = (210 - cols * cardW) / 2; // 15 mm
+    const startY = (297 - rows * cardH) / 2; // 13.5 mm
+
+    function drawA4SheetCropMarks(pdfDoc) {
+      pdfDoc.setDrawColor(120, 120, 120);
+      pdfDoc.setLineWidth(0.15);
+      // 繪製外圍與交界處的精準裁切線
+      for (let c = 0; c <= cols; c++) {
+        const x = startX + c * cardW;
+        pdfDoc.line(x, startY - 8, x, startY - 2);
+        pdfDoc.line(x, startY + rows * cardH + 2, x, startY + rows * cardH + 8);
+      }
+      for (let r = 0; r <= rows; r++) {
+        const y = startY + r * cardH;
+        pdfDoc.line(startX - 8, y, startX - 2, y);
+        pdfDoc.line(startX + cols * cardW + 2, y, startX + cols * cardW + 8, y);
+      }
+      pdfDoc.setFontSize(7);
+      pdfDoc.setTextColor(140, 140, 140);
+      pdfDoc.text('A4 10-Up Business Card Imposition (90x54mm) - Print at 100% Actual Size (Do Not Scale)', 105, 8, { align: 'center' });
+    }
+
+    // 第 1 頁：A4 正面 10 連模
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        doc.addImage(frontImg, 'PNG', startX + c * cardW, startY + r * cardH, cardW, cardH);
+      }
+    }
+    drawA4SheetCropMarks(doc);
+
+    // 第 2 頁：A4 背面 10 連模
+    doc.addPage('a4', 'portrait');
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        doc.addImage(backImg, 'PNG', startX + c * cardW, startY + r * cardH, cardW, cardH);
+      }
+    }
+    drawA4SheetCropMarks(doc);
+
+    const data = getFormData();
+    const namePart = (data.nameEn || data.nameZh || data.company || 'Card').replace(/\s+/g, '_');
+    doc.save(`${namePart}_A4_10Up_Imposition.pdf`);
+
+    isExportingClean = false;
+    renderAll(true);
+    showAutoSaveFeedback('🖨️ 已導出 A4 十連模雙面拼版 PDF');
+  }
+
+  // 2. 3D 實體翻轉與局部 UV 光澤模擬引擎
+  let is3DFlipped = false;
+  function open3DModal() {
+    isExportingClean = true;
+    renderAll(true);
+    const fCanvas = document.getElementById('canvasFront');
+    const bCanvas = document.getElementById('canvasBack');
+    document.getElementById('img3DFront').src = fCanvas.toDataURL('image/png', 1.0);
+    document.getElementById('img3DBack').src  = bCanvas.toDataURL('image/png', 1.0);
+    isExportingClean = false;
+    renderAll(true);
+
+    const box = document.getElementById('card3DBox');
+    if (isPortrait()) {
+      box.style.width = '330px'; box.style.height = '550px';
+    } else {
+      box.style.width = '560px'; box.style.height = '336px';
+    }
+    is3DFlipped = false;
+    box.classList.remove('flipped');
+    document.getElementById('modal3DPreview').classList.remove('hidden');
+  }
+
+  function close3DModal() {
+    document.getElementById('modal3DPreview').classList.add('hidden');
+  }
+
+  function toggle3DFlip() {
+    is3DFlipped = !is3DFlipped;
+    const box = document.getElementById('card3DBox');
+    const rotY = is3DFlipped ? 180 : 0;
+    box.style.transform = `rotateY(${rotY}deg)`;
+  }
+
+  // 滑鼠移動時模擬 350g 啞膠卡傾斜與局部 UV 反光
+  document.getElementById('modal3DPreview').addEventListener('mousemove', (e) => {
+    const box = document.getElementById('card3DBox');
+    const rect = box.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    const tiltX = Math.max(-18, Math.min(18, -dy * 12));
+    const tiltY = Math.max(-18, Math.min(18, dx * 12)) + (is3DFlipped ? 180 : 0);
+    box.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+
+    const glareX = Math.round(50 + dx * 40);
+    const glareY = Math.round(50 + dy * 40);
+    const glareCss = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.08) 35%, transparent 65%)`;
+    document.getElementById('glareFront').style.background = glareCss;
+    document.getElementById('glareBack').style.background = glareCss;
+    document.getElementById('glareFront').style.opacity = '1';
+    document.getElementById('glareBack').style.opacity = '1';
+  });
+</script>
+
+</body>
+</html>
