@@ -371,6 +371,8 @@ Kowloon, Hong Kong</textarea>
             <option value="preset_img3">方案 C：五大業務垂直方塊清單 ＋ 深水埗門市・網上商店</option>
             <option value="preset_img4">方案 D：經典中田全分店及部門名錄 (高登/黃金/中小企/支援)</option>
             <option value="preset_bilingual">方案 E：中英雙語國際化採購方案版 (Bilingual Corporate)</option>
+            <option value="preset_ai_b2b">方案 F：AI 算力基建與企業專案雙欄矩陣版 (2-Column Grid)</option>
+            <option value="preset_watermark">方案 G：尊尚品牌浮水印 + 核心業務精簡版</option>
           </select>
         </div>
 
@@ -407,6 +409,34 @@ Kowloon, Hong Kong</textarea>
               <option value="left_center">左側置中 (配右側QR)</option>
               <option value="top_right">右上角</option>
               <option value="custom">畫布滑鼠自由拖曳</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 背面排版網格、對齊與分隔線樣式控制列 -->
+        <div class="grid grid-cols-3 gap-2 bg-slate-950/75 p-2.5 rounded-xl border border-slate-800 text-xs">
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1">📊 業務內容欄數</label>
+            <select id="backColumns" onchange="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-[11px] text-white focus:outline-none">
+              <option value="1" selected>單欄經典排版</option>
+              <option value="2">雙欄網格並排</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1">📐 內文對齊方式</label>
+            <select id="backTextAlign" onchange="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-[11px] text-white focus:outline-none">
+              <option value="auto" selected>跟隨版型預設</option>
+              <option value="left">統一靠左對齊</option>
+              <option value="center">統一置中對齊</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1">➖ 頂部分隔線樣式</label>
+            <select id="backDividerStyle" onchange="renderAll()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-[11px] text-white focus:outline-none">
+              <option value="solid" selected>經典純色實線</option>
+              <option value="gradient">科技漸層光帶</option>
+              <option value="double">雙線精密刻度</option>
+              <option value="none">隱藏分隔線</option>
             </select>
           </div>
         </div>
@@ -490,6 +520,10 @@ Kowloon, Hong Kong</textarea>
             <input type="checkbox" id="showBackWeb" checked onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-indigo-500">
             <span>顯示背面底部網址</span>
           </label>
+          <label class="flex items-center gap-2 text-amber-300/90 cursor-pointer col-span-2 pt-1 border-t border-slate-800/80">
+            <input type="checkbox" id="showBackWatermark" onchange="renderAll()" class="rounded bg-slate-900 border-slate-700 text-amber-500">
+            <span>✨ 啟用背面背景「品牌標誌 / 字標大型浮水印」(尊尚印刷質感)</span>
+          </label>
         </div>
 
         <!-- 一般標語編輯框 -->
@@ -504,7 +538,7 @@ Kowloon, Hong Kong</textarea>
           <input type="text" id="backHeaderTitle" value="中田數碼有限公司  |  Since 1983" placeholder="例: 中田數碼有限公司 | Since 1983" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
 
           <div>
-            <label class="block text-xs text-slate-300 mb-1">背面標語 / 核心業務列表 (支援自由修改與換行)</label>
+            <label class="block text-xs text-slate-300 mb-1">背面標語 / 核心業務列表 (支援【分類】與 • 項目符號)</label>
             <textarea id="backTaglineText" rows="5" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono leading-relaxed focus:outline-none">【個人與玩家】
 • 電腦硬件零售    • 高階電腦訂製    • 高階水冷組裝
 
@@ -512,9 +546,15 @@ Kowloon, Hong Kong</textarea>
 • 企業 IT 採購方案    • AI 工作站方案</textarea>
           </div>
 
-          <div>
-            <label class="block text-[11px] text-slate-400 mb-1">背面底部副標 (如：深水埗門市 • 網上商店)</label>
-            <input type="text" id="backFooterSub" value="" placeholder="例: 深水埗門市 • 網上商店" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">背面底部副標 (支援自由拖曳)</label>
+              <input type="text" id="backFooterSub" value="" placeholder="例: 深水埗門市 • 網上商店" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-cyan-300 mb-1">背面 QR 下方掃碼提示字</label>
+              <input type="text" id="backQrCaption" value="" placeholder="例: 掃碼瀏覽官網 / FPS 付款" oninput="renderAll()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
           </div>
         </div>
 
@@ -574,6 +614,20 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             </div>
             <input type="range" id="sizeBackText" min="13" max="36" value="22" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
           </div>
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>背面段落行距</span>
+              <span id="val-backLineHeight" class="font-mono text-cyan-400">1.58×</span>
+            </div>
+            <input type="range" id="sizeBackLineHeight" min="1.2" max="2.2" step="0.05" value="1.58" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>背面 QR 獨立尺寸</span>
+              <span id="val-backQrSize" class="font-mono text-cyan-400">125 px</span>
+            </div>
+            <input type="range" id="sizeBackQr" min="80" max="260" value="125" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          </div>
         </div>
       </section>
 
@@ -584,7 +638,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             <h3 class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
               <span>🔤 正面與背面中英文字體獨立切換</span>
             </h3>
-            <button type="button" onclick="syncBackFontsFromFront()" class="text-[11px] bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/40 px-2 py-0.5 rounded transition">
+            <button type="button" onclick="syncBackFontsFromFront()" class="text-[11px] bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/40 px-2 py-0.5 rounded transition" title="將背面的中英文字體設為與正面相同">
               🔗 背面同步正面字體
             </button>
           </div>
@@ -601,12 +655,11 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             </select>
           </div>
 
-          <!-- 正面 3 組字體 -->
           <div class="pt-2 border-t border-slate-800/90 space-y-2">
             <div class="text-[11px] font-semibold text-cyan-300">▸ 正面 (Front Side) 獨立字體設定：</div>
             <div class="grid grid-cols-3 gap-2">
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">正面品牌字標</label>
+                <label class="block text-[10px] text-slate-400 mb-1">正面品牌字標/英文公司</label>
                 <select id="fontFrontBrand" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
                   <option value="'Libre Baskerville', Georgia, serif" selected>Libre Baskerville (經典襯線)</option>
                   <option value="'Playfair Display', Georgia, serif">Playfair Display (時尚襯線)</option>
@@ -618,7 +671,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
                 </select>
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">正面英文(姓名/通訊)</label>
+                <label class="block text-[10px] text-slate-400 mb-1">正面英文(姓名/職銜/通訊)</label>
                 <select id="fontFrontEn" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
                   <option value="'Inter', sans-serif" selected>Inter (現代標準無襯線)</option>
                   <option value="'Montserrat', sans-serif">Montserrat (幾何商務)</option>
@@ -629,7 +682,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
                 </select>
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">正面中文(姓名/地址)</label>
+                <label class="block text-[10px] text-slate-400 mb-1">正面中文(姓名/公司/地址)</label>
                 <select id="fontFrontZh" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
                   <option value="'Noto Sans TC', sans-serif" selected>思源黑體 (現代黑體)</option>
                   <option value="'Noto Serif TC', serif">思源宋體 (權威明體)</option>
@@ -641,7 +694,6 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             </div>
           </div>
 
-          <!-- 背面 3 組字體 -->
           <div class="pt-2 border-t border-slate-800/90 space-y-2">
             <div class="text-[11px] font-semibold text-emerald-300">▸ 背面 (Back Side) 獨立字體設定：</div>
             <div class="grid grid-cols-3 gap-2">
@@ -660,7 +712,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
                 </select>
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">背面英文(IT/AI/網址)</label>
+                <label class="block text-[10px] text-slate-400 mb-1">背面英文(IT/AI/網址/名錄)</label>
                 <select id="fontBackEn" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
                   <option value="'Inter', sans-serif" selected>Inter (現代標準無襯線)</option>
                   <option value="'Montserrat', sans-serif">Montserrat (幾何商務)</option>
@@ -671,7 +723,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
                 </select>
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">背面中文(標語/分店)</label>
+                <label class="block text-[10px] text-slate-400 mb-1">背面中文(標語/業務/分店)</label>
                 <select id="fontBackZh" onchange="switchFontAndRender()" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-[11px] text-white focus:outline-none">
                   <option value="'Noto Sans TC', sans-serif" selected>思源黑體 (現代黑體)</option>
                   <option value="'Noto Serif TC', serif">思源宋體 (權威明體)</option>
@@ -684,7 +736,6 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           </div>
         </div>
 
-        <!-- 版型方向與 18 款主題配色 -->
         <div class="space-y-3 pt-2 border-t border-slate-800">
           <div class="grid grid-cols-2 gap-2.5">
             <div>
@@ -756,7 +807,6 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             </div>
           </div>
 
-          <!-- 正面色彩選擇器 -->
           <div class="grid grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] text-slate-400 mb-1">正面主題底色</label>
@@ -782,7 +832,6 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           </div>
         </div>
 
-        <!-- 前後獨立 QR Code 設定 -->
         <div class="pt-3 border-t border-slate-800 space-y-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-semibold text-cyan-300">📱 前後 QR Code 獨立資訊與卡片同色設定</h3>
@@ -842,7 +891,6 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           </div>
         </div>
 
-        <!-- 字體大小微調 -->
         <div class="pt-3 border-t border-slate-800 space-y-2.5 text-xs">
           <div class="flex items-center justify-between">
             <h3 class="font-semibold text-white">正面字體與 QR 尺寸微調</h3>
@@ -893,7 +941,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             </div>
             <div>
               <div class="flex justify-between text-slate-300 mb-1">
-                <span>QR Code 尺寸</span>
+                <span>正面 QR Code 尺寸</span>
                 <span id="val-qrSize" class="font-mono text-cyan-400">125 px</span>
               </div>
               <input type="range" id="sizeQr" min="85" max="280" value="125" oninput="renderAll()" class="w-full h-1.5 bg-slate-800 rounded-lg cursor-pointer">
@@ -1182,28 +1230,48 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
 
   <!-- ==================== Apple / Google Wallet 電子票卡互動彈窗 ==================== -->
   <div id="walletModal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 select-none overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-4xl w-full p-6 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-6 my-auto">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-5xl w-full p-6 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-6 my-auto">
       
-      <!-- 左側：即時仿真手機 Wallet 票卡預覽 -->
-      <div class="md:col-span-5 flex flex-col items-center justify-center bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
-        <div class="text-[11px] text-slate-400 mb-2 flex items-center justify-between w-full px-2">
-          <span id="walletPreviewTitle" class="text-emerald-400 font-semibold">● Apple Wallet 仿真票卡預覽</span>
-          <span>750 × 1120 px</span>
+      <!-- 左側：即時仿真手機 Wallet 票卡與鎖屏雙模預覽 (5 Cols) -->
+      <div class="md:col-span-5 flex flex-col items-center justify-between bg-slate-950/95 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between w-full px-1">
+          <span id="walletPreviewTitle" class="text-[11px] text-emerald-400 font-semibold">● Apple Wallet 仿真票卡預覽</span>
+          <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg p-0.5 text-[10px]">
+            <button type="button" id="btnWalletViewPass" onclick="setWalletPreviewView('pass')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold transition">🪪 票卡視圖</button>
+            <button type="button" id="btnWalletViewLock" onclick="setWalletPreviewView('lockscreen')" class="px-2 py-1 rounded text-slate-400 hover:text-white transition">📱 鎖屏實機</button>
+          </div>
         </div>
-        <div class="w-full max-w-[270px] rounded-2xl overflow-hidden shadow-2xl border border-slate-800/80 flex items-center justify-center bg-slate-950">
-          <canvas id="walletCanvas" width="750" height="1120" class="w-full h-auto object-contain"></canvas>
+
+        <!-- 票卡視圖容器 -->
+        <div id="walletPassContainer" class="w-full max-w-[275px] rounded-[24px] overflow-hidden shadow-2xl border border-slate-700/80 flex items-center justify-center bg-slate-950">
+          <canvas id="walletCanvas" width="750" height="1160" class="w-full h-auto object-contain"></canvas>
+        </div>
+
+        <!-- 鎖屏實機預覽容器 -->
+        <div id="walletLockContainer" class="hidden w-full max-w-[240px] rounded-[30px] overflow-hidden shadow-2xl border-2 border-slate-700 flex items-center justify-center bg-slate-950">
+          <canvas id="walletLockPreviewCanvas" width="645" height="1398" class="w-full h-auto object-contain"></canvas>
+        </div>
+
+        <!-- 預覽區底部快速切換條碼模式 -->
+        <div class="w-full grid grid-cols-2 gap-1.5 pt-1">
+          <button type="button" onclick="quickSwitchWalletQr('vcard')" class="bg-slate-900 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition">
+            👤 顯示通訊錄 vCard 碼
+          </button>
+          <button type="button" onclick="quickSwitchWalletQr('fps_img')" class="bg-slate-900 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition">
+            🇭🇰 切換 FPS 轉數快碼
+          </button>
         </div>
       </div>
 
-      <!-- 右側：樣式設定與導出按鈕 -->
+      <!-- 右側：樣式設定與導出按鈕 (7 Cols) -->
       <div class="md:col-span-7 flex flex-col justify-between space-y-4 text-xs">
-        <div class="space-y-4">
+        <div class="space-y-3.5">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
               <h3 class="text-base font-bold text-white flex items-center gap-2">
                 📲 Apple Wallet / Google Wallet 電子名片與 FPS 收款卡中心
               </h3>
-              <p class="text-[11px] text-slate-400 mt-0.5">支援切換顯示「vCard 通訊錄 QR」或「高清 FPS 轉數快 2cm×2cm 收款碼」</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">支援 Strip 橫幅質感、FPS 識別碼欄位、.pkpass 開發封裝與手機互動網頁</p>
             </div>
             <button type="button" onclick="closeWalletModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
               ✕ 關閉
@@ -1213,23 +1281,33 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           <div class="grid grid-cols-2 gap-3 bg-slate-950/80 border border-slate-800 rounded-xl p-3.5">
             <div>
               <label class="block text-[11px] text-emerald-300 font-semibold mb-1">🎨 Wallet 票卡平台風格</label>
-              <select id="passPlatform" onchange="renderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <select id="passPlatform" onchange="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
                 <option value="apple" selected> Apple Wallet 經典票卡 (頂部凹槽)</option>
                 <option value="google">G Google Wallet 現代圓角卡 (膠囊標頭)</option>
+                <option value="holographic">✨ AI 流光黑金尊尚票卡 (金屬光澤)</option>
               </select>
             </div>
             <div>
               <label class="block text-[11px] text-cyan-300 font-semibold mb-1">🌗 票卡底色模式</label>
-              <select id="passColorMode" onchange="renderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <select id="passColorMode" onchange="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
                 <option value="sync_card" selected>🔗 跟隨目前名片正面主題色</option>
                 <option value="invert_accent">🔥 滿版品牌強調色 (紅底/藍底白字)</option>
                 <option value="dark_pro">🖤 尊尚曜石深黑 (#11141C)</option>
                 <option value="clean_white">🤍 純淨極簡皓白 (#FFFFFF)</option>
+                <option value="cyber_mesh">🌌 深空科技網格漸層 (#070B19)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-300 font-semibold mb-1">🎞️ 票卡頂部 Strip 視覺橫幅</label>
+              <select id="passStripStyle" onchange="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+                <option value="tech_wave" selected>✨ 科技幾何光波橫幅 (推薦)</option>
+                <option value="solid_accent">🎨 品牌強調色純淨橫幅</option>
+                <option value="minimal_none">⬜ 極簡無橫幅 (純淨留白)</option>
               </select>
             </div>
             <div>
               <label class="block text-[11px] text-amber-300 font-semibold mb-1">📱 票卡底部 QR Code 內容</label>
-              <select id="passQrSource" onchange="renderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <select id="passQrSource" onchange="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
                 <option value="vcard" selected>1. vCard 完整通訊錄 (一掃即存聯絡人)</option>
                 <option value="fps_img">🇭🇰 高清 FPS 轉數快收款碼 (已上傳圖檔)</option>
                 <option value="whatsapp">2. WhatsApp 即時對話連結</option>
@@ -1238,33 +1316,47 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
               </select>
             </div>
             <div>
-              <label class="block text-[11px] text-slate-300 font-semibold mb-1">🏷️ 票卡右上角職能標籤</label>
-              <input type="text" id="passBadgeLabel" value="FPS / VERIFIED" oninput="renderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none">
+              <label class="block text-[11px] text-slate-300 font-semibold mb-1">🏷️ 右上角職能 / 認證標籤</label>
+              <input type="text" id="passBadgeLabel" value="FPS / VERIFIED" oninput="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-amber-300 font-semibold mb-1">💳 第四欄位顯示內容</label>
+              <select id="passField4Mode" onchange="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+                <option value="website" selected>官方網站 (Website)</option>
+                <option value="fps_id">FPS 轉數快識別碼 / 商戶編號</option>
+                <option value="department">所屬部門 / 業務專長</option>
+              </select>
             </div>
           </div>
 
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
-            <label class="block text-[11px] text-slate-400 mb-1">票卡底部掃碼提示文字 (顯示於 QR Code 正下方)</label>
-            <input type="text" id="passFooterHint" value="掃描上方 QR Code 存入聯絡人或透過 FPS 轉數快付款" oninput="renderWalletPreview()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+          <div class="grid grid-cols-2 gap-2.5 bg-slate-950/80 border border-slate-800 rounded-xl p-3">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">自訂 FPS 識別碼 / 部門文字</label>
+              <input type="text" id="passCustomField4Val" value="FPS ID: 103884920" placeholder="例: FPS ID: 103884920" oninput="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">QR Code 下方掃碼提示文字</label>
+              <input type="text" id="passFooterHint" value="掃描上方 QR Code 存入聯絡人或透過 FPS 轉數快付款" oninput="renderWalletPreview(); scheduleSaveState();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
+            </div>
           </div>
         </div>
 
-        <div class="space-y-2.5 pt-2 border-t border-slate-800">
+        <div class="space-y-2 pt-2 border-t border-slate-800">
           <div class="text-[11px] font-semibold text-slate-300">⬇ 選擇導出格式：</div>
-          <button type="button" onclick="downloadWalletPassImage()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-slate-950 font-extrabold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
-            <span class="flex items-center gap-2">🪪 1. 下載「Apple / Google Wallet 仿真電子票卡 (.PNG)」</span>
-            <span class="text-[10px] bg-slate-950/25 px-2 py-0.5 rounded font-mono">750 × 1120 px</span>
-          </button>
-          <button type="button" onclick="downloadLockScreenWallpaper()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition flex items-center justify-between">
-            <span class="flex items-center gap-2">📱 2. 下載「iPhone / Android 鎖定畫面專屬電子名片桌布」</span>
-            <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono">1290 × 2796 px</span>
-          </button>
-          <div class="grid grid-cols-2 gap-2 pt-0.5">
-            <button type="button" onclick="exportPkpassBundle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
-              <span>📦 3. 導出 Apple .pkpass 封裝包</span>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="downloadWalletPassImage()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-95 text-slate-950 font-extrabold py-2.5 px-3 rounded-xl shadow-lg transition flex flex-col items-start">
+              <span>🪪 1. 下載 Wallet 票卡 (.PNG)</span>
+              <span class="text-[10px] opacity-75 font-mono">750 × 1160 px 高清票卡</span>
             </button>
-            <button type="button" onclick="exportStandalone2cmFpsPNG()" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
-              <span>🎯 4. 下載 2×2cm 高清 FPS 圖 (.PNG)</span>
+            <button type="button" onclick="downloadLockScreenWallpaper()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transition flex flex-col items-start">
+              <span>📱 2. 下載鎖定畫面桌布 (.PNG)</span>
+              <span class="text-[10px] text-indigo-200 font-mono">1290 × 2796 px 適配 iPhone</span>
+            </button>
+            <button type="button" onclick="exportPkpassBundle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
+              <span>📦 3. Apple .pkpass 完整封裝包</span>
+            </button>
+            <button type="button" onclick="exportInteractiveWalletWebHTML()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 py-2 px-3 rounded-xl font-semibold transition flex items-center justify-center gap-1.5">
+              <span>🌐 4. 手機互動 Wallet 網頁 (.HTML)</span>
             </button>
           </div>
         </div>
@@ -1418,20 +1510,20 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
 
     function getDefaultLandscapeBack(bLayout) {
       const map = {
-        segmented_groups:   { backBrand: { x: 76,  y: 62,  w: 520, h: 48,  label: '背面頂部標題/Logo', centered: false }, backTagline: { x: 76,  y: 185, w: 780, h: 260, label: '客群分類業務內容', centered: false }, backQr: { x: 855, y: 440, w: 125, h: 125, label: '背面右下 QR Code' } },
-        centered_minimal:   { backBrand: { x: 531, y: 105, w: 480, h: 90,  label: '背面置中標題/Logo', centered: true },  backTagline: { x: 531, y: 280, w: 800, h: 150, label: '置中雙行業務內容', centered: true },  backQr: { x: 865, y: 445, w: 125, h: 125, label: '背面 QR Code' } },
-        vertical_list_card: { backBrand: { x: 531, y: 64,  w: 480, h: 80,  label: '背面頂部標題', centered: true },       backTagline: { x: 340, y: 185, w: 420, h: 245, label: '五大業務垂直清單', centered: false }, backQr: { x: 780, y: 215, w: 155, h: 155, label: '背面 QR Code' } },
-        branch_directory:   { backBrand: { x: 52,  y: 42,  w: 960, h: 550, label: '雙欄全分店名錄', centered: false },     backTagline: { x: 52,  y: 42,  w: 480, h: 500, label: '全分店名錄區', centered: false },     backQr: { x: 895, y: 485, w: 115, h: 115, label: '名錄右下 QR Code' } },
-        classic_center:     { backBrand: { x: 531, y: 205, w: 420, h: 120, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 365, w: 680, h: 80,  label: '背面標語/業務', centered: true },     backQr: { x: 855, y: 425, w: 125, h: 125, label: '背面 QR Code' } },
-        qr_showcase:        { backBrand: { x: 95,  y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: false },      backTagline: { x: 95,  y: 330, w: 480, h: 120, label: '背面標語/業務', centered: false },    backQr: { x: 700, y: 175, w: 230, h: 230, label: '背面大型 QR Code' } },
-        luxe_frame:         { backBrand: { x: 531, y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 340, w: 680, h: 110, label: '背面標語/業務', centered: true },     backQr: { x: 840, y: 400, w: 125, h: 125, label: '背面 QR Code' } },
-        triple_features:    { backBrand: { x: 531, y: 95,  w: 420, h: 90,  label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 255, w: 820, h: 200, label: '三大業務特點', centered: true },      backQr: { x: 855, y: 455, w: 120, h: 120, label: '背面 QR Code' } },
-        giant_qr_card:      { backBrand: { x: 110, y: 190, w: 380, h: 100, label: '背面品牌標誌', centered: false },      backTagline: { x: 110, y: 325, w: 420, h: 120, label: '背面標語', centered: false },        backQr: { x: 650, y: 135, w: 290, h: 290, label: '巨型 QR Code' } },
-        diagonal_split:     { backBrand: { x: 531, y: 195, w: 360, h: 100, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 345, w: 400, h: 100, label: '斜切區標語', centered: true },       backQr: { x: 830, y: 410, w: 140, h: 140, label: '斜切區 QR Code' } },
-        ai_circuit_core:    { backBrand: { x: 82,  y: 72,  w: 520, h: 50,  label: 'AI 核心標題/Logo', centered: false }, backTagline: { x: 82,  y: 195, w: 720, h: 260, label: 'AI 業務範疇內容', centered: false },  backQr: { x: 845, y: 425, w: 130, h: 130, label: '背面 QR Code' } },
-        modern_white_bento: { backBrand: { x: 82,  y: 72,  w: 520, h: 50,  label: 'Bento 標題/Logo', centered: false },  backTagline: { x: 82,  y: 190, w: 690, h: 265, label: 'Bento 業務模組卡', centered: false }, backQr: { x: 835, y: 225, w: 140, h: 140, label: 'Bento 掃碼區' } },
-        hud_tech_spec:      { backBrand: { x: 84,  y: 78,  w: 520, h: 50,  label: '銘牌標題/Logo', centered: false },   backTagline: { x: 84,  y: 195, w: 720, h: 260, label: '銘牌業務規格', centered: false },     backQr: { x: 840, y: 415, w: 130, h: 130, label: '銘牌 QR Code' } },
-        minimal_arch_line:  { backBrand: { x: 531, y: 105, w: 480, h: 80,  label: '黃金比例標題/Logo', centered: true },  backTagline: { x: 531, y: 270, w: 780, h: 170, label: '黃金比例業務內容', centered: true },  backQr: { x: 855, y: 435, w: 125, h: 125, label: '背面 QR Code' } }
+        segmented_groups:   { backBrand: { x: 76,  y: 62,  w: 520, h: 48,  label: '背面頂部標題/Logo', centered: false }, backTagline: { x: 76,  y: 185, w: 740, h: 260, label: '客群分類業務內容', centered: false }, backQr: { x: 855, y: 430, w: 125, h: 125, label: '背面右下 QR Code' }, backWeb: { x: 76,  y: 530, w: 360, h: 45, label: '背面網址與副標', centered: false } },
+        centered_minimal:   { backBrand: { x: 531, y: 105, w: 480, h: 90,  label: '背面置中標題/Logo', centered: true },  backTagline: { x: 531, y: 280, w: 800, h: 150, label: '置中雙行業務內容', centered: true },  backQr: { x: 865, y: 440, w: 125, h: 125, label: '背面 QR Code' },      backWeb: { x: 531, y: 535, w: 360, h: 45, label: '背面網址與副標', centered: true } },
+        vertical_list_card: { backBrand: { x: 531, y: 64,  w: 480, h: 80,  label: '背面頂部標題', centered: true },       backTagline: { x: 260, y: 185, w: 440, h: 245, label: '五大業務垂直清單', centered: false }, backQr: { x: 780, y: 215, w: 155, h: 155, label: '背面 QR Code' },      backWeb: { x: 531, y: 525, w: 380, h: 55, label: '背面網址與門市', centered: true } },
+        branch_directory:   { backBrand: { x: 52,  y: 42,  w: 960, h: 550, label: '雙欄全分店名錄', centered: false },     backTagline: { x: 52,  y: 42,  w: 480, h: 500, label: '全分店名錄區', centered: false },     backQr: { x: 895, y: 485, w: 115, h: 115, label: '名錄右下 QR Code' }, backWeb: { x: 54,  y: 565, w: 360, h: 40, label: '名錄底部網址', centered: false } },
+        classic_center:     { backBrand: { x: 531, y: 205, w: 420, h: 120, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 365, w: 680, h: 80,  label: '背面標語/業務', centered: true },     backQr: { x: 855, y: 425, w: 125, h: 125, label: '背面 QR Code' },      backWeb: { x: 531, y: 535, w: 360, h: 45, label: '背面網址與副標', centered: true } },
+        qr_showcase:        { backBrand: { x: 95,  y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: false },      backTagline: { x: 95,  y: 330, w: 480, h: 120, label: '背面標語/業務', centered: false },    backQr: { x: 700, y: 175, w: 230, h: 230, label: '背面大型 QR Code' }, backWeb: { x: 95,  y: 525, w: 360, h: 45, label: '背面網址與副標', centered: false } },
+        luxe_frame:         { backBrand: { x: 531, y: 185, w: 420, h: 110, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 340, w: 680, h: 110, label: '背面標語/業務', centered: true },     backQr: { x: 840, y: 400, w: 125, h: 125, label: '背面 QR Code' },      backWeb: { x: 531, y: 530, w: 360, h: 45, label: '背面網址與副標', centered: true } },
+        triple_features:    { backBrand: { x: 531, y: 95,  w: 420, h: 90,  label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 255, w: 820, h: 200, label: '三大業務特點', centered: true },      backQr: { x: 855, y: 455, w: 120, h: 120, label: '背面 QR Code' },      backWeb: { x: 531, y: 535, w: 360, h: 45, label: '背面網址與副標', centered: true } },
+        giant_qr_card:      { backBrand: { x: 110, y: 190, w: 380, h: 100, label: '背面品牌標誌', centered: false },      backTagline: { x: 110, y: 325, w: 420, h: 120, label: '背面標語', centered: false },        backQr: { x: 650, y: 135, w: 290, h: 290, label: '巨型 QR Code' },      backWeb: { x: 110, y: 525, w: 360, h: 45, label: '背面網址與副標', centered: false } },
+        diagonal_split:     { backBrand: { x: 531, y: 195, w: 360, h: 100, label: '背面品牌標誌', centered: true },       backTagline: { x: 531, y: 345, w: 400, h: 100, label: '斜切區標語', centered: true },       backQr: { x: 830, y: 410, w: 140, h: 140, label: '斜切區 QR Code' },   backWeb: { x: 531, y: 535, w: 360, h: 45, label: '背面網址與副標', centered: true } },
+        ai_circuit_core:    { backBrand: { x: 82,  y: 72,  w: 520, h: 50,  label: 'AI 核心標題/Logo', centered: false }, backTagline: { x: 82,  y: 195, w: 720, h: 260, label: 'AI 業務範疇內容', centered: false },  backQr: { x: 845, y: 425, w: 130, h: 130, label: '背面 QR Code' },      backWeb: { x: 82,  y: 530, w: 360, h: 45, label: '背面網址與副標', centered: false } },
+        modern_white_bento: { backBrand: { x: 82,  y: 72,  w: 520, h: 50,  label: 'Bento 標題/Logo', centered: false },  backTagline: { x: 82,  y: 190, w: 690, h: 265, label: 'Bento 業務模組卡', centered: false }, backQr: { x: 855, y: 225, w: 130, h: 130, label: 'Bento 掃碼區' },     backWeb: { x: 82,  y: 556, w: 360, h: 40, label: '背面網址與副標', centered: false } },
+        hud_tech_spec:      { backBrand: { x: 84,  y: 78,  w: 520, h: 50,  label: '銘牌標題/Logo', centered: false },   backTagline: { x: 84,  y: 195, w: 720, h: 260, label: '銘牌業務規格', centered: false },     backQr: { x: 840, y: 415, w: 130, h: 130, label: '銘牌 QR Code' },      backWeb: { x: 84,  y: 530, w: 360, h: 45, label: '背面網址與副標', centered: false } },
+        minimal_arch_line:  { backBrand: { x: 531, y: 105, w: 480, h: 80,  label: '黃金比例標題/Logo', centered: true },  backTagline: { x: 531, y: 270, w: 780, h: 170, label: '黃金比例業務內容', centered: true },  backQr: { x: 855, y: 435, w: 125, h: 125, label: '背面 QR Code' },      backWeb: { x: 531, y: 535, w: 360, h: 45, label: '背面網址與副標', centered: true } }
       };
       return JSON.parse(JSON.stringify(map[bLayout] || map.segmented_groups));
     }
@@ -1441,19 +1533,22 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         return {
           backBrand:   { x: 64,  y: 74,  w: 510, h: 50,  label: '背面頂部標題/Logo', centered: false },
           backTagline: { x: 64,  y: 198, w: 510, h: 420, label: '背面業務內容區', centered: false },
-          backQr:      { x: 244, y: 735, w: 150, h: 150, label: '背面置中 QR Code' }
+          backQr:      { x: 244, y: 725, w: 150, h: 150, label: '背面置中 QR Code' },
+          backWeb:     { x: 319, y: 945, w: 360, h: 50,  label: '背面網址與副標', centered: true }
         };
       } else if (bLayout === 'vertical_list_card') {
         return {
           backBrand:   { x: 319, y: 75,  w: 480, h: 80,  label: '背面頂部標題', centered: true },
           backTagline: { x: 165, y: 225, w: 360, h: 290, label: '五大業務垂直清單', centered: false },
-          backQr:      { x: 244, y: 635, w: 150, h: 150, label: '背面置中 QR Code' }
+          backQr:      { x: 244, y: 635, w: 150, h: 150, label: '背面置中 QR Code' },
+          backWeb:     { x: 319, y: 920, w: 380, h: 60,  label: '背面網址與門市', centered: true }
         };
       }
       return {
         backBrand:   { x: 319, y: 140, w: 460, h: 110, label: '背面品牌標誌', centered: true },
         backTagline: { x: 319, y: 330, w: 510, h: 260, label: '背面標語/業務', centered: true },
-        backQr:      { x: 244, y: 690, w: 150, h: 150, label: '背面 QR Code' }
+        backQr:      { x: 244, y: 690, w: 150, h: 150, label: '背面 QR Code' },
+        backWeb:     { x: 319, y: 945, w: 360, h: 50,  label: '背面網址與副標', centered: true }
       };
     }
 
@@ -1641,17 +1736,18 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       'blendLogoWhite', 'brightenLogoDark', 'forceWhiteLogo', 'whiteTolerance',
       'company', 'showTm', 'companySubEn', 'companySubZh', 'nameEn', 'nameZh', 'titleEn', 'titleZh',
       'email', 'website', 'facebook', 'phone', 'fax', 'whatsapp', 'address', 'addressEn',
-      'backContentPreset', 'backLayout', 'backLogoPosPreset', 'backThemePreset',
-      'backColorBg', 'backColorAccent', 'backColorText',
-      'showBackLogo', 'showBackQr', 'showBackTagline', 'showBackWeb', 'useImageLogoOnBack',
-      'backHeaderTitle', 'backTaglineText', 'backFooterSub', 'dirLeftText', 'dirRightText',
-      'sizeBackLogo', 'sizeBackText',
+      'backContentPreset', 'backLayout', 'backLogoPosPreset', 'backColumns', 'backTextAlign', 'backDividerStyle',
+      'backThemePreset', 'backColorBg', 'backColorAccent', 'backColorText',
+      'showBackLogo', 'showBackQr', 'showBackTagline', 'showBackWeb', 'showBackWatermark', 'useImageLogoOnBack',
+      'backHeaderTitle', 'backTaglineText', 'backFooterSub', 'backQrCaption', 'dirLeftText', 'dirRightText',
+      'sizeBackLogo', 'sizeBackText', 'sizeBackLineHeight', 'sizeBackQr',
       'brandPreset', 'layoutStyle', 'colorBg', 'colorAccent', 'colorText',
       'showRightTriangle', 'qrColorStyle', 'showQrFront', 'frontQrMode', 'frontQrCustom',
       'showBackQrSync', 'backQrMode', 'backQrCustom',
       'sizeLogo', 'sizeSince', 'sizeName', 'sizeTitle', 'sizeContact', 'sizeQr', 'showBleed',
       'textureTarget', 'textureStyle', 'textureOpacity', 'fpsApplyTarget', 'showFpsLabel',
-      'enableSmartSnap', 'qrCenterBadge', 'qrBadgeType', 'qrBadgeText', 'showTechBadges', 'techBadgeSide', 'techBadgeString'
+      'enableSmartSnap', 'qrCenterBadge', 'qrBadgeType', 'qrBadgeText', 'showTechBadges', 'techBadgeSide', 'techBadgeString',
+      'passPlatform', 'passColorMode', 'passStripStyle', 'passQrSource', 'passBadgeLabel', 'passField4Mode', 'passCustomField4Val', 'passFooterHint'
     ];
 
     function collectFullState() {
@@ -2175,19 +2271,21 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
 
     function lockFps2cmSize() {
       const sizeQrInput = document.getElementById('sizeQr');
-      sizeQrInput.value = String(FPS_2CM_PX_AT_300DPI);
+      const sizeBackQrInput = document.getElementById('sizeBackQr');
       const portrait = isPortrait();
       const W = portrait ? 638 : 1063;
       const H = portrait ? 1063 : 638;
       const targetSide = document.getElementById('fpsApplyTarget').value;
 
       if (targetSide === 'front' || targetSide === 'both') {
+        sizeQrInput.value = String(FPS_2CM_PX_AT_300DPI);
         document.getElementById('showQrFront').checked = true;
         const fPos = getActiveFrontPos();
         fPos.qrcode.x = Math.min(fPos.qrcode.x, W - FPS_2CM_PX_AT_300DPI - 52);
         fPos.qrcode.y = Math.min(fPos.qrcode.y, H - FPS_2CM_PX_AT_300DPI - 52);
       }
       if (targetSide === 'back' || targetSide === 'both') {
+        if (sizeBackQrInput) sizeBackQrInput.value = String(FPS_2CM_PX_AT_300DPI);
         document.getElementById('showBackQr').checked = true;
         document.getElementById('showBackQrSync').checked = true;
         const bPos = getActiveBackPos();
@@ -2819,6 +2917,8 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       const sizeQr = parseInt(document.getElementById('sizeQr').value, 10) || 125;
       const sizeBackLogo = parseInt(document.getElementById('sizeBackLogo').value, 10) || 28;
       const sizeBackText = parseInt(document.getElementById('sizeBackText').value, 10) || 22;
+      const sizeBackLineHeight = parseFloat(document.getElementById('sizeBackLineHeight')?.value) || 1.58;
+      const sizeBackQr = parseInt(document.getElementById('sizeBackQr')?.value, 10) || 125;
 
       document.getElementById('val-logoSize').textContent = `${sizeLogo} px`;
       document.getElementById('val-sinceSize').textContent = `${sizeSince} px`;
@@ -2828,10 +2928,15 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       document.getElementById('val-qrSize').textContent = sizeQr === FPS_2CM_PX_AT_300DPI ? `${sizeQr} px (2×2cm)` : `${sizeQr} px`;
       document.getElementById('val-backLogoSize').textContent = `${sizeBackLogo} px`;
       document.getElementById('val-backTextSize').textContent = `${sizeBackText} px`;
+      if (document.getElementById('val-backLineHeight')) document.getElementById('val-backLineHeight').textContent = `${sizeBackLineHeight.toFixed(2)}×`;
+      if (document.getElementById('val-backQrSize')) document.getElementById('val-backQrSize').textContent = sizeBackQr === FPS_2CM_PX_AT_300DPI ? `${sizeBackQr} px (2×2cm)` : `${sizeBackQr} px`;
 
-      document.getElementById('frontQrCustom').classList.toggle('hidden', document.getElementById('frontQrMode').value !== 'custom');
-      document.getElementById('backQrCustom').classList.toggle('hidden', document.getElementById('backQrMode').value !== 'custom');
-      document.getElementById('showBackQrSync').checked = document.getElementById('showBackQr').checked;
+      const fQrModeEl = document.getElementById('frontQrMode');
+      const bQrModeEl = document.getElementById('backQrMode');
+      if (fQrModeEl) document.getElementById('frontQrCustom')?.classList.toggle('hidden', fQrModeEl.value !== 'custom');
+      if (bQrModeEl) document.getElementById('backQrCustom')?.classList.toggle('hidden', bQrModeEl.value !== 'custom');
+      const showBackQrSyncEl = document.getElementById('showBackQrSync');
+      if (showBackQrSyncEl) showBackQrSyncEl.checked = !!document.getElementById('showBackQr')?.checked;
 
       const backColorBg = document.getElementById('backColorBg').value || '#FFFFFF';
       const backColorAccent = document.getElementById('backColorAccent').value || '#901E23';
@@ -2880,19 +2985,24 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         showBleed: document.getElementById('showBleed').checked,
         sizeLogo, sizeSince, sizeName, sizeTitle, sizeContact, sizeQr,
         backLayout: document.getElementById('backLayout').value,
+        backColumns: document.getElementById('backColumns')?.value || '1',
+        backTextAlign: document.getElementById('backTextAlign')?.value || 'auto',
+        backDividerStyle: document.getElementById('backDividerStyle')?.value || 'solid',
         backThemePreset: document.getElementById('backThemePreset').value,
         backColorBg, backColorAccent, backColorText,
         showBackLogo: document.getElementById('showBackLogo').checked,
         showBackQr: document.getElementById('showBackQr').checked,
         showBackTagline: document.getElementById('showBackTagline').checked,
         showBackWeb: document.getElementById('showBackWeb').checked,
+        showBackWatermark: document.getElementById('showBackWatermark')?.checked || false,
         useImageLogoOnBack: document.getElementById('useImageLogoOnBack').checked,
         backHeaderTitle: document.getElementById('backHeaderTitle').value,
         backTaglineText: document.getElementById('backTaglineText').value,
         backFooterSub: document.getElementById('backFooterSub').value.trim(),
+        backQrCaption: document.getElementById('backQrCaption')?.value.trim() || '',
         dirLeftText: document.getElementById('dirLeftText').value,
         dirRightText: document.getElementById('dirRightText').value,
-        sizeBackLogo, sizeBackText
+        sizeBackLogo, sizeBackText, sizeBackLineHeight, sizeBackQr
       };
     }
 
@@ -3112,11 +3222,33 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       ctx.fillRect(0, 0, W, H);
       drawPaperTextureOverlay(ctx, textureState.back, textureState.opacity);
 
+      // 背面背景大型浮水印 (尊尚印刷質感)
+      if (data.showBackWatermark) {
+        ctx.save();
+        ctx.globalAlpha = isDark ? 0.055 : 0.048;
+        if (uploadedLogo) {
+          const procLogo = getProcessedLogo(backBg, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
+          const ratio = uploadedLogo.width / uploadedLogo.height;
+          const wmW = Math.round(W * 0.52);
+          const wmH = Math.round(wmW / ratio);
+          ctx.drawImage(procLogo, Math.round((W - wmW) / 2), Math.round((H - wmH) / 2), wmW, wmH);
+        } else if (data.company) {
+          ctx.fillStyle = backBrandColor;
+          ctx.font = `800 ${portrait ? 110 : 145}px ${data.fontFrontBrand}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(data.company.toUpperCase(), W / 2, H / 2, W * 0.88);
+        }
+        ctx.restore();
+      }
+
       if (data.backLayout === 'branch_directory') {
         renderBranchDirectoryBack(ctx, W, H, data, backBg, backBrandColor, backTextColor);
         if (data.showBackQr) {
           const qp = bPos.backQr;
-          drawCardQRCode(ctx, 'back', portrait ? W - 155 : qp.x, portrait ? H - 155 : qp.y, 110, buildQRPayload(data.backQrMode, data.backQrCustom, data), backBg, backBrandColor, backTextColor, data.qrColorStyle);
+          const dirQrSz = Math.min(130, data.sizeBackQr || 110);
+          qp.w = dirQrSz; qp.h = dirQrSz; qp.drawX = portrait ? W - dirQrSz - 45 : qp.x;
+          drawCardQRCode(ctx, 'back', qp.drawX, portrait ? H - dirQrSz - 45 : qp.y, dirQrSz, buildQRPayload(data.backQrMode, data.backQrCustom, data), backBg, backBrandColor, backTextColor, data.qrColorStyle);
         }
         drawTechBadges(ctx, 'back', data);
         drawCustomLayers(ctx, 'back', data);
@@ -3124,12 +3256,36 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         return;
       }
 
+      // 輔助函式：繪製可選樣式的頂部分隔線
+      function drawBackDividerLine(x, y, width) {
+        if (data.backDividerStyle === 'none') return;
+        ctx.save();
+        if (data.backDividerStyle === 'gradient') {
+          const g = ctx.createLinearGradient(x, y, x + width, y);
+          g.addColorStop(0, backBrandColor);
+          g.addColorStop(0.55, backBrandColor + '66');
+          g.addColorStop(1, backBrandColor + '00');
+          ctx.fillStyle = g;
+          ctx.fillRect(x, y, width, 3);
+        } else if (data.backDividerStyle === 'double') {
+          ctx.fillStyle = backBrandColor;
+          ctx.fillRect(x, y, width, 2);
+          ctx.fillStyle = backBrandColor + '55';
+          ctx.fillRect(x, y + 5, width * 0.65, 1.5);
+        } else {
+          ctx.fillStyle = backBrandColor;
+          ctx.fillRect(x, y, width, 2.5);
+        }
+        ctx.restore();
+      }
+
       // 背面幾何與 AI 科技紋理
       ctx.save();
       if (data.backLayout === 'segmented_groups') {
-        ctx.fillStyle = backBrandColor; ctx.fillRect(60, bPos.backBrand.y + data.sizeBackLogo + 28, W - 120, 2.5);
+        drawBackDividerLine(60, bPos.backBrand.y + data.sizeBackLogo + 28, W - 120);
       } else if (data.backLayout === 'vertical_list_card') {
-        ctx.fillStyle = backBrandColor; ctx.fillRect(68, 165, W - 136, 2.5); ctx.fillRect(68, H - 175, W - 136, 2.5);
+        drawBackDividerLine(68, 165, W - 136);
+        drawBackDividerLine(68, H - 175, W - 136);
       } else if (data.backLayout === 'classic_center') {
         ctx.fillStyle = backBrandColor; ctx.fillRect(0, H - 16, W, 16);
       } else if (data.backLayout === 'qr_showcase') {
@@ -3150,7 +3306,8 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           if (idx === 1) ctx.setLineDash([8, 6]); else ctx.setLineDash([]);
           ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
         });
-        ctx.setLineDash([]); ctx.fillStyle = backBrandColor; ctx.fillRect(64, bPos.backBrand.y + data.sizeBackLogo + 24, W - 128, 2);
+        ctx.setLineDash([]);
+        drawBackDividerLine(64, bPos.backBrand.y + data.sizeBackLogo + 24, W - 128);
       } else if (data.backLayout === 'modern_white_bento') {
         const cardFill = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.026)';
         const borderCol = isDark ? backBrandColor + '38' : 'rgba(15,23,42,0.1)';
@@ -3172,7 +3329,7 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
           ctx.beginPath(); ctx.arc(sx, sy, 6, 0, Math.PI * 2); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(sx - 3.5, sy); ctx.lineTo(sx + 3.5, sy); ctx.moveTo(sx, sy - 3.5); ctx.lineTo(sx, sy + 3.5); ctx.stroke();
         });
-        ctx.fillStyle = backBrandColor; ctx.fillRect(pad + 36, bPos.backBrand.y + data.sizeBackLogo + 22, W - (pad + 36) * 2, 2);
+        drawBackDividerLine(pad + 36, bPos.backBrand.y + data.sizeBackLogo + 22, W - (pad + 36) * 2);
         ctx.fillStyle = backTextColor + '66'; ctx.font = `600 11px 'JetBrains Mono', monospace`;
         ctx.fillText('SPEC // ENTERPRISE & AI SOLUTIONS', pad + 36, H - pad - 14);
       } else if (data.backLayout === 'minimal_arch_line') {
@@ -3212,11 +3369,16 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         }
       }
 
-      // 2. 背面標語 / 業務內容
+      // 2. 背面標語 / 業務內容 (支援單欄/雙欄網格、對齊覆寫、向量項目符號與行距控制)
       if (data.showBackTagline && data.backTaglineText.trim()) {
         const tp = bPos.backTagline;
-        const maxLineW = W - (tp.centered ? 90 : tp.x + 50);
-        ctx.save(); ctx.textBaseline = 'top';
+        const effectiveAlign = data.backTextAlign === 'auto' ? (tp.centered ? 'center' : 'left') : data.backTextAlign;
+        const maxLineW = W - (effectiveAlign === 'center' ? 90 : tp.x + 50);
+        const lineH = Math.round(data.sizeBackText * (data.sizeBackLineHeight || 1.58));
+
+        ctx.save();
+        ctx.textBaseline = 'top';
+
         if (data.backLayout === 'triple_features') {
           ctx.textAlign = 'center';
           const cols = ['⚡ 高效能運算方案', '🛡️ 原廠信心保證', '💡 專業技術支援'];
@@ -3232,53 +3394,142 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
             }
           });
           tp.w = W - 100; tp.h = portrait ? 310 : 90; tp.drawX = 50;
+        } else if (data.backColumns === '2' && !portrait) {
+          // 雙欄網格矩陣排版
+          const nonEmptyLines = data.backTaglineText.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          const colGap = 36;
+          const colW = Math.min(350, Math.floor((W - tp.x - 210 - colGap) / 2));
+          const rowsPerCol = Math.ceil(nonEmptyLines.length / 2);
+          ctx.textAlign = 'left';
+
+          nonEmptyLines.forEach((line, idx) => {
+            const colIdx = Math.floor(idx / rowsPerCol);
+            const rowIdx = idx % rowsPerCol;
+            const cx = tp.x + colIdx * (colW + colGap);
+            const cy = tp.y + rowIdx * lineH;
+            const isHeader = line.startsWith('【') && line.includes('】');
+            const isBullet = line.startsWith('■') || line.startsWith('•') || line.startsWith('-');
+
+            if (isHeader) {
+              ctx.fillStyle = backBrandColor;
+              ctx.font = `700 ${data.sizeBackText}px ${backMixedFont}`;
+              ctx.fillText(line, cx, cy, colW);
+            } else if (isBullet) {
+              const cleanTxt = line.replace(/^[■•\-]\s*/, '');
+              ctx.fillStyle = backBrandColor;
+              const sqSz = Math.max(7, Math.round(data.sizeBackText * 0.36));
+              ctx.beginPath();
+              ctx.roundRect(cx, cy + Math.round((data.sizeBackText - sqSz) / 2) + 2, sqSz, sqSz, 2);
+              ctx.fill();
+              ctx.fillStyle = backTextColor;
+              ctx.font = `500 ${data.sizeBackText}px ${backMixedFont}`;
+              ctx.fillText(cleanTxt, cx + sqSz + 10, cy, colW - sqSz - 10);
+            } else {
+              ctx.fillStyle = backTextColor;
+              ctx.font = `500 ${data.sizeBackText}px ${backMixedFont}`;
+              ctx.fillText(line, cx, cy, colW);
+            }
+          });
+          tp.w = colW * 2 + colGap;
+          tp.h = Math.max(50, rowsPerCol * lineH);
+          tp.drawX = tp.x;
         } else {
-          ctx.textAlign = tp.centered ? 'center' : 'left';
+          // 單欄排版 (支援向量項目符號美化)
+          ctx.textAlign = effectiveAlign;
           const rawLines = data.backTaglineText.split(/\r?\n/);
-          const lineH = Math.round(data.sizeBackText * 1.62);
           let curY = tp.y, maxW = 240;
+
           rawLines.forEach(rawLine => {
             const line = rawLine.trim();
             if (!line) { curY += Math.round(lineH * 0.45); return; }
             const isHeader = line.startsWith('【') && line.includes('】');
+            const isSingleBullet = (line.startsWith('■') || line.startsWith('•')) && !line.slice(1).includes('•') && !line.slice(1).includes('■');
+
             let fSz = data.sizeBackText;
+            const displayTxt = isSingleBullet ? line.replace(/^[■•]\s*/, '') : line;
             ctx.font = `${isHeader ? 700 : 500} ${fSz}px ${backMixedFont}`;
-            let measured = ctx.measureText(line).width;
+            let measured = ctx.measureText(displayTxt).width + (isSingleBullet ? 22 : 0);
+
             if (measured > maxLineW && maxLineW > 120) {
               fSz = Math.max(13, Math.floor(fSz * (maxLineW / measured)));
               ctx.font = `${isHeader ? 700 : 500} ${fSz}px ${backMixedFont}`;
-              measured = ctx.measureText(line).width;
+              measured = ctx.measureText(displayTxt).width + (isSingleBullet ? 22 : 0);
             }
-            ctx.fillStyle = isHeader ? backBrandColor : backTextColor;
-            ctx.fillText(line, tp.x, curY);
+
+            if (isSingleBullet && effectiveAlign === 'left') {
+              ctx.fillStyle = backBrandColor;
+              const sqSz = Math.max(8, Math.round(fSz * 0.38));
+              ctx.beginPath();
+              ctx.roundRect(tp.x, curY + Math.round((fSz - sqSz) / 2) + 2, sqSz, sqSz, 2);
+              ctx.fill();
+              ctx.fillStyle = backTextColor;
+              ctx.fillText(displayTxt, tp.x + sqSz + 12, curY);
+            } else {
+              ctx.fillStyle = isHeader ? backBrandColor : backTextColor;
+              ctx.fillText(line, tp.x, curY);
+            }
             maxW = Math.max(maxW, measured);
             curY += lineH;
           });
-          tp.w = maxW; tp.h = Math.max(45, curY - tp.y); tp.drawX = tp.centered ? tp.x - maxW / 2 : tp.x;
+          tp.w = maxW;
+          tp.h = Math.max(45, curY - tp.y);
+          tp.drawX = effectiveAlign === 'center' ? tp.x - maxW / 2 : tp.x;
         }
         ctx.restore();
       }
 
-      if (data.backFooterSub) {
-        ctx.save(); ctx.fillStyle = backTextColor; ctx.font = `600 20px ${backMixedFont}`;
-        ctx.textAlign = (data.backLayout === 'segmented_groups' && !portrait) ? 'left' : 'center';
-        ctx.fillText(data.backFooterSub, (data.backLayout === 'segmented_groups' && !portrait) ? 68 : W / 2, H - 96);
+      // 3. 背面底部網址與副標區 (已升級為可自由拖曳區塊 backWeb)
+      if (!bPos.backWeb) {
+        const isLeftWebDefault = (data.backLayout === 'segmented_groups' || data.backLayout === 'ai_circuit_core' || data.backLayout === 'modern_white_bento') && !portrait;
+        bPos.backWeb = { x: isLeftWebDefault ? 76 : Math.round(W / 2), y: H - 56, w: 340, h: 45, label: '背面網址與副標', centered: !isLeftWebDefault };
+      }
+      const wPos = bPos.backWeb;
+      if (data.backFooterSub || (data.showBackWeb && data.website)) {
+        ctx.save();
+        ctx.textAlign = wPos.centered ? 'center' : 'left';
+        ctx.textBaseline = 'top';
+        let curWebY = wPos.y;
+        let maxWebW = 200;
+
+        if (data.backFooterSub) {
+          ctx.fillStyle = backTextColor;
+          ctx.font = `600 19px ${backMixedFont}`;
+          ctx.fillText(data.backFooterSub, wPos.x, curWebY);
+          maxWebW = Math.max(maxWebW, ctx.measureText(data.backFooterSub).width);
+          curWebY += 28;
+        }
+        if (data.showBackWeb && data.website) {
+          ctx.fillStyle = backTextColor;
+          ctx.font = `600 20px ${data.fontBackEn}`;
+          ctx.fillText(data.website, wPos.x, curWebY);
+          maxWebW = Math.max(maxWebW, ctx.measureText(data.website).width);
+          curWebY += 26;
+        }
+        wPos.w = maxWebW;
+        wPos.h = Math.max(36, curWebY - wPos.y);
+        wPos.drawX = wPos.centered ? wPos.x - maxWebW / 2 : wPos.x;
         ctx.restore();
       }
 
-      if (data.showBackWeb && data.website) {
-        ctx.save(); ctx.fillStyle = backTextColor; ctx.font = `600 20px ${data.fontBackEn}`;
-        const isLeftWeb = (data.backLayout === 'segmented_groups' || data.backLayout === 'ai_circuit_core' || data.backLayout === 'modern_white_bento') && !portrait;
-        ctx.textAlign = isLeftWeb ? 'left' : 'center';
-        ctx.fillText(data.website, isLeftWeb ? 76 : W / 2, H - 52);
-        ctx.restore();
-      }
-
+      // 4. 背面 QR Code (支援獨立尺寸 sizeBackQr 與底部掃碼提示字)
       if (data.showBackQr) {
         const qp = bPos.backQr;
-        const qrSize = (data.backLayout === 'qr_showcase' || data.backLayout === 'giant_qr_card') ? Math.max(185, data.sizeQr + 50) : data.sizeQr;
-        qp.w = qrSize; qp.h = qrSize; qp.drawX = qp.x;
+        const baseBackQr = data.sizeBackQr || data.sizeQr || 125;
+        const qrSize = (data.backLayout === 'qr_showcase' || data.backLayout === 'giant_qr_card') ? Math.max(185, baseBackQr + 45) : baseBackQr;
+        qp.w = qrSize;
+        qp.h = qrSize + (data.backQrCaption ? 26 : 0);
+        qp.drawX = qp.x;
         drawCardQRCode(ctx, 'back', qp.x, qp.y, qrSize, buildQRPayload(data.backQrMode, data.backQrCustom, data), backBg, backBrandColor, backTextColor, data.qrColorStyle);
+
+        if (data.backQrCaption) {
+          ctx.save();
+          ctx.fillStyle = backTextColor;
+          ctx.font = `600 13px ${backMixedFont}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(data.backQrCaption, qp.x + qrSize / 2, qp.y + qrSize + 10, qrSize + 40);
+          ctx.restore();
+        }
       }
 
       drawTechBadges(ctx, 'back', data);
@@ -3318,7 +3569,8 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     }
 
     function computeSnapLines(canvasEl, activeKey, posMap, isFront) {
-      const snapEnabled = document.getElementById('enableSmartSnap').checked;
+      const snapEl = document.getElementById('enableSmartSnap');
+      const snapEnabled = snapEl ? snapEl.checked : false;
       if (!snapEnabled || !activeKey || !posMap[activeKey]) {
         if (isFront) snapLinesFront = []; else snapLinesBack = [];
         return;
@@ -3354,7 +3606,8 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     }
 
     function hitTestFront(x, y) {
-      const showQr = document.getElementById('showQrFront').checked;
+      const qrEl = document.getElementById('showQrFront');
+      const showQr = qrEl ? qrEl.checked : false;
       const pos = getActiveFrontPos();
       for (const key of ['qrcode', 'addressBlock', 'contacts', 'brand', 'profile']) {
         if (key === 'qrcode' && !showQr) continue;
@@ -3365,12 +3618,15 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     }
 
     function hitTestBack(x, y) {
-      if (document.getElementById('backLayout').value === 'branch_directory') return null;
+      const bLayoutEl = document.getElementById('backLayout');
+      if (bLayoutEl && bLayoutEl.value === 'branch_directory') return null;
       const bPos = getActiveBackPos();
-      for (const key of ['backQr', 'backTagline', 'backBrand']) {
-        if (key === 'backBrand' && !document.getElementById('showBackLogo').checked) continue;
-        if (key === 'backTagline' && !document.getElementById('showBackTagline').checked) continue;
-        if (key === 'backQr' && !document.getElementById('showBackQr').checked) continue;
+      for (const key of ['backQr', 'backWeb', 'backTagline', 'backBrand']) {
+        if (!bPos[key]) continue;
+        if (key === 'backBrand' && !document.getElementById('showBackLogo')?.checked) continue;
+        if (key === 'backTagline' && !document.getElementById('showBackTagline')?.checked) continue;
+        if (key === 'backQr' && !document.getElementById('showBackQr')?.checked) continue;
+        if (key === 'backWeb' && !document.getElementById('showBackWeb')?.checked && !(document.getElementById('backFooterSub')?.value || '').trim()) continue;
         const b = bPos[key], bx = b.drawX !== undefined ? b.drawX : b.x;
         if (x >= bx - 10 && x <= bx + b.w + 10 && y >= b.y - 10 && y <= b.y + b.h + 10) return key;
       }
@@ -3537,6 +3793,41 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
 
     // ==================== 15. 3D 實體翻轉預覽與 Wallet 電子票卡 ====================
     let is3DFlipped = false;
+    let walletPreviewViewMode = 'pass';
+
+    function setWalletPreviewView(mode) {
+      walletPreviewViewMode = mode;
+      const passBox = document.getElementById('walletPassContainer');
+      const lockBox = document.getElementById('walletLockContainer');
+      const btnPass = document.getElementById('btnWalletViewPass');
+      const btnLock = document.getElementById('btnWalletViewLock');
+
+      if (mode === 'lockscreen') {
+        passBox.classList.add('hidden');
+        lockBox.classList.remove('hidden');
+        btnPass.className = 'px-2 py-1 rounded text-slate-400 hover:text-white transition';
+        btnLock.className = 'px-2 py-1 rounded bg-indigo-600 text-white font-bold transition';
+        renderWalletLockPreview();
+      } else {
+        lockBox.classList.add('hidden');
+        passBox.classList.remove('hidden');
+        btnPass.className = 'px-2 py-1 rounded bg-emerald-600 text-white font-bold transition';
+        btnLock.className = 'px-2 py-1 rounded text-slate-400 hover:text-white transition';
+        renderWalletPreview();
+      }
+    }
+
+    function quickSwitchWalletQr(qrMode) {
+      const sel = document.getElementById('passQrSource');
+      if (qrMode === 'fps_img' && !fpsCrispCanvas) {
+        showAutoSaveFeedback('⚠️ 尚未上傳 FPS 圖檔，請先至「4. 材質/FPS」上傳');
+        return;
+      }
+      sel.value = qrMode;
+      renderWalletPreview();
+      if (walletPreviewViewMode === 'lockscreen') renderWalletLockPreview();
+      scheduleSaveState();
+    }
 
     function open3DModal() {
       isExportingClean = true; renderAll(true);
@@ -3582,14 +3873,42 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       if (mode === 'invert_accent') { bg = data.accent || '#901E23'; accent = '#FFFFFF'; text = '#F8FAFC'; }
       else if (mode === 'dark_pro') { bg = '#11141C'; accent = data.accent === '#0F172A' ? '#38BDF8' : data.accent; text = '#F8FAFC'; }
       else if (mode === 'clean_white') { bg = '#FFFFFF'; accent = data.accent; text = '#0F172A'; }
+      else if (mode === 'cyber_mesh') { bg = '#070B19'; accent = '#38BDF8'; text = '#F1F5F9'; }
 
       const rgb = hexToRgb(bg);
       const isDark = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255 < 0.46;
       return {
-        bg, accent, text, isDark, rgb,
+        bg, accent, text, isDark, rgb, mode,
         labelColor: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(15,23,42,0.5)',
         dividerColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.1)'
       };
+    }
+
+    function drawWalletStripBanner(ctx, W, y, h, palette, stripStyle) {
+      if (stripStyle === 'minimal_none') return;
+      ctx.save();
+      if (stripStyle === 'solid_accent') {
+        ctx.fillStyle = palette.accent;
+        ctx.fillRect(0, y, W, h);
+      } else {
+        const grad = ctx.createLinearGradient(0, y, W, y + h);
+        grad.addColorStop(0, palette.accent + (palette.isDark ? '38' : '22'));
+        grad.addColorStop(0.5, palette.accent + (palette.isDark ? '18' : '0D'));
+        grad.addColorStop(1, palette.accent + (palette.isDark ? '30' : '1A'));
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y, W, h);
+
+        // 科技光波曲線
+        ctx.strokeStyle = palette.accent + '44';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 4; i++) {
+          ctx.beginPath();
+          ctx.moveTo(0, y + 18 + i * 16);
+          ctx.bezierCurveTo(W * 0.35, y + i * 10, W * 0.65, y + h - i * 8, W, y + 25 + i * 14);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
     }
 
     function renderWalletPreview() {
@@ -3600,135 +3919,227 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       const data = getFormData();
       const palette = getPassColorPalette(data);
       const platform = document.getElementById('passPlatform').value;
+      const stripStyle = document.getElementById('passStripStyle')?.value || 'tech_wave';
 
-      document.getElementById('walletPreviewTitle').textContent = platform === 'apple'
-        ? '● Apple Wallet 仿真票卡預覽'
-        : '● Google Wallet 現代票卡預覽';
+      const titleMap = {
+        apple: '● Apple Wallet 仿真票卡預覽',
+        google: '● Google Wallet 現代票卡預覽',
+        holographic: '● AI 流光黑金尊尚票卡預覽'
+      };
+      document.getElementById('walletPreviewTitle').textContent = titleMap[platform] || titleMap.apple;
 
       ctx.clearRect(0, 0, W, H);
       ctx.save();
       ctx.beginPath(); ctx.roundRect(0, 0, W, H, 42); ctx.clip();
 
       ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+      if (palette.mode === 'cyber_mesh') {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+        for (let gx = 28; gx < W; gx += 32) {
+          for (let gy = 28; gy < H; gy += 32) ctx.fillRect(gx, gy, 1.5, 1.5);
+        }
+      }
+
       const topGrad = ctx.createLinearGradient(0, 0, W, 320);
       topGrad.addColorStop(0, palette.accent + (palette.isDark ? '28' : '14'));
       topGrad.addColorStop(1, palette.bg + '00');
       ctx.fillStyle = topGrad; ctx.fillRect(0, 0, W, 360);
 
-      ctx.fillStyle = palette.accent; ctx.fillRect(0, 0, W, 12);
+      if (platform === 'holographic') {
+        const holoGrad = ctx.createLinearGradient(0, 0, W, 0);
+        holoGrad.addColorStop(0, '#F59E0B');
+        holoGrad.addColorStop(0.5, '#38BDF8');
+        holoGrad.addColorStop(1, '#EC4899');
+        ctx.fillStyle = holoGrad;
+      } else {
+        ctx.fillStyle = palette.accent;
+      }
+      ctx.fillRect(0, 0, W, 12);
 
       if (platform === 'apple') {
         ctx.fillStyle = '#020617';
         ctx.beginPath(); ctx.arc(W / 2, -8, 52, 0, Math.PI, false); ctx.fill();
       } else {
-        ctx.fillStyle = palette.accent + '22';
+        ctx.fillStyle = palette.accent + '33';
         ctx.beginPath(); ctx.roundRect(W / 2 - 44, 24, 88, 8, 4); ctx.fill();
       }
 
-      const padX = 52, headerY = 54;
+      const padX = 52, headerY = 52;
       if (uploadedLogo) {
         const procLogo = getProcessedLogo(palette.bg, data.blendLogoWhite, data.whiteTolerance, data.brightenLogoDark, data.forceWhiteLogo);
         const ratio = uploadedLogo.width / uploadedLogo.height;
-        let drawH = 62, drawW = drawH * ratio;
+        let drawH = 60, drawW = drawH * ratio;
         if (drawW > 340) { drawW = 340; drawH = drawW / ratio; }
         ctx.drawImage(procLogo, padX, headerY, drawW, drawH);
       } else {
         ctx.fillStyle = palette.accent;
-        ctx.font = `700 44px ${data.fontFrontBrand}`;
+        ctx.font = `700 42px ${data.fontFrontBrand}`;
         ctx.textAlign = 'left'; ctx.textBaseline = 'top';
         ctx.fillText(data.company || 'Centralfield', padX, headerY);
       }
 
       const badgeStr = (document.getElementById('passBadgeLabel').value || 'FPS / VERIFIED').trim();
       if (badgeStr) {
-        ctx.font = `700 16px 'Montserrat', sans-serif`;
-        const bw = ctx.measureText(badgeStr).width + 28, bx = W - padX - bw;
+        ctx.font = `700 15px 'Montserrat', sans-serif`;
+        const bw = ctx.measureText(badgeStr).width + 26, bx = W - padX - bw;
         ctx.fillStyle = palette.accent + '22'; ctx.strokeStyle = palette.accent + '66'; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.roundRect(bx, headerY + 4, bw, 32, 16); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.roundRect(bx, headerY + 4, bw, 30, 15); ctx.fill(); ctx.stroke();
         ctx.fillStyle = palette.accent; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(badgeStr, bx + bw / 2, headerY + 20);
+        ctx.fillText(badgeStr, bx + bw / 2, headerY + 19);
       }
       if (data.sinceYear) {
         ctx.fillStyle = palette.labelColor;
-        ctx.font = `italic 400 18px ${data.fontFrontBrand}`;
+        ctx.font = `italic 400 17px ${data.fontFrontBrand}`;
         ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-        ctx.fillText(data.sinceYear, W - padX, headerY + 44);
+        ctx.fillText(data.sinceYear, W - padX, headerY + 42);
       }
 
-      ctx.fillStyle = palette.dividerColor; ctx.fillRect(padX, 145, W - padX * 2, 2);
+      // 繪製 Strip 橫幅視覺區
+      const stripY = 138, stripH = stripStyle === 'minimal_none' ? 0 : 72;
+      if (stripH > 0) {
+        drawWalletStripBanner(ctx, W, stripY, stripH, palette, stripStyle);
+        ctx.fillStyle = stripStyle === 'solid_accent' ? '#FFFFFF' : palette.text;
+        ctx.font = `600 17px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        const subBannerTxt = [data.companySubEn, data.companySubZh].filter(Boolean).join('  •  ');
+        ctx.fillText(subBannerTxt, padX, stripY + stripH / 2, W - padX * 2);
+      } else {
+        ctx.fillStyle = palette.dividerColor;
+        ctx.fillRect(padX, 142, W - padX * 2, 2);
+      }
 
-      let curY = 175;
+      let curY = stripH > 0 ? stripY + stripH + 26 : 168;
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-      ctx.fillStyle = palette.labelColor; ctx.font = `700 15px 'Montserrat', sans-serif`;
+      ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`;
       ctx.fillText('NAME / REPRESENTATIVE', padX, curY);
-      curY += 26;
+      curY += 24;
 
       const fullName = [data.nameEn, data.nameZh].filter(Boolean).join('  ');
       ctx.fillStyle = palette.text;
-      ctx.font = `700 44px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
+      ctx.font = `700 42px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
       ctx.fillText(fullName || 'Centralfield Representative', padX, curY, W - padX * 2);
-      curY += 58;
+      curY += 54;
 
       const fullTitle = [data.titleEn, data.titleZh].filter(Boolean).join('  |  ');
       ctx.fillStyle = palette.accent;
-      ctx.font = `600 24px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
+      ctx.font = `600 22px ${buildMixedFontFamily(data.fontFrontEn, data.fontFrontZh)}`;
       ctx.fillText(fullTitle || (data.companySubEn + ' ' + data.companySubZh), padX, curY, W - padX * 2);
-      curY += 48;
+      curY += 44;
 
       ctx.fillStyle = palette.dividerColor; ctx.fillRect(padX, curY, W - padX * 2, 2);
-      curY += 28;
+      curY += 24;
 
       const col1X = padX, col2X = Math.round(W / 2) + 15, colW = Math.round(W / 2) - padX - 20;
       function drawPassField(label, value, x, y, maxW) {
-        ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`; ctx.textAlign = 'left';
+        ctx.fillStyle = palette.labelColor; ctx.font = `700 13px 'Montserrat', sans-serif`; ctx.textAlign = 'left';
         ctx.fillText(label, x, y);
-        ctx.fillStyle = palette.text; ctx.font = `600 20px ${data.fontFrontEn}`;
-        ctx.fillText(value || '—', x, y + 22, maxW);
+        ctx.fillStyle = palette.text; ctx.font = `600 19px ${data.fontFrontEn}`;
+        ctx.fillText(value || '—', x, y + 20, maxW);
       }
 
       drawPassField('DIRECT / TEL', data.phone || '+852 2387 0273', col1X, curY, colW);
       drawPassField('WHATSAPP / MOBILE', data.whatsapp || data.phone || '—', col2X, curY, colW);
-      curY += 74;
+      curY += 68;
       drawPassField('EMAIL ADDRESS', data.email || 'sales@centralfield.com', col1X, curY, colW);
-      drawPassField('OFFICIAL WEBSITE', data.website || 'www.centralfield.com', col2X, curY, colW);
-      curY += 74;
 
-      ctx.fillStyle = palette.labelColor; ctx.font = `700 14px 'Montserrat', sans-serif`;
+      // 第四欄位動態切換 (Website / FPS ID / Department)
+      const f4Mode = document.getElementById('passField4Mode')?.value || 'website';
+      const f4CustomVal = document.getElementById('passCustomField4Val')?.value || '';
+      if (f4Mode === 'fps_id') {
+        drawPassField('FPS 轉數快識別碼', f4CustomVal || 'FPS ID: 103884920', col2X, curY, colW);
+      } else if (f4Mode === 'department') {
+        drawPassField('DIVISION / TEAM', f4CustomVal || 'Enterprise & AI Solutions', col2X, curY, colW);
+      } else {
+        drawPassField('OFFICIAL WEBSITE', data.website || 'www.centralfield.com', col2X, curY, colW);
+      }
+      curY += 68;
+
+      ctx.fillStyle = palette.labelColor; ctx.font = `700 13px 'Montserrat', sans-serif`;
       ctx.fillText('LOCATION / STORE ADDRESS', col1X, curY);
-      curY += 22;
-      ctx.fillStyle = palette.text; ctx.font = `500 18px ${data.fontFrontZh}`;
+      curY += 20;
+      ctx.fillStyle = palette.text; ctx.font = `500 17px ${data.fontFrontZh}`;
       ctx.fillText((data.address || data.addressEn || '').replace(/\r?\n/g, ' '), col1X, curY, W - padX * 2);
 
       // 底部掃碼卡座區
-      const qrBoxW = 360, qrBoxH = 360, qrBoxX = Math.round((W - qrBoxW) / 2), qrBoxY = 665;
+      const qrBoxW = 350, qrBoxH = 350, qrBoxX = Math.round((W - qrBoxW) / 2), qrBoxY = 695;
       ctx.fillStyle = '#FFFFFF';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.22)'; ctx.shadowBlur = 25; ctx.shadowOffsetY = 8;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.24)'; ctx.shadowBlur = 25; ctx.shadowOffsetY = 8;
       ctx.beginPath(); ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, 28); ctx.fill();
       ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
 
       const qrSrcMode = document.getElementById('passQrSource').value;
       if (qrSrcMode === 'fps_img' && fpsCrispCanvas) {
         ctx.save(); ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(fpsCrispCanvas, qrBoxX + 18, qrBoxY + 18, 324, 324);
+        ctx.drawImage(fpsCrispCanvas, qrBoxX + 18, qrBoxY + 18, 314, 314);
         ctx.restore();
       } else {
         const actualMode = (qrSrcMode === 'front_sync' || qrSrcMode === 'fps_img') ? data.frontQrMode : qrSrcMode;
         const qrPayload = buildQRPayload(actualMode, data.frontQrCustom, data);
         const qrCanvas = document.createElement('canvas');
         new QRious({ element: qrCanvas, value: qrPayload, size: 320, level: 'H', foreground: '#0F172A', background: '#FFFFFF', padding: 6 });
-        ctx.drawImage(qrCanvas, qrBoxX + 20, qrBoxY + 20, 320, 320);
+        ctx.drawImage(qrCanvas, qrBoxX + 18, qrBoxY + 18, 314, 314);
       }
 
       const footerHint = document.getElementById('passFooterHint').value || '';
       ctx.fillStyle = palette.text; ctx.font = `600 17px ${data.fontFrontZh}`; ctx.textAlign = 'center';
-      ctx.fillText(footerHint, W / 2, 1052, W - 80);
+      ctx.fillText(footerHint, W / 2, 1072, W - 80);
 
       ctx.fillStyle = palette.labelColor; ctx.font = `600 14px 'Montserrat', sans-serif`;
-      ctx.fillText(`${data.companySubEn || data.company}  •  ${data.companySubZh}`, W / 2, 1084);
+      ctx.fillText(`${data.companySubEn || data.company}  •  ${data.companySubZh}`, W / 2, 1106);
 
       ctx.strokeStyle = palette.isDark ? 'rgba(255,255,255,0.16)' : 'rgba(15,23,42,0.12)';
       ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect(1.5, 1.5, W - 3, H - 3, 42); ctx.stroke();
       ctx.restore();
+
+      if (walletPreviewViewMode === 'lockscreen') renderWalletLockPreview();
+    }
+
+    function buildLockScreenCanvas(WW, WH, includeMockTimeUI = false) {
+      const passCanvas = document.getElementById('walletCanvas');
+      renderWalletPreview();
+      const data = getFormData();
+
+      const wallCanvas = document.createElement('canvas');
+      wallCanvas.width = WW; wallCanvas.height = WH;
+      const wctx = wallCanvas.getContext('2d');
+
+      const bgGrad = wctx.createLinearGradient(0, 0, WW, WH);
+      bgGrad.addColorStop(0, '#040711'); bgGrad.addColorStop(0.5, '#0F172A'); bgGrad.addColorStop(1, '#040711');
+      wctx.fillStyle = bgGrad; wctx.fillRect(0, 0, WW, WH);
+
+      // 品牌色彩柔和光暈
+      const rad = wctx.createRadialGradient(WW / 2, WH * 0.55, 20, WW / 2, WH * 0.55, WW * 0.75);
+      rad.addColorStop(0, (data.accent || '#6366F1') + '26');
+      rad.addColorStop(1, 'rgba(0,0,0,0)');
+      wctx.fillStyle = rad; wctx.fillRect(0, 0, WW, WH);
+
+      if (includeMockTimeUI) {
+        wctx.save();
+        wctx.fillStyle = 'rgba(255,255,255,0.88)';
+        wctx.font = `600 ${Math.round(WW * 0.04)}px 'Inter', sans-serif`;
+        wctx.textAlign = 'center';
+        wctx.fillText('Saturday, November 14', WW / 2, Math.round(WH * 0.095));
+        wctx.font = `700 ${Math.round(WW * 0.21)}px 'Inter', sans-serif`;
+        wctx.fillText('09:41', WW / 2, Math.round(WH * 0.18));
+        wctx.restore();
+      }
+
+      const cardDrawW = Math.round(WW * 0.76);
+      const cardDrawH = Math.round(cardDrawW * (1160 / 750));
+      const cardY = Math.round(WH * 0.31);
+      wctx.save();
+      wctx.shadowColor = 'rgba(0, 0, 0, 0.78)'; wctx.shadowBlur = 55; wctx.shadowOffsetY = 20;
+      wctx.drawImage(passCanvas, Math.round((WW - cardDrawW) / 2), cardY, cardDrawW, cardDrawH);
+      wctx.restore();
+      return wallCanvas;
+    }
+
+    function renderWalletLockPreview() {
+      const target = document.getElementById('walletLockPreviewCanvas');
+      if (!target) return;
+      const mockWall = buildLockScreenCanvas(645, 1398, true);
+      target.getContext('2d').drawImage(mockWall, 0, 0);
     }
 
     function openWalletModal() {
@@ -3748,25 +4159,8 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
     }
 
     function downloadLockScreenWallpaper() {
-      const passCanvas = document.getElementById('walletCanvas');
-      renderWalletPreview();
       const data = getFormData();
-
-      const wallCanvas = document.createElement('canvas');
-      const WW = 1290, WH = 2796;
-      wallCanvas.width = WW; wallCanvas.height = WH;
-      const wctx = wallCanvas.getContext('2d');
-
-      const bgGrad = wctx.createLinearGradient(0, 0, WW, WH);
-      bgGrad.addColorStop(0, '#040711'); bgGrad.addColorStop(0.5, '#0F172A'); bgGrad.addColorStop(1, '#040711');
-      wctx.fillStyle = bgGrad; wctx.fillRect(0, 0, WW, WH);
-
-      const cardDrawW = 980, cardDrawH = Math.round(cardDrawW * (1120 / 750));
-      wctx.save();
-      wctx.shadowColor = 'rgba(0, 0, 0, 0.75)'; wctx.shadowBlur = 65; wctx.shadowOffsetY = 25;
-      wctx.drawImage(passCanvas, Math.round((WW - cardDrawW) / 2), 920, cardDrawW, cardDrawH);
-      wctx.restore();
-
+      const wallCanvas = buildLockScreenCanvas(1290, 2796, false);
       const link = document.createElement('a');
       link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_LockScreen_Wallpaper.png`;
       link.href = wallCanvas.toDataURL('image/png', 0.95);
@@ -3780,14 +4174,53 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       const passCanvas = document.getElementById('walletCanvas');
       renderWalletPreview();
 
+      // 生成標準 Apple Wallet icon.png (58x58) 與 logo.png (320x100)
+      const iconC = document.createElement('canvas');
+      iconC.width = 58; iconC.height = 58;
+      const ictx = iconC.getContext('2d');
+      ictx.fillStyle = palette.accent;
+      ictx.beginPath(); ictx.roundRect(0, 0, 58, 58, 12); ictx.fill();
+      ictx.fillStyle = '#FFFFFF';
+      ictx.font = `800 24px 'Montserrat', sans-serif`;
+      ictx.textAlign = 'center'; ictx.textBaseline = 'middle';
+      ictx.fillText((data.company || 'CF').slice(0, 2).toUpperCase(), 29, 30);
+
+      const qrSrcMode = document.getElementById('passQrSource').value;
+      const actualMode = (qrSrcMode === 'front_sync' || qrSrcMode === 'fps_img') ? data.frontQrMode : qrSrcMode;
+      const qrPayload = buildQRPayload(actualMode, data.frontQrCustom, data);
+
       const zip = new JSZip();
       zip.file("pass.json", JSON.stringify({
         formatVersion: 1,
         passTypeIdentifier: "pass.com.centralfield.card",
+        serialNumber: `CARD-${Date.now()}`,
+        teamIdentifier: "CF83TEAMID",
         organizationName: data.companySubEn || "Centralfield Computer Ltd.",
-        description: "Business Card & FPS Pass",
-        backgroundColor: `rgb(${palette.rgb.r}, ${palette.rgb.g}, ${palette.rgb.b})`
+        description: `${data.nameEn || data.company} Digital Business Card`,
+        backgroundColor: `rgb(${palette.rgb.r}, ${palette.rgb.g}, ${palette.rgb.b})`,
+        foregroundColor: palette.isDark ? "rgb(248, 250, 252)" : "rgb(15, 23, 42)",
+        labelColor: palette.isDark ? "rgb(148, 163, 184)" : "rgb(100, 116, 139)",
+        generic: {
+          primaryFields: [{ key: "name", label: "REPRESENTATIVE", value: [data.nameEn, data.nameZh].filter(Boolean).join(" ") || data.company }],
+          secondaryFields: [{ key: "title", label: "TITLE", value: [data.titleEn, data.titleZh].filter(Boolean).join(" | ") }],
+          auxiliaryFields: [
+            { key: "tel", label: "DIRECT", value: data.phone },
+            { key: "email", label: "EMAIL", value: data.email }
+          ],
+          backFields: [
+            { key: "addr", label: "ADDRESS", value: (data.address + " / " + data.addressEn).replace(/\r?\n/g, " ") },
+            { key: "web", label: "WEBSITE", value: data.website }
+          ]
+        },
+        barcodes: [{
+          message: qrPayload,
+          format: "PKBarcodeFormatQR",
+          messageEncoding: "utf-8"
+        }]
       }, null, 2));
+
+      zip.file("icon.png", iconC.toDataURL('image/png').split(',')[1], { base64: true });
+      zip.file("icon@2x.png", iconC.toDataURL('image/png').split(',')[1], { base64: true });
       zip.file("Wallet_Pass_Preview.png", passCanvas.toDataURL('image/png').split(',')[1], { base64: true });
       if (fpsCrispCanvas) {
         zip.file("FPS_QR_2x2cm_236px.png", fpsCrispCanvas.toDataURL('image/png').split(',')[1], { base64: true });
@@ -3797,6 +4230,30 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `${(data.nameEn || 'Card').replace(/\s+/g, '_')}_PassKit.pkpass`;
+      link.click();
+      showAutoSaveFeedback('📦 已導出完整 Apple Wallet .pkpass 封裝包');
+    }
+
+    function exportInteractiveWalletWebHTML() {
+      isExportingClean = true; renderAll(true);
+      const frontCardImg = frontCanvas.toDataURL('image/png', 0.9);
+      const backCardImg  = backCanvas.toDataURL('image/png', 0.9);
+      isExportingClean = false; renderAll(true);
+
+      const passCanvas = document.getElementById('walletCanvas');
+      renderWalletPreview();
+      const walletPassImg = passCanvas.toDataURL('image/png', 0.95);
+      const data = getFormData();
+      const fpsIdText = (document.getElementById('passCustomField4Val')?.value || '').replace(/^FPS\s*ID:\s*/i, '').trim();
+      const cleanWa = (data.whatsapp || data.phone || '85291317468').replace(/[^0-9]/g, '');
+      const cleanTel = (data.phone || '+85223870273').replace(/[^0-9+]/g, '');
+      const vcardUri = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(buildQRPayload('vcard', '', data));
+
+      const htmlPage = `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${data.nameEn || data.company} - Wallet 電子名片</title><script src="https://cdn.tailwindcss.com"><\/script></head><body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center py-6 px-4"><div class="max-w-sm w-full space-y-4"><div class="flex justify-center gap-2 text-xs"><button onclick="showView('wallet')" class="px-3 py-1.5 rounded-full bg-emerald-600 text-white font-bold">📲 Wallet 票卡</button><button onclick="showView('front')" class="px-3 py-1.5 rounded-full bg-slate-800 text-slate-300">🪪 實體正面</button><button onclick="showView('back')" class="px-3 py-1.5 rounded-full bg-slate-800 text-slate-300">🔄 實體背面</button></div><div class="rounded-3xl overflow-hidden shadow-2xl border border-slate-800"><img id="mainDisplay" src="${walletPassImg}" class="w-full h-auto block"></div><div class="grid grid-cols-2 gap-2.5 text-xs font-bold"><a href="${vcardUri}" download="contact.vcf" class="col-span-2 py-3 rounded-2xl text-center text-white shadow-lg" style="background:${data.accent}">📥 一鍵存入通訊錄 (.VCF)</a><a href="https://wa.me/${cleanWa}" target="_blank" class="bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 py-3 rounded-xl text-center">💬 WhatsApp</a><a href="tel:${cleanTel}" class="bg-slate-900 border border-slate-800 py-3 rounded-xl text-center">☎️ 撥打電話</a>${fpsIdText ? `<button onclick="copyFps('${fpsIdText}')" class="col-span-2 bg-amber-500/20 text-amber-300 border border-amber-500/40 py-2.5 rounded-xl text-center">🇭🇰 複製轉數快號碼：${fpsIdText}</button>` : ''}</div><p id="toast" class="text-center text-xs text-emerald-400 hidden">✅ 已複製到剪貼簿！</p></div><script>function showView(v){const img=document.getElementById('mainDisplay');img.src=v==='wallet'?'${walletPassImg}':(v==='front'?'${frontCardImg}':'${backCardImg}');}function copyFps(t){const el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);document.getElementById('toast').classList.remove('hidden');}<\/script></body></html>`;
+      const blob = new Blob([htmlPage], { type: 'text/html;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${(data.nameEn || 'WalletCard').replace(/\s+/g, '_')}_MobileWallet.html`;
       link.click();
     }
 
@@ -4041,6 +4498,10 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         taglineEl.value = portrait
           ? '【Gaming & Custom PC】\n• 電腦硬件零售 PC Hardware Retail\n• 高階水冷訂製 Custom Liquid Cooling\n\n【Enterprise & AI Solutions】\n• 企業 IT 採購 Corporate IT\n• AI 工作站方案 AI Workstation'
           : '【Gaming & Custom PC | 個人與高階玩家】\n• PC Hardware Retail 電腦硬件零售   • Custom Liquid Cooling 高階水冷訂製\n\n【Enterprise & AI Solutions | 企業與專案採購】\n• Corporate IT Procurement 企業採購   • AI Workstation Solutions AI 工作站方案';
+      } else if (key === 'preset_ai_b2b') {
+        taglineEl.value = '【AI 算力與工作站方案】\n• 多 GPU 深度學習工作站\n• 本地私有化 LLM 伺服器部署\n• 企業級高速 NAS 儲存陣列\n【企業 IT 採購與工程】\n• 商業電腦與伺服器一站式採購\n• 網絡基建與機房整合工程\n• 原廠保養與企業技術支援';
+      } else if (key === 'preset_watermark') {
+        taglineEl.value = '電腦硬件零售  •  高階水冷訂製  •  AI 工作站方案\n企業 IT 一站式採購與技術支援';
       }
     }
 
@@ -4051,6 +4512,11 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
       const footerSubEl = document.getElementById('backFooterSub');
       const layoutEl = document.getElementById('backLayout');
       const logoPosEl = document.getElementById('backLogoPosPreset');
+      const colsEl = document.getElementById('backColumns');
+      const wmEl = document.getElementById('showBackWatermark');
+
+      if (colsEl) colsEl.value = '1';
+      if (wmEl) wmEl.checked = false;
 
       if (key === 'preset_img1') {
         layoutEl.value = 'segmented_groups'; logoPosEl.value = 'top_left';
@@ -4077,6 +4543,20 @@ Sha Wan Rd, Shamshuipo, Kowloon, HK</textarea>
         layoutEl.value = 'segmented_groups'; logoPosEl.value = 'top_left';
         headerEl.value = 'Centralfield Computer Ltd.  |  中田數碼有限公司';
         footerSubEl.value = '';
+        document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
+        adaptBackPresetTextForOrientation();
+      } else if (key === 'preset_ai_b2b') {
+        layoutEl.value = 'ai_circuit_core'; logoPosEl.value = 'top_left';
+        if (colsEl) colsEl.value = '2';
+        headerEl.value = 'Centralfield AI & Enterprise  |  Since 1983';
+        footerSubEl.value = '';
+        document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
+        adaptBackPresetTextForOrientation();
+      } else if (key === 'preset_watermark') {
+        layoutEl.value = 'minimal_arch_line'; logoPosEl.value = 'top_center';
+        if (wmEl) wmEl.checked = true;
+        headerEl.value = '中田數碼有限公司  |  SINCE 1983';
+        footerSubEl.value = '香港九龍深水埗高登電腦中心';
         document.getElementById('showBackQr').checked = true; document.getElementById('showBackQrSync').checked = true;
         adaptBackPresetTextForOrientation();
       }
