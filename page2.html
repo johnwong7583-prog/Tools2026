@@ -134,6 +134,15 @@
                     <li>在 <strong>Build and deployment (Source)</strong> 選擇 <strong>Deploy from a branch</strong>，Branch 選擇 <code class="text-amber-300">main</code>（或 <code class="text-amber-300">master</code>）以及資料夾 <code class="text-amber-300">/ (root)</code>，再按 <strong>Save</strong> 即可！</li>
                 </ol>
             </div>
+
+            <div class="bg-rose-950/30 p-3.5 rounded-xl border border-rose-500/50 text-xs space-y-2">
+                <div class="font-black text-rose-400"><i class="fa-solid fa-circle-exclamation mr-1.5"></i>🚨 上載後未能成功啟用？請檢查這 3 點：</div>
+                <ul class="list-disc list-inside text-rose-200/90 space-y-1.5 leading-relaxed">
+                    <li><strong>有沒有解壓縮？</strong> 請務必將 <code>.zip</code> 解壓縮，上載裡面的 <code>index.html</code> 等檔案。<strong>絕對不能</strong>直接上載 zip 檔。</li>
+                    <li><strong>檔案是否在最外層？</strong> <code>index.html</code> 不能放在資料夾內，必須在 GitHub 專案的首頁目錄下。</li>
+                    <li><strong>等候時間：</strong> 在 Settings 按下 Save 後，GitHub 需要約 <strong>1 至 2 分鐘</strong> 編譯，請稍候並重新整理網頁。</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -311,6 +320,9 @@
                         <div class="flex flex-wrap gap-1.5">
                             <button onclick="applyQuickTopic('🔥【雙11限時狂歡】全場 Router / Mesh Wi-Fi / NAS / 電競螢幕 / 砌機組合激減！高登門市現貨即買即走')" class="text-[11px] bg-rose-950/80 hover:bg-rose-800 text-rose-200 border border-rose-500/40 px-2.5 py-1 rounded-lg transition">🛒 雙11限時狂歡</button>
                             <button onclick="applyQuickTopic('👑【Powered by ASUS 信仰海景房】Ryzen 7 9800X3D + ROG TUF RTX 5080 / 4070Ti Super 滿血 4K 光追電競主機，中田電腦專業走線三年保固')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded-lg transition">🛡️ Powered by ASUS 砌機</button>
+                            <button onclick="applyQuickTopic('🪖【ASUS TUF Gaming 軍規特工】TUF B650-PLUS + TUF RTX 4070TiS + GT502 彈藥庫，軍規耐用五年保固，高登中田現貨')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-yellow-300 border border-yellow-500/30 px-2.5 py-1 rounded-lg transition">🪖 TUF 軍規砌機</button>
+                            <button onclick="applyQuickTopic('🎨【ASUS ProArt 創作者超算】ProArt Z790 + RTX 4080S 創作者專屬，極簡黑金美學，3D 渲染與 AI 繪圖首選')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-amber-200 border border-amber-500/30 px-2.5 py-1 rounded-lg transition">🎨 ProArt 創作者</button>
+                            <button onclick="applyQuickTopic('🔧【ASUS ROG DIY 散件升級】ROG Maximus Z890 Hero 主板 / ROG Strix RTX 5080 顯示卡 / ROG 360 水冷，高登旗艦現貨！')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-lg transition">🔧 ROG DIY 散件</button>
                             <button onclick="applyQuickTopic('🐉【Powered by MSI 龍魂海景房】MSI MAG PANO 無立柱背插機箱 + MPG 刀鋒鈦主板 + GAMING TRIO 顯卡，顏值散熱雙巔峰')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg transition">🐉 Powered by MSI 龍魂</button>
                             <button onclick="applyQuickTopic('🦅【GIGABYTE AORUS 雕族神鷹認證機】X870E AORUS MASTER + RTX 5080 AORUS + 360 LCD 水冷，極致超頻散熱體驗')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-lg transition">🦅 AORUS 雕族神鷹</button>
                             <button onclick="applyQuickTopic('❄️【純白無立柱海景房特輯】全白 B650E ICE 主板 + 純白 RTX 4070Ti Super + 無限鏡 ARGB 風扇，書枱最靚風景線')" class="text-[11px] bg-slate-900 hover:bg-slate-700 text-sky-200 border border-sky-400/30 px-2.5 py-1 rounded-lg transition">❄️ 純白雪景海景房</button>
@@ -432,16 +444,20 @@
                                 </optgroup>
                                 <optgroup label="🛡️ 官方大廠信仰與 AI 超算認證主機">
                                     <option value="pba_asus_rig">🛡️ Powered by ASUS 華碩 ROG 信仰認證海景房主機</option>
+                                    <option value="pba_tuf_rig">🪖 Powered by ASUS (TUF Gaming 軍規彈藥庫主機)</option>
+                                    <option value="pba_proart_rig">🎨 Powered by ASUS (ProArt 創作者 AI 超算主機)</option>
                                     <option value="pbm_msi_rig">🐉 Powered by MSI 微星龍魂認證全景電競主機</option>
                                     <option value="aorus_rig">🦅 GIGABYTE AORUS 雕族神鷹認證極限超頻主機</option>
-                                    <option value="white_sea_rig">❄️ 純白無立柱雪景海景房 顏值巔峰整機</option>
+                                    <option value="white_sea_rig">❄️ 純白無立柱雪景海景房 (支援 ROG White Edition)</option>
                                     <option value="agent_pc">🧠 Agent Computer 24H 全自動 AI 智能體電腦</option>
                                     <option value="ai_computer">⚡ AI Computer 本地 DeepSeek R1 + NPU 超算工作站</option>
                                 </optgroup>
-                                <optgroup label="🔥 單一硬體爆款特賣">
+                                <optgroup label="🔥 單一硬體爆款特賣 (DIY散件)">
+                                    <option value="asus_diy_mb">🔧 ASUS ROG Maximus 旗艦主機板特賣</option>
+                                    <option value="asus_diy_gpu">🔧 ASUS ROG Strix / TUF 顯示卡升級</option>
                                     <option value="gpu_5080">🟢 GeForce RTX 5080 / 4080 Super 旗艦顯卡單品特賣</option>
                                     <option value="cpu_9800x3d">🔴 AMD Ryzen 7 9800X3D 地表最強遊戲神U</option>
-                                    <option value="monitor_oled">🖥️ 32吋 4K 240Hz QD-OLED 電競顯示器</option>
+                                    <option value="monitor_oled">🖥️ ASUS ROG 32吋 4K 240Hz QD-OLED 電競螢幕</option>
                                     <option value="wifi7_nas">📡 Wi-Fi 7 三頻 Mesh Router + Synology NAS 套裝</option>
                                 </optgroup>
                             </select>
@@ -454,6 +470,9 @@
                                 <select id="sp-theme" onchange="renderSingleProductPoster()" class="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-bold">
                                     <optgroup label="🛡️ 大廠信仰與 AI 主題">
                                         <option value="powered_by_asus">🛡️ Powered by ASUS (ROG 黑紅斜切)</option>
+                                        <option value="asus_tuf_gaming">🪖 ASUS TUF Gaming (軍規黑黃硬派)</option>
+                                        <option value="asus_proart">🎨 ASUS ProArt (創作者極簡黑金)</option>
+                                        <option value="asus_rog_white">❄️ ASUS ROG White (吹雪冰藍銀白)</option>
                                         <option value="powered_by_msi">🐉 Powered by MSI (微星龍魂黑金赤紅)</option>
                                         <option value="aorus_gigabyte">🦅 GIGABYTE AORUS (雕族神鷹黑橘電馭)</option>
                                         <option value="nvidia_rtx_green">🟢 NVIDIA GeForce RTX (光追黑綠矩陣)</option>
@@ -855,6 +874,9 @@
                                 <select id="st-theme" onchange="renderStandeePreview()" class="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold">
                                     <option value="pop_double11" selected>🛒 雙11紅藍狂歡 POP</option>
                                     <option value="powered_by_asus">🛡️ Powered by ASUS 信仰黑紅</option>
+                                    <option value="asus_tuf_gaming">🪖 ASUS TUF Gaming 軍規黑黃</option>
+                                    <option value="asus_proart">🎨 ASUS ProArt 創作者黑金</option>
+                                    <option value="asus_rog_white">❄️ ASUS ROG White 吹雪銀白</option>
                                     <option value="powered_by_msi">🐉 Powered by MSI 龍魂黑金</option>
                                     <option value="aorus_gigabyte">🦅 GIGABYTE AORUS 雕族黑橘</option>
                                     <option value="nvidia_rtx_green">🟢 NVIDIA GeForce RTX 黑綠</option>
@@ -1026,14 +1048,18 @@
             cny_sale: { badge: '新春開年', ribbon: '黃金賀歲賞', name: '逗利是換新機！滿血 4K 電競主機開年震撼價', cats: 'RTX 50系顯卡 | 9800X3D | 旗艦水冷 | 高速SSD', price: 'HK$ 8,888 起', orig: '原價 $10,888', theme: 'cny_fortune', layout: 'double11_podium', burst: '開年行大運・即砌即走' },
             bts_student: { badge: '開學季優惠', ribbon: '大學生專屬', name: 'AI 編程 / 剪片渲染 / 3A打機全能開學神機', cats: 'AI算力機 | 輕薄Notebook | iPad配件 | 高刷螢幕', price: 'HK$ 6,499 起', orig: '原價 $7,899', theme: 'back_to_school', layout: 'double11_podium', burst: '憑學生證・額外再減' },
             pba_asus_rig: { badge: 'ROG信仰', ribbon: 'POWERED BY ASUS', name: '華碩官方認證 滿血 4K 電競海景房', cats: 'ROG 主機板 | TUF 顯示卡 | 龍神360水冷 | GT502機箱', price: 'HK$ 14,800', orig: '原價 $16,999', theme: 'powered_by_asus', layout: 'double11_podium', burst: '✦ POWERED BY ASUS' },
+            pba_tuf_rig: { badge: '軍規耐用', ribbon: 'TUF GAMING', name: 'ASUS TUF Gaming 軍規防護彈藥庫主機', cats: 'TUF 主機板 | TUF 顯示卡 | GT502 機箱 | 五年保固', price: 'HK$ 12,800', orig: '原價 $14,500', theme: 'asus_tuf_gaming', layout: 'double11_podium', burst: '堅固耐用・戰場利器' },
+            pba_proart_rig: { badge: '創作者', ribbon: 'PROART 專業超算', name: 'ASUS ProArt 創作者 3D渲染與 AI 繪圖主機', cats: 'ProArt 主板 | ProArt 顯示卡 | 64GB大容量 | PA602', price: 'HK$ 18,999', orig: '原價 $21,800', theme: 'asus_proart', layout: 'double11_podium', burst: '極簡黑金・專業首選' },
             pbm_msi_rig: { badge: '微星龍魂', ribbon: 'POWERED BY MSI', name: 'MSI 龍魂背插全景海景房整機', cats: 'MPG 刀鋒主板 | GAMING TRIO 顯卡 | MAG PANO 機箱', price: 'HK$ 13,480', orig: '原價 $15,200', theme: 'powered_by_msi', layout: 'double11_podium', burst: '✦ POWERED BY MSI' },
             aorus_rig: { badge: '雕族神鷹', ribbon: 'GIGABYTE AORUS', name: 'AORUS 極限超頻冰感海景房戰機', cats: 'X870E AORUS | RTX 5080 MASTER | 360 LCD水冷', price: 'HK$ 15,800', orig: '原價 $17,900', theme: 'aorus_gigabyte', layout: 'double11_podium', burst: '✦ TEAM UP. FIGHT ON.' },
             white_sea_rig: { badge: '純白海景房', ribbon: '270° 無立柱全景', name: '冰白 ARGB 無限鏡美學海景房主機', cats: '純白主板 | 純白三風扇顯卡 | 360白水冷 | 隱藏走線', price: 'HK$ 11,980', orig: '原價 $13,800', theme: 'white_snow_sea', layout: 'double11_podium', burst: '顏值巔峰・現貨實機' },
             agent_pc: { badge: 'AI AGENT', ribbon: '24H 自動化智能體', name: '本機離線運行 OpenManus / AutoGPT 專屬電腦', cats: '64GB DDR5 | 24GB VRAM | 本地私隱零外洩 | 雙網卡', price: 'HK$ 18,800', orig: '原價 $21,500', theme: 'agent_computer', layout: 'double11_podium', burst: '100%本機離線・零月費' },
             ai_computer: { badge: 'AI 超算', ribbon: 'DEEPSEEK R1 滿血機', name: 'NPU + RTX 雙算力本地 AI 工作站', cats: 'Core Ultra 9 | 64GB RAM | 秒速生圖 | 離線LLM', price: 'HK$ 19,800', orig: '原價 $22,800', theme: 'ai_computer', layout: 'double11_podium', burst: 'AI算力怪獸・企業首選' },
-            gpu_5080: { badge: '卡皇首發', ribbon: 'GEFORCE RTX', name: 'GeForce RTX 5080 / 4080S 16GB OC', cats: 'DLSS 4 支援 | 三風扇冰感散熱 | 三年香港行貨保固', price: 'HK$ 8,999', orig: '原價 $9,899', theme: 'nvidia_rtx_green', layout: 'hero_center', burst: '高登中田・現貨發售' },
+            asus_diy_mb: { badge: 'ROG主板', ribbon: 'MAXIMUS 旗艦', name: 'ASUS ROG MAXIMUS Z890 HERO 旗艦主機板', cats: 'Intel Z890 | 22+1相供電 | Wi-Fi 7 | AI 超頻', price: 'HK$ 5,499', orig: '原價 $5,999', theme: 'powered_by_asus', layout: 'hero_center', burst: '發燒友必備・現貨' },
+            asus_diy_gpu: { badge: 'ROG顯卡', ribbon: 'STRIX 猛禽', name: 'ASUS ROG Strix GeForce RTX 5080 / 4080S', cats: '真空腔均熱板 | 專利金屬外殼 | Aura Sync 神光', price: 'HK$ 10,499', orig: '原價 $11,999', theme: 'powered_by_asus', layout: 'hero_center', burst: '極致散熱・限量到貨' },
+            gpu_5080: { badge: '卡皇首發', ribbon: 'GEFORCE RTX', name: 'GeForce RTX 5080 / 4080 Super 16GB OC', cats: 'DLSS 4 支援 | 三風扇冰感散熱 | 三年香港行貨保固', price: 'HK$ 8,999', orig: '原價 $9,899', theme: 'nvidia_rtx_green', layout: 'hero_center', burst: '高登中田・現貨發售' },
             cpu_9800x3d: { badge: '遊戲神U', ribbon: 'RYZEN 7 9800X3D', name: 'AMD Ryzen 7 9800X3D 3D V-Cache', cats: '千幀電競表現 | 第二代3D快取 | 砌機跟單特價', price: 'HK$ 3,999', orig: '原價 $4,399', theme: 'amd_ryzen_red', layout: 'hero_center', burst: '地表最強・打機必備' },
-            monitor_oled: { badge: '240Hz OLED', ribbon: '視覺巔峰', name: '32吋 4K QD-OLED 0.03ms 電競螢幕', cats: '4K 240Hz | 0.03ms極速反應 | 三年防烙印保固', price: 'HK$ 6,499', orig: '原價 $7,999', theme: 'pop_double11', layout: 'hero_center', burst: '門市實機・即場試色' },
+            monitor_oled: { badge: 'ROG螢幕', ribbon: 'SWIFT QD-OLED', name: 'ASUS ROG Swift 32吋 4K 240Hz QD-OLED', cats: '4K 240Hz | 0.03ms極速反應 | 三年防烙印保固', price: 'HK$ 9,499', orig: '原價 $10,999', theme: 'powered_by_asus', layout: 'hero_center', burst: '門市實機・即場試色' },
             wifi7_nas: { badge: '極速網絡', ribbon: 'WI-FI 7 + NAS', name: '三頻 BE19000 Wi-Fi 7 Mesh + 4-Bay 私人雲端套裝', cats: '10G光纖埠 | 全屋零死角 | 手機相片自動備份', price: 'HK$ 3,680 起', orig: '原價 $4,580', theme: 'pop_618', layout: 'double11_podium', burst: '家居升級・免月費雲端' }
         };
 
@@ -1498,24 +1524,26 @@
                 const dimVal = (Number(document.getElementById('sp-bg-dim')?.value) || 25) / 100;
                 ctx.fillStyle = `rgba(9, 13, 22, ${dimVal})`;
                 ctx.fillRect(0, 0, w, h);
-            } else if (theme === 'pop_double11' || theme === 'white_snow_sea') {
+            } else if (theme === 'pop_double11' || theme === 'white_snow_sea' || theme === 'asus_rog_white') {
                 const bg = ctx.createRadialGradient(w/2, h*0.45, 80, w/2, h*0.5, w*0.85);
                 bg.addColorStop(0, '#ffffff');
-                bg.addColorStop(0.65, theme === 'white_snow_sea' ? '#e0f2fe' : '#f1f5f9');
-                bg.addColorStop(1, theme === 'white_snow_sea' ? '#bae6fd' : '#cbd5e1');
+                bg.addColorStop(0.65, (theme === 'white_snow_sea' || theme === 'asus_rog_white') ? '#e0f2fe' : '#f1f5f9');
+                bg.addColorStop(1, (theme === 'white_snow_sea' || theme === 'asus_rog_white') ? '#bae6fd' : '#cbd5e1');
                 ctx.fillStyle = bg;
                 ctx.fillRect(0, 0, w, h);
 
                 // 動感斜切飄帶
-                ctx.fillStyle = theme === 'white_snow_sea' ? '#0284c7' : '#e11d48';
+                ctx.fillStyle = (theme === 'white_snow_sea' || theme === 'asus_rog_white') ? '#0284c7' : '#e11d48';
                 ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w*0.55, 0); ctx.lineTo(0, h*0.32); ctx.closePath(); ctx.fill();
-                ctx.fillStyle = theme === 'white_snow_sea' ? '#0f172a' : '#1e3a8a';
+                ctx.fillStyle = (theme === 'white_snow_sea' || theme === 'asus_rog_white') ? '#0f172a' : '#1e3a8a';
                 ctx.beginPath(); ctx.moveTo(w*0.55, 0); ctx.lineTo(w, 0); ctx.lineTo(w, h*0.28); ctx.lineTo(w*0.42, h*0.15); ctx.closePath(); ctx.fill();
-                ctx.fillStyle = theme === 'white_snow_sea' ? '#38bdf8' : '#e11d48';
+                ctx.fillStyle = (theme === 'white_snow_sea' || theme === 'asus_rog_white') ? '#38bdf8' : '#e11d48';
                 ctx.beginPath(); ctx.moveTo(w, h*0.12); ctx.lineTo(w, h*0.62); ctx.lineTo(w*0.76, h*0.42); ctx.closePath(); ctx.fill();
             } else {
                 const palettes = {
                     powered_by_asus: ['#090a0f', '#450a0a', '#dc2626'],
+                    asus_tuf_gaming: ['#0f1011', '#422006', '#facc15'],
+                    asus_proart: ['#09090b', '#27272a', '#d4af37'],
                     powered_by_msi: ['#090d16', '#3b0764', '#f59e0b'],
                     aorus_gigabyte: ['#090a0f', '#431407', '#f97316'],
                     nvidia_rtx_green: ['#050b07', '#064e3b', '#84cc16'],
@@ -1575,7 +1603,14 @@
             ctx.fillText(badge, 0, -6);
 
             // 立體橫幅
-            ctx.fillStyle = (theme === 'aorus_gigabyte') ? '#ea580c' : (theme === 'nvidia_rtx_green' ? '#16a34a' : '#dc2626');
+            let ribbonColor = '#dc2626';
+            if (theme === 'aorus_gigabyte') ribbonColor = '#ea580c';
+            else if (theme === 'nvidia_rtx_green') ribbonColor = '#16a34a';
+            else if (theme === 'asus_tuf_gaming') ribbonColor = '#ca8a04';
+            else if (theme === 'asus_proart') ribbonColor = '#b45309';
+            else if (theme === 'asus_rog_white') ribbonColor = '#0ea5e9';
+
+            ctx.fillStyle = ribbonColor;
             ctx.beginPath();
             ctx.roundRect(-255, 26, 510, 76, 14);
             ctx.fill();
@@ -1585,7 +1620,7 @@
             ctx.restore();
 
             // 4. 副標題與深藍分類膠囊列
-            const isLightBg = (!spCustomBgImage && (theme === 'pop_double11' || theme === 'white_snow_sea'));
+            const isLightBg = (!spCustomBgImage && (theme === 'pop_double11' || theme === 'white_snow_sea' || theme === 'asus_rog_white'));
             ctx.font = '900 37px "Noto Sans TC", sans-serif';
             ctx.textAlign = 'center';
             ctx.fillStyle = isLightBg ? '#0f172a' : '#f8fafc';
@@ -2279,6 +2314,9 @@
             const headerGradMap = {
                 pop_double11: 'from-rose-600 via-red-600 to-blue-900',
                 powered_by_asus: 'from-slate-950 via-red-900 to-rose-600',
+                asus_tuf_gaming: 'from-slate-950 via-amber-900 to-yellow-600',
+                asus_proart: 'from-black via-zinc-900 to-yellow-700',
+                asus_rog_white: 'from-slate-700 via-slate-400 to-sky-600',
                 powered_by_msi: 'from-slate-950 via-purple-900 to-amber-600',
                 aorus_gigabyte: 'from-slate-950 via-orange-900 to-amber-500',
                 nvidia_rtx_green: 'from-slate-950 via-emerald-900 to-lime-600',
