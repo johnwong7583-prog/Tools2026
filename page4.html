@@ -2716,6 +2716,68 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           } else {
             match9Btn.classList.add('hidden');
           }
+
+          const deleteCustomBtn = document.getElementById('modalDeleteCustomBtn');
+          if (deleteCustomBtn) {
+            if (item.isCustom) {
+              deleteCustomBtn.classList.remove('hidden');
+              deleteCustomBtn.onclick = () => {
+                state.products = state.products.filter(p => p.id !== item.id);
+                DataStore.saveToStorage();
+                this.closeDetailModal();
+                this.renderAll();
+                Utils.showToast(`已刪除自訂型號「${item.model}」`);
+              };
+            } else {
+              deleteCustomBtn.classList.add('hidden');
+            }
+          }
+
+          document.getElementById('detailModal').classList.remove('hidden');
+        },
+
+        closeDetailModal() {
+          document.getElementById('detailModal').classList.add('hidden');
+          state.selectedDetailId = null;
+        },
+
+        saveDetailPrices() {
+          if (!state.selectedDetailId) return;
+          const item = state.products.find(p => p.id === state.selectedDetailId);
+          if (!item) return;
+
+          const inputs = document.querySelectorAll('#modalStoresList input[data-store-input]');
+          let changed = false;
+          let baseValid = true;
+
+          inputs.forEach(inp => {
+            const store = inp.getAttribute('data-store-input');
+            const newVal = Utils.parsePriceToken(inp.value);
+            if (store === CONFIG.BASE_STORE && newVal === null) {
+              baseValid = false;
+              return;
+            }
+            if (item.prices[store] !== newVal) {
+              item.prices[store] = newVal;
+              changed = true;
+            }
+          });
+
+          if (!baseValid) {
+            Utils.showToast('基準店舖「中田」必須保留有效港元價格', 'error');
+            return;
+          }
+
+          if (changed) {
+            item.isModified = CONFIG.ALL_STORES.some(s => item.prices[s] !== item.originalPrices[s]);
+            DataStore.saveToStorage();
+            Utils.showToast(`已更新「${item.model.slice(0, 24)}...」最新店舖售價！`);
+          }
+
+          this.closeDetailModal();
+          this.renderAll();
+        },
+
         openSyncModal(tab = 'auto') {
           document.getElementById('webSyncModal').classList.remove('hidden');
           const urlInput = document.getElementById('remoteFeedUrlInput');
@@ -3335,6 +3397,13 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
       // Boot Application
       window.addEventListener('DOMContentLoaded', () => {
         DataStore.loadInitialState();
+        const tsBadge = document.getElementById('timestampBadge');
+        if (tsBadge && state.lastUpdated) {
+          tsBadge.innerHTML = `
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            查價基準：${Utils.escapeHtml(state.lastUpdated)}
+          `;
+        }
         bindEvents();
         UI.renderAll();
       });
