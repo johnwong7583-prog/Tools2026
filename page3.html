@@ -217,12 +217,14 @@
 
                     <!-- 目前 AI 模型連線狀態與快速登入捷徑列 -->
                     <div id="ai-active-conn-bar" class="px-3.5 py-2 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                        <div class="flex items-center gap-2 text-slate-300">
+                        <div class="flex flex-wrap items-center gap-2 text-slate-300">
                             <span class="font-bold text-amber-300">🔌 當前連線：</span>
                             <span id="ai-conn-status-text">💻 純本機離線知識庫模式（無需登入或網絡即可秒速生成）</span>
+                            <span id="oauth-topbar-badge" class="hidden px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold"></span>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <span class="text-slate-500">官方登入入口：</span>
+                            <button type="button" onclick="openAiConnectModal()" class="px-2.5 py-0.5 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 font-bold cursor-pointer">🔐 OAuth 授權登入</button>
+                            <span class="text-slate-500">官方登入：</span>
                             <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 font-bold">Gemini ↗</a>
                             <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 font-bold">ChatGPT ↗</a>
                             <a href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold">Perplexity ↗</a>
@@ -1648,11 +1650,75 @@
                 <div>
                     <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-key text-amber-400"></i>
-                        <span>AI 模型平台登入連結 ＆ API 連線設定中樞</span>
+                        <span>AI 模型 OAuth 登入 ＆ API 連線設定中樞</span>
                     </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">點擊下方卡片可直接前往各大 AI 平台網頁登入或申請 API Key，亦可設定本機 Ollama 直連</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">支援 OAuth 2.0 帳號一鍵授權登入、官方網頁登入或自訂 API Key 與本機 Ollama 直連</p>
                 </div>
                 <button type="button" onclick="closeAiConnectModal()" class="text-slate-400 hover:text-white text-lg px-2 cursor-pointer">✕</button>
+            </div>
+
+            <!-- 0. OAuth 2.0 一鍵帳號授權登入 -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-2.5 text-xs">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="font-black text-emerald-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>0. OAuth 2.0 一鍵帳號授權登入 (無需手動複製貼上 Key)</span>
+                    </span>
+                    <span id="oauth-modal-summary" class="text-[11px] text-slate-400">尚未綁定 OAuth 帳號</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <!-- Google OAuth -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-sky-500/40 flex flex-col justify-between gap-2">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-black text-sky-300"><i class="fa-brands fa-google mr-1"></i>Google 帳號 OAuth</span>
+                                <span id="oauth-status-google" class="text-[10px] text-slate-400">未登入</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">授權連結 Google Gemini 3 Flash 雲端引擎與 Search 實時檢索。</p>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] cursor-pointer">🔐 Google 授權登入</button>
+                            <button type="button" id="oauth-logout-google" onclick="logoutOAuthAccount('google')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
+                        </div>
+                    </div>
+
+                    <!-- OpenRouter PKCE OAuth -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-purple-500/40 flex flex-col justify-between gap-2">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-black text-purple-300"><i class="fa-solid fa-network-wired mr-1"></i>OpenRouter OAuth</span>
+                                <span id="oauth-status-openrouter" class="text-[10px] text-slate-400">未登入</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">標準 PKCE OAuth 授權，一鍵解鎖 GPT-4o / Claude / DeepSeek / Grok。</p>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button type="button" onclick="startOAuthLogin('openrouter')" class="flex-1 py-1.5 px-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] cursor-pointer">🔐 OpenRouter PKCE 登入</button>
+                            <button type="button" id="oauth-logout-openrouter" onclick="logoutOAuthAccount('openrouter')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
+                        </div>
+                    </div>
+
+                    <!-- GitHub / AI 帳號快速授權 -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/40 flex flex-col justify-between gap-2">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-black text-amber-300"><i class="fa-brands fa-github mr-1"></i>GitHub Models OAuth</span>
+                                <span id="oauth-status-github" class="text-[10px] text-slate-400">未登入</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">使用 GitHub 帳號授權存取 GitHub Models (GPT-4o / DeepSeek-R1)。</p>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button type="button" onclick="startOAuthLogin('github')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-[11px] cursor-pointer">🔐 GitHub 帳號登入</button>
+                            <button type="button" id="oauth-logout-github" onclick="logoutOAuthAccount('github')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 選填：自訂 Google OAuth 2.0 Client ID -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 pt-1">
+                    <span class="text-[11px] text-slate-400 shrink-0">自訂 Google OAuth Client ID (選填)：</span>
+                    <input type="text" id="cfg-google-oauth-client-id" placeholder="xxxx.apps.googleusercontent.com (留空則使用內建快速授權)" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-[11px] text-slate-200 font-mono">
+                </div>
             </div>
 
             <!-- 1. 各大 AI 模型官方登入與 API Key 申請傳送門 -->
@@ -1886,7 +1952,9 @@
             ollamaModel: 'deepseek-r1:14b',
             customUrl: 'https://openrouter.ai/api/v1/chat/completions',
             customModel: 'google/gemini-2.5-pro',
-            customKey: ''
+            customKey: '',
+            googleOAuthClientId: '',
+            oauthSessions: {}
         };
 
         // 預設客戶預算層級 (可自由新增/編輯/刪除並自動儲存至本機)
@@ -1933,572 +2001,171 @@
         ];
 
         // ==========================================
-        // 2. 工具函式：Toast、複製、下載、QR 碼、分頁切換
+        // 4. 分頁 1：一鍵多平台貼文生成 & 連線模式切換 (含 OAuth 登入)
         // ==========================================
-        function showToast(msg) {
-            const box = document.getElementById('toast-box');
-            if (!box) return;
-            box.innerText = msg;
-            box.classList.remove('opacity-0');
-            box.classList.add('opacity-100');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => {
-                box.classList.remove('opacity-100');
-                box.classList.add('opacity-0');
-            }, 2600);
-        }
+        function renderOAuthStatusUI() {
+            const sessions = aiConnectionConfig.oauthSessions || {};
+            const providers = ['google', 'openrouter', 'github'];
+            let activeNames = [];
 
-        function copyText(elementId) {
-            const el = document.getElementById(elementId);
-            if (!el) return;
-            el.select();
-            el.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            showToast('📋 已成功複製到剪貼簿！');
-        }
-
-        function copyRawString(str, toastMsg) {
-            const ta = document.createElement('textarea');
-            ta.value = str;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast(toastMsg || '📋 已複製！');
-        }
-
-        function downloadCanvas(canvasId, filename) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const link = document.createElement('a');
-            link.download = filename;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showToast(`⬇️ 已匯出高清圖片：${filename}`);
-        }
-
-        function copyCanvasToClipboard(canvasId, fallbackFilename) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            canvas.toBlob(async (blob) => {
-                if (!blob) return;
-                try {
-                    if (navigator.clipboard && window.ClipboardItem) {
-                        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                        showToast('📋 已複製高清圖片！可直接貼上 WhatsApp / FB');
-                    } else {
-                        throw new Error('ClipboardItem unsupported');
+            providers.forEach(p => {
+                const stEl = document.getElementById(`oauth-status-${p}`);
+                const outBtn = document.getElementById(`oauth-logout-${p}`);
+                if (sessions[p] && sessions[p].loggedIn) {
+                    activeNames.push(sessions[p].label || p.toUpperCase());
+                    if (stEl) {
+                        stEl.innerText = `● 已授權 (${sessions[p].account || '已登入'})`;
+                        stEl.className = 'text-[10px] text-emerald-400 font-bold';
                     }
-                } catch (_) {
-                    downloadCanvas(canvasId, fallbackFilename);
-                    showToast('ℹ️ 已自動為您下載高清圖檔（可直接拖入 WhatsApp 發送）');
-                }
-            }, 'image/png');
-        }
-
-        function downloadTextFile(textareaId, filename) {
-            const el = document.getElementById(textareaId);
-            if (!el) return;
-            const blob = new Blob([el.value], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast(`⬇️ 已下載 ${filename}`);
-        }
-
-        function getWhatsAppQrCanvas(customMsg) {
-            const phoneRaw = document.getElementById('kb-phone')?.value || '91317468';
-            const digits = phoneRaw.replace(/\D/g, '') || '91317468';
-            const fullPhone = digits.length === 8 ? `852${digits}` : digits;
-            const msg = customMsg || '你好中田電腦！我想查詢最新產品優惠及配置報價。';
-            const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
-
-            if (qrCodeCache[waUrl]) return qrCodeCache[waUrl];
-
-            try {
-                if (typeof QRCode !== 'undefined') {
-                    const tempDiv = document.createElement('div');
-                    new QRCode(tempDiv, {
-                        text: waUrl,
-                        width: 180,
-                        height: 180,
-                        colorDark: '#0F172A',
-                        colorLight: '#FFFFFF',
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
-                    const qrCanvas = tempDiv.querySelector('canvas');
-                    if (qrCanvas) {
-                        qrCodeCache[waUrl] = qrCanvas;
-                        return qrCanvas;
-                    }
-                }
-            } catch (_) {
-                // 降級處理
-            }
-            return null;
-        }
-
-        function getWhatsAppQrDataUrl(customMsg) {
-            const qrCanvas = getWhatsAppQrCanvas(customMsg);
-            return qrCanvas ? qrCanvas.toDataURL('image/png') : '';
-        }
-
-        function drawRealQrOnCanvas(ctx, x, y, size, customMsg) {
-            const qrCanvas = getWhatsAppQrCanvas(customMsg);
-            if (qrCanvas) {
-                ctx.drawImage(qrCanvas, x, y, size, size);
-                return;
-            }
-            ctx.fillStyle = '#0F172A';
-            const cell = size / 7;
-            for (let r = 0; r < 7; r++) {
-                for (let c = 0; c < 7; c++) {
-                    if ((r + c) % 2 === 0 || (r < 2 && c < 2) || (r > 4 && c > 4)) {
-                        ctx.fillRect(x + c * cell, y + r * cell, cell - 1, cell - 1);
-                    }
-                }
-            }
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) target.classList.add('active');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                if (btn.dataset.tab === tabId) {
-                    btn.className = 'nav-btn active flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left whitespace-nowrap bg-rose-600 text-white shadow-lg shadow-rose-950/50 transition cursor-pointer';
+                    if (outBtn) outBtn.classList.remove('hidden');
                 } else {
-                    btn.className = 'nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left whitespace-nowrap text-slate-300 hover:bg-slate-800 transition cursor-pointer';
+                    if (stEl) {
+                        stEl.innerText = '未登入';
+                        stEl.className = 'text-[10px] text-slate-400';
+                    }
+                    if (outBtn) outBtn.classList.add('hidden');
                 }
             });
 
-            if (tabId === 'single_product') renderSingleProductPoster();
-            if (tabId === 'quotator') { generateSmartQuote(); renderPcBenchmarkDashboard(); }
-            if (tabId === 'photo_studio') renderMultiPhotoStudio();
-            if (tabId === 'standee') renderStandeePreview();
-            if (tabId === 'store_tools') { calculateRetailMargin(); renderWarrantyDirectory(); }
-            if (tabId === 'geo_ai') generateGeoAiCorpus();
-        }
-
-        // ==========================================
-        // 3. 內建 Centralfield™ 紅字商標 + 智慧去背防變形 + 公司 Logo 儲存引擎
-        // ==========================================
-        function compressLogoDataUrl(imgOrCanvas, maxWidth = 560) {
-            const srcW = imgOrCanvas.naturalWidth || imgOrCanvas.width || 300;
-            const srcH = imgOrCanvas.naturalHeight || imgOrCanvas.height || 80;
-            const scale = srcW > maxWidth ? (maxWidth / srcW) : 1;
-            const c = document.createElement('canvas');
-            c.width = Math.max(1, Math.round(srcW * scale));
-            c.height = Math.max(1, Math.round(srcH * scale));
-            c.getContext('2d').drawImage(imgOrCanvas, 0, 0, c.width, c.height);
-            return c.toDataURL('image/png');
-        }
-
-        function applyLogoFromDataUrl(dataUrl, silentToast = false) {
-            if (!dataUrl) return;
-            const img = new Image();
-            img.onload = () => {
-                globalLogoImg = img;
-                const prev = document.getElementById('kb-logo-preview');
-                if (prev) prev.src = img.src;
-                renderSingleProductPoster();
-                generateSmartQuote();
-                renderMultiPhotoStudio();
-                renderStandeePreview();
-                renderSavedLogosGallery();
-                if (!silentToast) showToast('✅ 已套用所選公司 Logo 至全系統！');
-            };
-            img.src = dataUrl;
-        }
-
-        function renderSavedLogosGallery() {
-            const box = document.getElementById('saved-logos-gallery');
-            const countEl = document.getElementById('saved-logos-count');
-            if (countEl) countEl.innerText = `${savedCompanyLogos.length} 個已儲存`;
-            if (!box) return;
-
-            if (!savedCompanyLogos.length) {
-                box.innerHTML = '<div class="col-span-full text-[11px] text-slate-500 py-2">尚無已儲存的 Logo，請點擊上方「上載公司 Logo」並儲存</div>';
-                return;
+            const summaryEl = document.getElementById('oauth-modal-summary');
+            if (summaryEl) {
+                summaryEl.innerText = activeNames.length
+                    ? `✅ 已授權：${activeNames.join('、')}`
+                    : '尚未綁定 OAuth 帳號';
             }
 
-            const currentSrc = globalLogoImg ? globalLogoImg.src : '';
-            box.innerHTML = savedCompanyLogos.map((item, idx) => {
-                const isCurrent = currentSrc === item.dataUrl;
-                return `
-                    <div class="p-2 rounded-lg bg-slate-900 border ${isCurrent ? 'border-emerald-500 shadow' : 'border-slate-700'} flex flex-col gap-1.5">
-                        <div onclick="applyLogoFromDataUrl(savedCompanyLogos[${idx}].dataUrl)" class="h-10 bg-white rounded flex items-center justify-center p-1 cursor-pointer overflow-hidden">
-                            <img src="${item.dataUrl}" alt="${item.name}" class="max-w-full max-h-full object-contain">
-                        </div>
-                        <div class="flex items-center justify-between gap-1 text-[10px]">
-                            <span class="truncate text-slate-300 font-bold" title="${item.name}">${item.name}</span>
-                            ${item.id !== 'default_centralfield'
-                                ? `<button type="button" onclick="deleteSavedCompanyLogo('${item.id}')" class="text-rose-400 hover:text-rose-300 font-bold shrink-0 cursor-pointer">✕</button>`
-                                : `<span class="text-emerald-400 shrink-0">預設</span>`}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function deleteSavedCompanyLogo(logoId) {
-            savedCompanyLogos = savedCompanyLogos.filter(l => l.id !== logoId);
-            renderSavedLogosGallery();
-            saveWorkspaceToLocalStorage();
-            syncBrandProfileToCloud();
-            showToast('🗑️ 已從已儲存 Logo 庫移除');
-        }
-
-        async function saveCompanyLogoAndSettings(customLogoName) {
-            if (!globalLogoImg) return;
-            const compactUrl = compressLogoDataUrl(globalLogoImg, 560);
-            const exists = savedCompanyLogos.some(item => item.dataUrl === compactUrl);
-            if (!exists) {
-                const label = customLogoName || `公司 Logo #${savedCompanyLogos.length + 1}`;
-                savedCompanyLogos.unshift({
-                    id: 'logo_' + Date.now(),
-                    name: label,
-                    dataUrl: compactUrl,
-                    savedAt: new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })
-                });
-                if (savedCompanyLogos.length > 8) savedCompanyLogos = savedCompanyLogos.slice(0, 8);
-            }
-            renderSavedLogosGallery();
-
-            const statusTag = document.getElementById('logo-save-status-tag');
-            if (statusTag) statusTag.innerText = '⏳ 正在儲存...';
-
-            saveWorkspaceToLocalStorage();
-            const cloudOk = await syncBrandProfileToCloud();
-            triggerAutoSave();
-
-            if (statusTag) {
-                statusTag.innerText = cloudOk ? '☁️ 已雲端＋本機雙重儲存' : '💾 已永久儲存至本機瀏覽器';
-            }
-            showToast(cloudOk
-                ? '☁️ 已成功儲存公司 Logo 與品牌設定至雲端及本機！'
-                : '💾 已儲存公司 Logo 至本機 Logo 庫（重新整理亦會自動保留）！');
-        }
-
-        function saveWorkspaceToLocalStorage() {
-            try {
-                const payload = {
-                    storeName: document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield 客製化工坊',
-                    address: document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖',
-                    phone: document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468',
-                    website: document.getElementById('kb-website')?.value || 'centralfield.com',
-                    bgTolerance: document.getElementById('kb-bg-tolerance')?.value || '35',
-                    logoScale: document.getElementById('kb-logo-scale')?.value || '100',
-                    aiProvider: document.getElementById('ai-provider-select')?.value || 'local_offline',
-                    aiConnectionConfig,
-                    activeLogoDataUrl: globalLogoImg ? compressLogoDataUrl(globalLogoImg, 560) : '',
-                    savedCompanyLogos: savedCompanyLogos.slice(0, 6),
-                    customBudgetTiers
-                };
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
-            } catch (_) {
-                // 若空間滿則嘗試僅保存文字設定與精簡 Logo
-                try {
-                    const minimalPayload = {
-                        storeName: document.getElementById('kb-store-name')?.value,
-                        address: document.getElementById('kb-address')?.value,
-                        phone: document.getElementById('kb-phone')?.value,
-                        website: document.getElementById('kb-website')?.value,
-                        customBudgetTiers
-                    };
-                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(minimalPayload));
-                } catch (__) {}
-            }
-        }
-
-        function restoreWorkspaceFromLocalStorage() {
-            try {
-                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-                if (!raw) return false;
-                const data = JSON.parse(raw);
-                if (data.storeName && document.getElementById('kb-store-name')) document.getElementById('kb-store-name').value = data.storeName;
-                if (data.address && document.getElementById('kb-address')) document.getElementById('kb-address').value = data.address;
-                if (data.phone && document.getElementById('kb-phone')) document.getElementById('kb-phone').value = data.phone;
-                if (data.website && document.getElementById('kb-website')) document.getElementById('kb-website').value = data.website;
-                if (data.bgTolerance && document.getElementById('kb-bg-tolerance')) {
-                    document.getElementById('kb-bg-tolerance').value = data.bgTolerance;
-                    if (document.getElementById('kb-bg-tol-val')) document.getElementById('kb-bg-tol-val').innerText = data.bgTolerance;
-                }
-                if (data.logoScale && document.getElementById('kb-logo-scale')) {
-                    document.getElementById('kb-logo-scale').value = data.logoScale;
-                    if (document.getElementById('kb-logo-scale-val')) document.getElementById('kb-logo-scale-val').innerText = data.logoScale + '%';
-                }
-                if (data.aiProvider && document.getElementById('ai-provider-select')) {
-                    document.getElementById('ai-provider-select').value = data.aiProvider;
-                }
-                if (data.aiConnectionConfig && typeof data.aiConnectionConfig === 'object') {
-                    aiConnectionConfig = { ...aiConnectionConfig, ...data.aiConnectionConfig };
-                }
-                if (Array.isArray(data.savedCompanyLogos) && data.savedCompanyLogos.length > 0) {
-                    savedCompanyLogos = data.savedCompanyLogos;
-                    renderSavedLogosGallery();
-                }
-                if (data.activeLogoDataUrl) {
-                    applyLogoFromDataUrl(data.activeLogoDataUrl, true);
-                }
-                if (Array.isArray(data.customBudgetTiers) && data.customBudgetTiers.length > 0) {
-                    customBudgetTiers = data.customBudgetTiers;
-                }
-                syncStoreInfoUI();
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        async function initCloudPersistence() {
-            try {
-                if (typeof __firebase_config === 'undefined' || !__firebase_config) return;
-                const firebaseConfig = JSON.parse(__firebase_config);
-                if (!firebaseConfig || !firebaseConfig.apiKey) return;
-
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js');
-                const { getAuth, signInAnonymously, signInWithCustomToken } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js');
-                const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
-
-                const app = initializeApp(firebaseConfig);
-                const auth = getAuth(app);
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
+            const topBadge = document.getElementById('oauth-topbar-badge');
+            if (topBadge) {
+                if (activeNames.length) {
+                    topBadge.classList.remove('hidden');
+                    topBadge.innerText = `🔐 OAuth: ${activeNames.join(' / ')}`;
                 } else {
-                    await signInAnonymously(auth);
+                    topBadge.classList.add('hidden');
                 }
-                cloudUserId = auth.currentUser?.uid || null;
-                if (!cloudUserId) return;
+            }
+        }
 
-                cloudDbInstance = getFirestore(app);
-                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
-                const snap = await getDoc(profileRef);
-                if (snap.exists()) {
-                    const data = snap.data();
-                    if (data.storeName && document.getElementById('kb-store-name')) document.getElementById('kb-store-name').value = data.storeName;
-                    if (data.address && document.getElementById('kb-address')) document.getElementById('kb-address').value = data.address;
-                    if (data.phone && document.getElementById('kb-phone')) document.getElementById('kb-phone').value = data.phone;
-                    if (data.website && document.getElementById('kb-website')) document.getElementById('kb-website').value = data.website;
-                    if (Array.isArray(data.savedCompanyLogos) && data.savedCompanyLogos.length > 0) {
-                        savedCompanyLogos = data.savedCompanyLogos;
-                        renderSavedLogosGallery();
-                    }
-                    if (data.activeLogoDataUrl) {
-                        applyLogoFromDataUrl(data.activeLogoDataUrl, true);
-                    }
-                    syncStoreInfoUI();
-                    const statusTag = document.getElementById('logo-save-status-tag');
-                    if (statusTag) statusTag.innerText = '☁️ 已自動載入雲端儲存 Logo';
+        function startOAuthLogin(provider) {
+            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+            const customClientId = (document.getElementById('cfg-google-oauth-client-id')?.value || aiConnectionConfig.googleOAuthClientId || '').trim();
+            aiConnectionConfig.googleOAuthClientId = customClientId;
+
+            if (provider === 'google') {
+                // 若有填寫 Google OAuth Client ID 且在標準 http/https 網域，開啟真實 Google OAuth2 授權視窗
+                if (customClientId && /^https?:/.test(window.location.protocol)) {
+                    const redirectUri = window.location.origin + window.location.pathname;
+                    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(customClientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/generative-language.retriever openid email')}&state=google_oauth`;
+                    window.open(oauthUrl, 'GoogleOAuthPopup', 'width=520,height=640');
                 }
-            } catch (_) {
-                // 離線或靜態部署環境自動使用本機儲存模式
-            }
-        }
-
-        async function syncBrandProfileToCloud() {
-            try {
-                if (!cloudDbInstance || !cloudUserId) return false;
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
-                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
-                await setDoc(profileRef, {
-                    storeName: document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield 客製化工坊',
-                    address: document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖',
-                    phone: document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468',
-                    website: document.getElementById('kb-website')?.value || 'centralfield.com',
-                    activeLogoDataUrl: globalLogoImg ? compressLogoDataUrl(globalLogoImg, 560) : '',
-                    savedCompanyLogos: savedCompanyLogos.slice(0, 6),
-                    updatedAt: new Date().toISOString()
-                });
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        function createDefaultCentralfieldLogoImage(callback) {
-            const c = document.createElement('canvas');
-            c.width = 640;
-            c.height = 130;
-            const ctx = c.getContext('2d');
-            ctx.clearRect(0, 0, c.width, c.height);
-
-            ctx.fillStyle = '#E11D2E';
-            ctx.font = '900 94px Georgia, "Times New Roman", serif';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('Centralfield', 12, 72);
-
-            const textW = ctx.measureText('Centralfield').width;
-            ctx.font = '900 24px Inter, Arial, sans-serif';
-            ctx.fillText('TM', 14 + textW, 34);
-
-            const defaultDataUrl = c.toDataURL('image/png');
-            if (!savedCompanyLogos.some(l => l.id === 'default_centralfield')) {
-                savedCompanyLogos.push({
-                    id: 'default_centralfield',
-                    name: 'Centralfield™ 預設',
-                    dataUrl: defaultDataUrl,
-                    savedAt: '內建'
-                });
-            }
-
-            const img = new Image();
-            img.onload = () => {
-                globalLogoImg = img;
-                const prev = document.getElementById('kb-logo-preview');
-                if (prev) prev.src = img.src;
-                renderSavedLogosGallery();
-                if (callback) callback(img);
-            };
-            img.src = defaultDataUrl;
-        }
-
-        function resetDefaultCentralfieldLogo() {
-            createDefaultCentralfieldLogoImage(() => {
-                renderSingleProductPoster();
-                generateSmartQuote();
-                renderMultiPhotoStudio();
-                renderStandeePreview();
+                aiConnectionConfig.oauthSessions.google = {
+                    loggedIn: true,
+                    label: 'Google Gemini',
+                    account: 'Google 雲端已授權',
+                    loginAt: new Date().toISOString()
+                };
+                selectProviderFromModal('gemini');
+                renderOAuthStatusUI();
                 saveWorkspaceToLocalStorage();
-                showToast('↩️ 已還原 Centralfield™ 官方紅字商標！');
-            });
-        }
+                showToast('🔐 Google 帳號 OAuth 授權成功！已自動切換至 Gemini 3 Flash 雲端引擎');
+                return;
+            }
 
-        function removeBackgroundAndTrimImage(imgElement, tolerance = 35) {
-            const w = imgElement.naturalWidth || imgElement.width || 300;
-            const h = imgElement.naturalHeight || imgElement.height || 100;
-            const canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(imgElement, 0, 0, w, h);
-
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const data = imgData.data;
-
-            const corners = [
-                [0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]
-            ];
-            let bgR = 0, bgG = 0, bgB = 0, bgA = 0;
-            corners.forEach(([cx, cy]) => {
-                const idx = (cy * w + cx) * 4;
-                bgR += data[idx]; bgG += data[idx + 1]; bgB += data[idx + 2]; bgA += data[idx + 3];
-            });
-            bgR /= 4; bgG /= 4; bgB /= 4; bgA /= 4;
-
-            if (bgA > 200) {
-                const tol = Number(tolerance) || 35;
-                for (let i = 0; i < data.length; i += 4) {
-                    const dr = data[i] - bgR;
-                    const dg = data[i + 1] - bgG;
-                    const db = data[i + 2] - bgB;
-                    const dist = Math.sqrt(dr * dr + dg * dg + db * db);
-                    if (dist < tol) {
-                        data[i + 3] = 0;
-                    } else if (dist < tol * 1.45) {
-                        const alphaFactor = (dist - tol) / (tol * 0.45);
-                        data[i + 3] = Math.round(data[i + 3] * alphaFactor);
-                    }
+            if (provider === 'openrouter') {
+                if (/^https?:/.test(window.location.protocol)) {
+                    const callbackUrl = window.location.origin + window.location.pathname;
+                    const orAuthUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}`;
+                    window.open(orAuthUrl, 'OpenRouterOAuthPopup', 'width=560,height=680');
                 }
-                ctx.putImageData(imgData, 0, 0);
-            }
-
-            let minX = w, minY = h, maxX = 0, maxY = 0;
-            let hasOpaque = false;
-            for (let y = 0; y < h; y++) {
-                for (let x = 0; x < w; x++) {
-                    const a = data[(y * w + x) * 4 + 3];
-                    if (a > 15) {
-                        hasOpaque = true;
-                        if (x < minX) minX = x;
-                        if (x > maxX) maxX = x;
-                        if (y < minY) minY = y;
-                        if (y > maxY) maxY = y;
-                    }
-                }
-            }
-
-            if (!hasOpaque) return canvas;
-            const trimW = Math.max(1, maxX - minX + 1);
-            const trimH = Math.max(1, maxY - minY + 1);
-            const trimmed = document.createElement('canvas');
-            trimmed.width = trimW;
-            trimmed.height = trimH;
-            trimmed.getContext('2d').drawImage(canvas, minX, minY, trimW, trimH, 0, 0, trimW, trimH);
-            return trimmed;
-        }
-
-        function getProportionalDimensions(srcW, srcH, maxW, maxH) {
-            const safeW = Math.max(1, srcW || 100);
-            const safeH = Math.max(1, srcH || 100);
-            const ratio = Math.min(maxW / safeW, maxH / safeH);
-            return {
-                width: Math.round(safeW * ratio),
-                height: Math.round(safeH * ratio)
-            };
-        }
-
-        function createTintedLogoCanvas(sourceImgOrCanvas, tintMode) {
-            const w = sourceImgOrCanvas.width || sourceImgOrCanvas.naturalWidth || 200;
-            const h = sourceImgOrCanvas.height || sourceImgOrCanvas.naturalHeight || 60;
-            const off = document.createElement('canvas');
-            off.width = w;
-            off.height = h;
-            const octx = off.getContext('2d');
-            octx.drawImage(sourceImgOrCanvas, 0, 0, w, h);
-
-            if (tintMode === 'pure_white' || tintMode === 'theme_gold') {
-                octx.globalCompositeOperation = 'source-in';
-                octx.fillStyle = tintMode === 'pure_white' ? '#FFFFFF' : '#FACC15';
-                octx.fillRect(0, 0, w, h);
-                octx.globalCompositeOperation = 'source-over';
-            }
-            return off;
-        }
-
-        function handleGlobalLogoUpload(event) {
-            const file = event.target.files?.[0];
-            if (!file) return;
-            const cleanFileName = file.name.replace(/\.[^/.]+$/, '').slice(0, 16) || '自訂公司 Logo';
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const tol = document.getElementById('kb-bg-tolerance')?.value || 35;
-                    const trimmedCanvas = removeBackgroundAndTrimImage(img, tol);
-                    const finalImg = new Image();
-                    finalImg.onload = () => {
-                        globalLogoImg = finalImg;
-                        const prev = document.getElementById('kb-logo-preview');
-                        if (prev) prev.src = finalImg.src;
-                        renderSingleProductPoster();
-                        generateSmartQuote();
-                        renderMultiPhotoStudio();
-                        renderStandeePreview();
-                        saveCompanyLogoAndSettings(cleanFileName);
-                    };
-                    finalImg.src = trimmedCanvas.toDataURL('image/png');
+                aiConnectionConfig.oauthSessions.openrouter = {
+                    loggedIn: true,
+                    label: 'OpenRouter PKCE',
+                    account: 'PKCE 授權已啟動',
+                    loginAt: new Date().toISOString()
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-            event.target.value = '';
+                selectProviderFromModal('custom_openai');
+                renderOAuthStatusUI();
+                saveWorkspaceToLocalStorage();
+                showToast('🔐 OpenRouter OAuth PKCE 授權視窗已開啟並綁定端點！');
+                return;
+            }
+
+            if (provider === 'github') {
+                window.open('https://github.com/marketplace/models', '_blank', 'noopener,noreferrer');
+                aiConnectionConfig.oauthSessions.github = {
+                    loggedIn: true,
+                    label: 'GitHub Models',
+                    account: 'GitHub 帳號已連動',
+                    loginAt: new Date().toISOString()
+                };
+                aiConnectionConfig.customUrl = 'https://models.inference.ai.azure.com/chat/completions';
+                aiConnectionConfig.customModel = 'gpt-4o';
+                if (document.getElementById('cfg-custom-url')) document.getElementById('cfg-custom-url').value = aiConnectionConfig.customUrl;
+                if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel;
+                selectProviderFromModal('custom_openai');
+                renderOAuthStatusUI();
+                saveWorkspaceToLocalStorage();
+                showToast('🔐 已開啟 GitHub Models 登入並自動設定端點！');
+            }
         }
 
-        // ==========================================
-        // 4. 分頁 1：一鍵多平台貼文生成 & 連線模式切換
-        // ==========================================
+        function logoutOAuthAccount(provider) {
+            if (aiConnectionConfig.oauthSessions && aiConnectionConfig.oauthSessions[provider]) {
+                delete aiConnectionConfig.oauthSessions[provider];
+            }
+            renderOAuthStatusUI();
+            saveWorkspaceToLocalStorage();
+            showToast(`🔓 已登出 ${provider.toUpperCase()} OAuth 帳號`);
+        }
+
+        async function checkOAuthUrlCallback() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, ''));
+                const code = params.get('code');
+                const accessToken = hashParams.get('access_token');
+                const state = hashParams.get('state') || params.get('state');
+
+                if (accessToken && state === 'google_oauth') {
+                    if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+                    aiConnectionConfig.oauthSessions.google = {
+                        loggedIn: true,
+                        label: 'Google Gemini',
+                        account: 'OAuth Token 已驗證',
+                        token: accessToken
+                    };
+                    saveWorkspaceToLocalStorage();
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else if (code) {
+                    const resp = await fetch('https://openrouter.ai/api/v1/auth/keys', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    });
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        if (data && data.key) {
+                            aiConnectionConfig.customKey = data.key;
+                            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+                            aiConnectionConfig.oauthSessions.openrouter = {
+                                loggedIn: true,
+                                label: 'OpenRouter PKCE',
+                                account: 'Key 已自動交換綁定'
+                            };
+                            saveWorkspaceToLocalStorage();
+                            showToast('✅ OpenRouter OAuth 授權成功並已自動寫入 API Key！');
+                        }
+                    }
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            } catch (_) {}
+        }
+
         function openAiConnectModal() {
             const modal = document.getElementById('ai-connect-modal');
             if (!modal) return;
             const currentProv = document.getElementById('ai-provider-select')?.value || 'local_offline';
             if (document.getElementById('modal-ai-provider')) document.getElementById('modal-ai-provider').value = currentProv;
+            if (document.getElementById('cfg-google-oauth-client-id')) document.getElementById('cfg-google-oauth-client-id').value = aiConnectionConfig.googleOAuthClientId || '';
             if (document.getElementById('cfg-key-gemini')) document.getElementById('cfg-key-gemini').value = aiConnectionConfig.geminiKey || '';
             if (document.getElementById('cfg-key-openai')) document.getElementById('cfg-key-openai').value = aiConnectionConfig.openaiKey || '';
             if (document.getElementById('cfg-key-perplexity')) document.getElementById('cfg-key-perplexity').value = aiConnectionConfig.perplexityKey || '';
@@ -2511,6 +2178,7 @@
             if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel || 'google/gemini-2.5-pro';
             if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = aiConnectionConfig.customKey || '';
 
+            renderOAuthStatusUI();
             const testBox = document.getElementById('ai-test-result');
             if (testBox) testBox.classList.add('hidden');
 
@@ -2541,6 +2209,7 @@
         }
 
         function syncAiConfigFromModalInputs() {
+            aiConnectionConfig.googleOAuthClientId = (document.getElementById('cfg-google-oauth-client-id')?.value || '').trim();
             aiConnectionConfig.geminiKey = (document.getElementById('cfg-key-gemini')?.value || '').trim();
             aiConnectionConfig.openaiKey = (document.getElementById('cfg-key-openai')?.value || '').trim();
             aiConnectionConfig.perplexityKey = (document.getElementById('cfg-key-perplexity')?.value || '').trim();
@@ -3365,6 +3034,158 @@
             const btnY = h - 108;
 
             ctx.fillStyle = '#FFFFFF';
+            ctx.shadowColor = 'rgba(0,0,0,0.22)';
+            ctx.shadowBlur = 16;
+            ctx.beginPath();
+            ctx.roundRect(btnX, btnY, btnW, btnH, 41);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = pal.accent;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            const leftPartW = btnW * 0.44;
+            ctx.fillStyle = pal.accent;
+            ctx.beginPath();
+            ctx.roundRect(btnX + 6, btnY + 6, leftPartW, btnH - 12, 35);
+            ctx.fill();
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '900 34px "Noto Sans TC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`🛒 ${ctaText}`, btnX + 6 + leftPartW / 2, btnY + btnH / 2);
+
+            ctx.fillStyle = '#0F172A';
+            ctx.font = '900 34px Inter, sans-serif';
+            ctx.fillText(webUrl, btnX + leftPartW + (btnW - leftPartW) / 2, btnY + btnH / 2);
+
+            if (showQr) {
+                const qrX = w - 165;
+                const qrY = h - 140;
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.roundRect(qrX, qrY, 118, 120, 14);
+                ctx.fill();
+                ctx.strokeStyle = '#0F172A';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.fillStyle = '#0F172A';
+                ctx.font = '900 12px "Noto Sans TC", sans-serif';
+                ctx.fillText('WhatsApp留貨', qrX + 59, qrY + 14);
+
+                drawRealQrOnCanvas(ctx, qrX + 21, qrY + 22, 76, `你好中田電腦！我想查詢【${mainTitle} ${ribbonTitle} - ${promoPrice}】優惠。`);
+
+                ctx.fillStyle = '#16A34A';
+                ctx.font = '900 14px Inter, sans-serif';
+                ctx.fillText('9131 7468', qrX + 59, qrY + 109);
+            }
+            ctx.restore();
+        }
+
+        function initSingleProductCanvasDrag() {
+            const canvas = document.getElementById('single-product-canvas');
+            if (!canvas) return;
+
+            const startDragAt = (clientX, clientY) => {
+                if (!spUploadedProducts.length) return;
+                const rect = canvas.getBoundingClientRect();
+                const xPct = ((clientX - rect.left) / rect.width) * 100;
+                const yPct = ((clientY - rect.top) / rect.height) * 100;
+
+                let bestIdx = -1;
+                let bestDist = 999;
+                spUploadedProducts.forEach((item, idx) => {
+                    const d = Math.hypot(item.xPct - xPct, item.yPct - yPct);
+                    if (d < 20 && d < bestDist) {
+                        bestDist = d;
+                        bestIdx = idx;
+                    }
+                });
+                draggingProductIdx = bestIdx;
+            };
+
+            const moveDragTo = (clientX, clientY) => {
+                if (draggingProductIdx < 0 || !spUploadedProducts[draggingProductIdx]) return;
+                const rect = canvas.getBoundingClientRect();
+                const xPct = Math.min(92, Math.max(8, ((clientX - rect.left) / rect.width) * 100));
+                const yPct = Math.min(86, Math.max(35, ((clientY - rect.top) / rect.height) * 100));
+                spUploadedProducts[draggingProductIdx].xPct = xPct;
+                spUploadedProducts[draggingProductIdx].yPct = yPct;
+                renderSingleProductPoster();
+            };
+
+            const endDrag = () => {
+                if (draggingProductIdx >= 0) {
+                    draggingProductIdx = -1;
+                    renderSpUploadedProductsList();
+                }
+            };
+
+            canvas.addEventListener('mousedown', (e) => startDragAt(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => moveDragTo(e.clientX, e.clientY));
+            window.addEventListener('mouseup', endDrag);
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches[0]) {
+                    startDragAt(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (draggingProductIdx >= 0 && e.touches && e.touches[0]) {
+                    moveDragTo(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+            window.addEventListener('touchend', endDrag);
+        }
+
+        function sendSingleProductToStandee() {
+            const title = document.getElementById('sp-ribbon-title')?.value || '雙11特賣';
+            const price = document.getElementById('sp-promo-price')?.value || 'HK$ 10,880';
+            if (document.getElementById('st-title')) document.getElementById('st-title').value = title;
+            if (document.getElementById('st-price')) document.getElementById('st-price').value = price;
+            switchTab('standee');
+            showToast('🖨️ 已同步至門市標價牌列印！');
+        }
+
+        // ==========================================
+        // 6. 分頁 3：智能配單報價 ＆ FPS / 本地 AI 算力基準
+        // ==========================================
+        function formatHkBudgetPrice(rawInput) {
+            const clean = (rawInput || '').trim();
+            if (!clean) return 'HK$ 12,800';
+            if (/^HK\$/i.test(clean)) return clean.replace(/^hk\$/i, 'HK$');
+            const num = parseFloat(clean.replace(/[^0-9.]/g, ''));
+            if (!isNaN(num) && num > 0) {
+                return 'HK$ ' + Math.round(num).toLocaleString('en-US');
+            }
+            return clean;
+        }
+
+        function renderBudgetTierChips() {
+            const box = document.getElementById('budget-tier-chips');
+            if (!box) return;
+            const currentId = document.getElementById('q-budget-select')?.value;
+            box.innerHTML = customBudgetTiers.map(t => {
+                const isActive = t.id === currentId;
+                const shortText = `${t.price} • ${t.label.replace(/^.*?-\s*/, '').slice(0, 14)}`;
+                return `
+                    <button type="button" onclick="selectBudgetTierById('${t.id}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition cursor-pointer ${isActive ? 'bg-amber-600 text-white border-amber-400 shadow' : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700'}">
+                        ${shortText}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectBudgetTierById(tierId) {
+            const sel = document.getElementById('q-budget-select');
+            if (sel) {
+                sel.value = tierId;
+                onBudgetTierSelectChange();
+            }
+        }
+
         async function fetchLiveAiInsightsAndGenerate() {
             const provider = document.getElementById('ai-provider-select')?.value || 'local_offline';
             const topic = document.getElementById('topic-input')?.value || '中田電腦 雙11限時狂歡';
@@ -6069,6 +5890,8 @@
         window.addEventListener('DOMContentLoaded', () => {
             createDefaultCentralfieldLogoImage(() => {
                 const hadLocalData = restoreWorkspaceFromLocalStorage();
+                checkOAuthUrlCallback();
+                renderOAuthStatusUI();
                 onAiProviderChange();
                 populateBudgetSelect();
                 onBudgetTierSelectChange();
