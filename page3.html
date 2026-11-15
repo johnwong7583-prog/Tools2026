@@ -188,19 +188,19 @@
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                         <div>
                             <h2 class="text-lg font-black text-white">✨ 一鍵多平台腦場行銷貼文生成</h2>
-                            <p class="text-xs text-slate-400">支援純本機離線引擎（GitHub Pages 零配置秒用）或填入個人 API Key 串接各大雲端 AI 模型</p>
+                            <p class="text-xs text-slate-400">自由選擇純本機離線引擎或各大雲端 AI 模型，一鍵生成 FB、IG、Threads、連登/EPC 及 WhatsApp 推廣文案</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
                             <select id="ai-provider-select" onchange="onAiProviderChange()" class="px-3 py-2 rounded-xl bg-slate-950 border border-amber-500/50 text-xs font-bold text-amber-300">
                                 <option value="local_offline" selected>💻 純本機離線極速使用 (0秒免網)</option>
                                 <option value="local_ollama">🏠 本機 Ollama / LM Studio 直連</option>
-                                <option value="gemini">✨ Google Gemini 3 Flash (需填 Key)</option>
+                                <option value="gemini">✨ Google Gemini 3 Flash (Search 實時連網)</option>
                                 <option value="perplexity">🔎 Perplexity AI (Sonar Pro 深度網搜)</option>
-                                <option value="deepseek">🐋 DeepSeek R1 / V3 推理版</option>
+                                <option value="deepseek">🐋 DeepSeek R1 滿血推理版</option>
                                 <option value="openai">💬 OpenAI ChatGPT-4o</option>
                                 <option value="claude">🧠 Anthropic Claude 3.7 Sonnet</option>
                                 <option value="grok">⚡ xAI Grok 3</option>
-                                <option value="custom_openai">🌐 自訂 OpenAI 相容端點 (OpenRouter)</option>
+                                <option value="custom_openai">🌐 OpenRouter / 自訂 OpenAI 端點</option>
                             </select>
                             <select id="ai-search-focus" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-200">
                                 <option value="hk_market_price">📊 香港高登腦場最新行情</option>
@@ -216,21 +216,18 @@
                     </div>
 
                     <!-- 目前 AI 模型連線狀態與快速登入捷徑列 -->
-                    <div id="ai-active-conn-bar" class="px-3.5 py-2 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                    <div id="ai-active-conn-bar" class="px-3.5 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
                         <div class="flex flex-wrap items-center gap-2 text-slate-300">
                             <span class="font-bold text-amber-300">🔌 當前連線：</span>
                             <span id="ai-conn-status-text">💻 純本機離線知識庫模式（無需登入或網絡即可秒速生成）</span>
                             <span id="oauth-topbar-badge" class="hidden px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold"></span>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <button type="button" onclick="openAiConnectModal()" class="px-2.5 py-0.5 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 font-bold cursor-pointer">🔐 OAuth / API Key</button>
-                            <span class="text-slate-500">官方登入：</span>
-                            <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 font-bold">Gemini ↗</a>
-                            <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 font-bold">ChatGPT ↗</a>
-                            <a href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold">Perplexity ↗</a>
-                            <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 font-bold">DeepSeek ↗</a>
-                            <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 font-bold">Claude ↗</a>
-                            <a href="https://grok.com/" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold">Grok ↗</a>
+                            <button type="button" onclick="openAiConnectModal()" class="px-2.5 py-1 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 font-bold cursor-pointer">🔐 OAuth 授權 / 綁定 Key</button>
+                            <button type="button" onclick="copyPromptAndOpenWebAi('https://chatgpt.com/', 'ChatGPT')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 ChatGPT 網頁版">ChatGPT網頁 ↗</button>
+                            <button type="button" onclick="copyPromptAndOpenWebAi('https://gemini.google.com/', 'Gemini')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 Gemini 網頁版">Gemini網頁 ↗</button>
+                            <button type="button" onclick="copyPromptAndOpenWebAi('https://chat.deepseek.com/', 'DeepSeek')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 DeepSeek 網頁版">DeepSeek網頁 ↗</button>
+                            <button type="button" onclick="copyPromptAndOpenWebAi('https://claude.ai/', 'Claude')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 Claude 網頁版">Claude網頁 ↗</button>
                         </div>
                     </div>
 
@@ -277,8 +274,13 @@
                     </div>
 
                     <!-- AI 情報摘要面板 -->
-                    <div id="live-ai-insight-panel" class="hidden p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-500/40 space-y-1.5">
-                        <div id="live-ai-insight-badge" class="text-xs font-black text-indigo-300">💻 情報分析完成</div>
+                    <div id="live-ai-insight-panel" class="hidden p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-500/40 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div id="live-ai-insight-badge" class="text-xs font-black text-indigo-300">💻 情報分析完成</div>
+                            <button type="button" id="btn-open-conn-from-insight" onclick="openAiConnectModal()" class="hidden px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold cursor-pointer">
+                                🔑 立即前往完成 OAuth 授權 / 填入 Key
+                            </button>
+                        </div>
                         <pre id="live-ai-insight-body" class="text-xs text-slate-200 whitespace-pre-wrap font-sans leading-relaxed"></pre>
                     </div>
                 </div>
@@ -825,28 +827,8 @@
                                         <button type="button" onclick="recalibrateBenchmarksWithEngine()" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-[11px] transition shadow cursor-pointer">
                                             ⚡ 依目前連線/引擎校準數據
                                         </button>
-                                        <button type="button" onclick="verifyBenchmarksWithModel()" id="btn-verify-bm" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition shadow cursor-pointer">
-                                            🛡️ 依所選模型核實資料真確
-                                        </button>
                                         <button type="button" onclick="applyBenchmarksToQuoteAndCanvas()" class="px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] transition shadow cursor-pointer">
                                             📥 套入報價單與圖卡
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- 新增：基準資料版本更新 ＆ 模型真確性核實控制列 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/90 px-3 py-2 rounded-lg border border-teal-500/30 text-[11px]">
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="font-bold text-teal-300 shrink-0">🔄 基準資料版本：</span>
-                                        <select id="bm-version-select" onchange="updateBenchmarkReferenceData()" class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-white font-bold text-[11px]">
-                                            <option value="v2026_q4" selected>🆕 2026 Q4 最新版 (DeepSeek-R1 / Qwen 3 / Gemma 4 / Llama 4 / FLUX.2)</option>
-                                            <option value="v2026_live_ai">🌐 依所選 AI 模型實時更新最新基準數據</option>
-                                            <option value="v2025_legacy">📦 2025 經典基準對照版 (DeepSeek-R1 14B/32B / Llama 3.3 / FLUX.1)</option>
-                                        </select>
-                                    </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <button type="button" onclick="updateBenchmarkReferenceData(true)" class="px-2.5 py-1 rounded bg-teal-600/30 hover:bg-teal-600/50 text-teal-200 border border-teal-500/40 font-bold transition cursor-pointer">
-                                            🔄 立即更新最新參考資料
                                         </button>
                                     </div>
                                 </div>
@@ -888,19 +870,6 @@
                                     <button type="button" onclick="copyBenchmarkReport()" class="shrink-0 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold transition cursor-pointer">
                                         📋 複製完整 FPS + AI 算力表
                                     </button>
-                                </div>
-                                <!-- 模型核實真確性結果報告面板 -->
-                                <div id="bm-verify-panel" class="hidden p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/50 space-y-2 text-[11px]">
-                                    <div class="flex flex-wrap items-center justify-between gap-2">
-                                        <span id="bm-verify-badge" class="font-black text-emerald-300">🛡️ 模型真確性核實報告</span>
-                                        <div class="flex items-center gap-1.5">
-                                            <button type="button" id="bm-apply-verified-btn" onclick="applyVerifiedBenchmarkOverride()" class="hidden px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer">
-                                                ✨ 套用模型核實修正值
-                                            </button>
-                                            <span id="bm-verify-time" class="text-[10px] text-slate-400 font-mono"></span>
-                                        </div>
-                                    </div>
-                                    <div id="bm-verify-body" class="text-slate-200 leading-relaxed whitespace-pre-wrap"></div>
                                 </div>
                                 <div id="bm-live-note" class="hidden p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-500/40 text-[11px] text-indigo-200 leading-relaxed"></div>
                             </div>
@@ -1471,7 +1440,7 @@
                         </div>
                     </div>
 
-                    <!-- 右側：香港主要代理商保養維修聯絡速查庫 -->
+                    <!-- 右側：香港主要電腦代理商保養聯絡速查庫 -->
                     <div class="lg:col-span-7 bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-4">
                         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
                             <div>
@@ -1657,18 +1626,18 @@
             </div>
             <div class="text-xs text-slate-300 space-y-2.5 leading-relaxed">
                 <div class="p-3 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-200">
-                    <strong>🚨 為什麼 GitHub Pages 會出現 404 或部分功能異常？</strong>
+                    <strong>🚨 為什麼 GitHub Pages 會出現 404 或未能啟用？</strong>
                     <ul class="list-disc pl-4 mt-1 space-y-1">
-                        <li>GitHub Pages 預設只會讀取全小寫的 <strong><code>index.html</code></strong>（不能叫 <code>centralfield_ai (2).html</code> 或含空格檔名）。</li>
-                        <li>檔案必須放在 Repository <strong>最外層根目錄 (Root)</strong>，上傳後到 <strong>Settings ➔ Pages ➔ Branch 選 <code>main</code> / <code>/ (root)</code> ➔ Save</strong>。</li>
-                        <li>GitHub Pages 為純靜態託管，使用雲端 AI 模型時請於右上角 <strong>「AI 登入 / 連線設定」</strong> 填入免費 Gemini / DeepSeek / OpenRouter API Key，或直接使用預設 <strong>「純本機離線極速模式」</strong>（100% 功能離線可用）。</li>
+                        <li>GitHub Pages 預設只會讀取全小寫的 <strong><code>index.html</code></strong>（不能叫 <code>pc_generator_pro.html</code> 或日期檔名）。</li>
+                        <li>檔案必須放在 Repository <strong>最外層根目錄 (Root)</strong>，不可包在子資料夾或直接上傳 <code>.zip</code>。</li>
+                        <li>上傳後需到專案 <strong>Settings ➔ Pages ➔ Branch 選 <code>main</code> / <code>/ (root)</code> ➔ Save</strong>，等待約 60 秒生效。</li>
                     </ul>
                 </div>
                 <div class="flex flex-wrap gap-2 pt-1">
-                    <button type="button" onclick="downloadCleanHtmlForGithub('index.html')" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-center cursor-pointer">
-                        ⬇️ 下載乾淨版 index.html (首頁主檔)
+                    <button type="button" onclick="downloadCurrentAsIndexHtml('index.html')" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-center cursor-pointer">
+                        ⬇️ 直接下載 index.html (首頁主檔)
                     </button>
-                    <button type="button" onclick="downloadCleanHtmlForGithub('404.html')" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-center cursor-pointer">
+                    <button type="button" onclick="downloadCurrentAsIndexHtml('404.html')" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-center cursor-pointer">
                         ⬇️ 下載 404.html (防跳錯備援頁)
                     </button>
                 </div>
@@ -1685,63 +1654,64 @@
                         <i class="fa-solid fa-key text-amber-400"></i>
                         <span>AI 模型 OAuth 登入 ＆ API 連線設定中樞</span>
                     </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">支援 OpenRouter PKCE OAuth 一鍵授權、官方網頁登入或自訂 API Key 與本機 Ollama 直連</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">說明：瀏覽器因安全隔離無法直接讀取其他網頁分頁的登入狀態，請透過下方「OAuth 2.0 一鍵授權」或貼上免費 API Key 進行真實連線</p>
                 </div>
                 <button type="button" onclick="closeAiConnectModal()" class="text-slate-400 hover:text-white text-lg px-2 cursor-pointer">✕</button>
             </div>
 
-            <!-- 0. OAuth 2.0 一鍵帳號授權登入 -->
+            <!-- 0. OAuth 2.0 一鍵帳號授權登入 (真實 PKCE ＆ Token 跨視窗回傳) -->
             <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-2.5 text-xs">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="font-black text-emerald-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-shield-halved"></i>
-                        <span>0. OAuth 2.0 一鍵帳號授權登入 (支援 GitHub Pages 網域回調)</span>
+                        <span>0. OAuth 2.0 帳號授權登入 (授權後自動回傳金鑰至本系統)</span>
                     </span>
-                    <span id="oauth-modal-summary" class="text-[11px] text-slate-400">尚未綁定 OAuth 帳號</span>
+                    <span id="oauth-modal-summary" class="text-[11px] text-slate-400">尚未綁定有效 OAuth 憑證</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <!-- Google OAuth -->
-                    <div class="p-3 rounded-xl bg-slate-900 border border-sky-500/40 flex flex-col justify-between gap-2">
+                    <!-- OpenRouter PKCE OAuth (推薦：無需 Client ID 即可一鍵登入換取真實 Key) -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-purple-500/50 flex flex-col justify-between gap-2">
                         <div>
                             <div class="flex items-center justify-between">
-                                <span class="font-black text-sky-300"><i class="fa-brands fa-google mr-1"></i>Google AI Studio</span>
-                                <span id="oauth-status-google" class="text-[10px] text-slate-400">未綁定</span>
+                                <span class="font-black text-purple-300"><i class="fa-solid fa-network-wired mr-1"></i>OpenRouter PKCE</span>
+                                <span id="oauth-status-openrouter" class="text-[10px] text-slate-400">未授權</span>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1">前往 Google AI Studio 免費取得 Gemini API Key，或使用自訂 Client ID 授權。</p>
+                            <p class="text-[11px] text-slate-400 mt-1">支援真實 SHA-256 PKCE OAuth 跳轉，登入後自動回傳 Key 解鎖 GPT-4o / Claude / DeepSeek。</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] cursor-pointer">🔐 取得 / 授權 Gemini</button>
-                            <button type="button" id="oauth-logout-google" onclick="logoutOAuthAccount('google')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
-                        </div>
-                    </div>
-
-                    <!-- OpenRouter PKCE OAuth -->
-                    <div class="p-3 rounded-xl bg-slate-900 border border-purple-500/40 flex flex-col justify-between gap-2">
-                        <div>
-                            <div class="flex items-center justify-between">
-                                <span class="font-black text-purple-300"><i class="fa-solid fa-network-wired mr-1"></i>OpenRouter OAuth</span>
-                                <span id="oauth-status-openrouter" class="text-[10px] text-slate-400">未登入</span>
-                            </div>
-                            <p class="text-[11px] text-slate-400 mt-1">標準 PKCE OAuth 授權（GitHub Pages 完美支援），自動交換專屬 API Key。</p>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('openrouter')" class="flex-1 py-1.5 px-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] cursor-pointer">🔐 OpenRouter PKCE 登入</button>
+                            <button type="button" onclick="startOAuthLogin('openrouter')" class="flex-1 py-1.5 px-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] cursor-pointer">🔐 PKCE 一鍵授權</button>
                             <button type="button" id="oauth-logout-openrouter" onclick="logoutOAuthAccount('openrouter')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
                         </div>
                     </div>
 
-                    <!-- GitHub / AI 帳號快速授權 -->
+                    <!-- Google Gemini 帳號授權 / 快速取 Key -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-sky-500/40 flex flex-col justify-between gap-2">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-black text-sky-300"><i class="fa-brands fa-google mr-1"></i>Google Gemini 帳號</span>
+                                <span id="oauth-status-google" class="text-[10px] text-slate-400">未綁定</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">有 Client ID 可走 Google OAuth 彈窗；無 Client ID 請點右側取免費 Key 貼入下方。</p>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] cursor-pointer">🔐 Google 授權</button>
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-[11px]">免費取Key ↗</a>
+                            <button type="button" id="oauth-logout-google" onclick="logoutOAuthAccount('google')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
+                        </div>
+                    </div>
+
+                    <!-- GitHub Models 帳號 Token 直連 -->
                     <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/40 flex flex-col justify-between gap-2">
                         <div>
                             <div class="flex items-center justify-between">
-                                <span class="font-black text-amber-300"><i class="fa-brands fa-github mr-1"></i>GitHub Models 端點</span>
+                                <span class="font-black text-amber-300"><i class="fa-brands fa-github mr-1"></i>GitHub Models 帳號</span>
                                 <span id="oauth-status-github" class="text-[10px] text-slate-400">未綁定</span>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1">一鍵切換至 GitHub Models 端點（填入 GitHub PAT 即可免費調用 GPT-4o）。</p>
+                            <p class="text-[11px] text-slate-400 mt-1">登入 GitHub 產生免費 PAT (`ghp_...`) 並貼入下方「自訂端點 Key」即可免費調用 GPT-4o。</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('github')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-[11px] cursor-pointer">🔐 GitHub Models 登入</button>
+                            <button type="button" onclick="startOAuthLogin('github')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-[11px] cursor-pointer">🔑 設定 GitHub 端點</button>
                             <button type="button" id="oauth-logout-github" onclick="logoutOAuthAccount('github')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
                         </div>
                     </div>
@@ -1749,8 +1719,8 @@
 
                 <!-- 選填：自訂 Google OAuth 2.0 Client ID -->
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 pt-1">
-                    <span class="text-[11px] text-slate-400 shrink-0">自訂 Google OAuth Client ID (選填)：</span>
-                    <input type="text" id="cfg-google-oauth-client-id" placeholder="xxxx.apps.googleusercontent.com (選填)" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-[11px] text-slate-200 font-mono">
+                    <span class="text-[11px] text-slate-400 shrink-0">Google OAuth 2.0 Client ID (選填)：</span>
+                    <input type="text" id="cfg-google-oauth-client-id" placeholder="xxxx.apps.googleusercontent.com (若無 Client ID，建議直接用上方 OpenRouter PKCE 或貼上 Gemini Key)" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-[11px] text-slate-200 font-mono">
                 </div>
             </div>
 
@@ -1762,9 +1732,9 @@
                     <div class="p-3 rounded-xl bg-slate-950 border border-sky-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-sky-300">✨ Google Gemini 3</span>
-                            <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] font-bold">免費額度高</span>
+                            <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] font-bold">Google Search</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">登入 Google AI Studio 免費申請 Key，支援 Google Search 實時檢索。</p>
+                        <p class="text-[11px] text-slate-400">登入 Google AI Studio 免費建立 Key 後貼入下方即可連網搜尋。</p>
                         <div class="flex gap-1.5">
                             <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
                             <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-sky-600/30 hover:bg-sky-600/50 text-center text-sky-200 font-bold">取 Key ↗</a>
@@ -1847,7 +1817,7 @@
             <!-- 2. 連線模式與 API Key / 本機端點設定 -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="font-black text-cyan-300">2. 選擇預設 AI 引擎 ＆ 填入 API Key (僅儲存於您本機瀏覽器 LocalStorage，絕不上傳)</span>
+                    <span class="font-black text-cyan-300">2. 選擇預設 AI 引擎 ＆ 貼上 API Key (自動儲存於本機瀏覽器)</span>
                     <button type="button" onclick="toggleAiKeyVisibility()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold cursor-pointer">
                         👁️ 顯示 / 隱藏金鑰
                     </button>
@@ -1860,17 +1830,17 @@
                         <option value="local_ollama">🏠 本機 Ollama / LM Studio 直連 (localhost)</option>
                         <option value="gemini">✨ Google Gemini 3 Flash (Search 實時連網)</option>
                         <option value="perplexity">🔎 Perplexity AI (Sonar Pro 深度網搜)</option>
-                        <option value="deepseek">🐋 DeepSeek R1 / V3 推理版</option>
+                        <option value="deepseek">🐋 DeepSeek R1 滿血推理版</option>
                         <option value="openai">💬 OpenAI ChatGPT-4o</option>
                         <option value="claude">🧠 Anthropic Claude 3.7 Sonnet</option>
                         <option value="grok">⚡ xAI Grok 3</option>
-                        <option value="custom_openai">🌐 自訂 OpenAI 相容端點 (OpenRouter / GitHub Models)</option>
+                        <option value="custom_openai">🌐 OpenRouter / GitHub Models / 自訂 OpenAI 端點</option>
                     </select>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                        <label class="block text-slate-400 mb-1">✨ Google Gemini API Key (於 AI Studio 免費取得)</label>
+                        <label class="block text-slate-400 mb-1">✨ Google Gemini API Key (可於上方免費取Key)</label>
                         <input type="password" id="cfg-key-gemini" placeholder="AIzaSy..." class="ai-key-input w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono">
                     </div>
                     <div>
@@ -1906,17 +1876,17 @@
                         <input type="text" id="cfg-ollama-model" value="deepseek-r1:14b" placeholder="如: deepseek-r1:14b / qwen2.5:14b" class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
                     </div>
                     <div>
-                        <label class="block text-purple-300 font-bold mb-1">🌐 自訂 OpenAI 相容端點 URL (OpenRouter 等)</label>
+                        <label class="block text-purple-300 font-bold mb-1">🌐 OpenRouter / GitHub Models / 自訂端點 URL</label>
                         <input type="text" id="cfg-custom-url" value="https://openrouter.ai/api/v1/chat/completions" class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
                     </div>
                     <div class="grid grid-cols-2 gap-1.5">
                         <div>
                             <label class="block text-purple-300 font-bold mb-1">模型 ID</label>
-                            <input type="text" id="cfg-custom-model" value="google/gemini-2.5-pro" class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
+                            <input type="text" id="cfg-custom-model" value="google/gemini-2.5-flash" class="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
                         </div>
                         <div>
-                            <label class="block text-purple-300 font-bold mb-1">自訂端點 Key</label>
-                            <input type="password" id="cfg-custom-key" placeholder="sk-or-..." class="ai-key-input w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
+                            <label class="block text-purple-300 font-bold mb-1">OAuth / 自訂 Key</label>
+                            <input type="password" id="cfg-custom-key" placeholder="sk-or-... 或 ghp_..." class="ai-key-input w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono">
                         </div>
                     </div>
                 </div>
@@ -1946,17 +1916,14 @@
 
     <script>
         // ==========================================
-        // 0. 捕獲乾淨初始 HTML 模板（供 GitHub Pages 部署匯出使用）
-        // ==========================================
-        const CLEAN_INITIAL_HTML_TEMPLATE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-        // ==========================================
         // 1. 全域狀態與品牌知識庫預設資料
         // ==========================================
-        const LOCAL_STORAGE_KEY = 'centralfield_pro_workspace_v4';
+        const LOCAL_STORAGE_KEY = 'centralfield_pro_workspace_v3';
 
         let globalLogoImg = null;         // 全域預設 Centralfield™ 紅字商標 Image
         let savedCompanyLogos = [];       // 已儲存公司 Logo 庫 [{id, name, dataUrl, savedAt}]
+        let cloudDbInstance = null;       // 選用雲端資料庫實例 (若環境有提供設定)
+        let cloudUserId = null;
 
         let spCustomLogoImg = null;       // 單品海報專屬覆蓋 Logo
         let spLogoHidden = false;         // 是否隱藏海報 Logo
@@ -1987,7 +1954,7 @@
             ollamaUrl: 'http://localhost:11434/v1/chat/completions',
             ollamaModel: 'deepseek-r1:14b',
             customUrl: 'https://openrouter.ai/api/v1/chat/completions',
-            customModel: 'google/gemini-2.5-pro',
+            customModel: 'google/gemini-2.5-flash',
             customKey: '',
             googleOAuthClientId: '',
             oauthSessions: {}
@@ -1995,10 +1962,10 @@
 
         // 預設客戶預算層級 (可自由新增/編輯/刪除並自動儲存至本機)
         let customBudgetTiers = [
-            { id: 'tier_10880', label: '🔥 HK$ 10,880 - 2K高刷魔物獵人海景房 (9800X3D + 4070TiS)', price: 'HK$ 10,880', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'RTX 4070 Ti Super 16GB', mb: 'B650M GAMING WIFI', ram: '32GB DDR5-6000 RGB', ssd: '2TB Gen4 NVMe SSD', case: '全景無立柱海景房 + 360水冷', fps: '🎮 2K 荒野 112FPS / 悟空 94FPS', ai: '🤖 DeepSeek-R1/Qwen3 14B 78t/s (16G VRAM)' },
-            { id: 'tier_14800', label: '🛡️ HK$ 14,800 - Powered by ASUS 信仰4K全能主機', price: 'HK$ 14,800', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'ASUS TUF RTX 5080 / 4080S 16GB', mb: 'ASUS TUF B650-PLUS WIFI', ram: '32GB DDR5-6400 RGB', ssd: '2TB Kingston KC3000 PCIe 4.0', case: 'ASUS TUF GT502 海景房 + ROG 360水冷', fps: '🎮 4K 荒野 116FPS / 光追全開', ai: '🤖 Gemma 4 26B MoE 96t/s • 14B 114t/s' },
-            { id: 'tier_19800', label: '🧠 HK$ 19,800 - 本機 DeepSeek / Qwen 3 / AI Agent 64GB 工作站', price: 'HK$ 19,800', cpu: 'Intel Core Ultra 9 285K (內建NPU)', gpu: 'RTX 4090D / 5080 24GB 大顯存', mb: 'Z890 AORUS ELITE WIFI7', ram: '64GB DDR5-6400 雙通道', ssd: '4TB Gen4 NVMe 高速SSD', case: '靜音散熱工作站機箱 + 1000W ATX3.1', fps: '🎮 4K 極限畫質 124+ FPS', ai: '🤖 滿血運行 Qwen3-32B / Gemma4 56t/s' },
-            { id: 'tier_11980', label: '❄️ HK$ 11,980 - 純白雪景無立柱海景房 (9800X3D + 純白4070TiS)', price: 'HK$ 11,980', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'AERO / WHITE RTX 4070 Ti Super 16GB', mb: 'B650E AORUS ELITE X AX ICE 純白板', ram: '32GB DDR5-6000 冰白 RGB', ssd: '2TB PCIe 4.0 NVMe SSD', case: '純白無立柱全景海景房 + 純白360水冷', fps: '🎮 2K 全開 112+ FPS / 4K 順跑', ai: '🤖 流暢運行 DeepSeek-R1 / Gemma 4 26B' }
+            { id: 'tier_10880', label: '🔥 HK$ 10,880 - 2K高刷魔物獵人海景房 (9800X3D + 4070TiS)', price: 'HK$ 10,880', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'RTX 4070 Ti Super 16GB', mb: 'B650M GAMING WIFI', ram: '32GB DDR5-6000 RGB', ssd: '2TB Gen4 NVMe SSD', case: '全景無立柱海景房 + 360水冷', fps: '🎮 2K 荒野 112FPS / 悟空 94FPS', ai: '🤖 DeepSeek 14B 78t/s (16G VRAM)' },
+            { id: 'tier_14800', label: '🛡️ HK$ 14,800 - Powered by ASUS 信仰4K全能主機', price: 'HK$ 14,800', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'ASUS TUF RTX 5080 / 4080S 16GB', mb: 'ASUS TUF B650-PLUS WIFI', ram: '32GB DDR5-6400 RGB', ssd: '2TB Kingston KC3000 PCIe 4.0', case: 'ASUS TUF GT502 海景房 + ROG 360水冷', fps: '🎮 4K 荒野 116FPS / 光追全開', ai: '🤖 DeepSeek 14B 112t/s (16G GDDR7)' },
+            { id: 'tier_19800', label: '🧠 HK$ 19,800 - 本機 DeepSeek / AI Agent 64GB 算力工作站', price: 'HK$ 19,800', cpu: 'Intel Core Ultra 9 285K (內建NPU)', gpu: 'RTX 4090D / 5080 24GB 大顯存', mb: 'Z890 AORUS ELITE WIFI7', ram: '64GB DDR5-6400 雙通道', ssd: '4TB Gen4 NVMe 高速SSD', case: '靜音散熱工作站機箱 + 1000W ATX3.1', fps: '🎮 4K 極限畫質 124+ FPS', ai: '🤖 滿血運行 DeepSeek R1 32B 54t/s' },
+            { id: 'tier_11980', label: '❄️ HK$ 11,980 - 純白雪景無立柱海景房 (9800X3D + 純白4070TiS)', price: 'HK$ 11,980', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'AERO / WHITE RTX 4070 Ti Super 16GB', mb: 'B650E AORUS ELITE X AX ICE 純白板', ram: '32GB DDR5-6000 冰白 RGB', ssd: '2TB PCIe 4.0 NVMe SSD', case: '純白無立柱全景海景房 + 純白360水冷', fps: '🎮 2K 全開 112+ FPS / 4K 順跑', ai: '🤖 流暢運行 14B 級別大模型' }
         ];
 
         const singleProductPresets = {
@@ -2049,52 +2016,36 @@
             window._toastTimer = setTimeout(() => {
                 box.classList.remove('opacity-100');
                 box.classList.add('opacity-0');
-            }, 2600);
+            }, 2800);
         }
 
         function copyText(elementId) {
             const el = document.getElementById(elementId);
             if (!el) return;
-            const textVal = el.value || '';
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textVal).then(() => {
-                    showToast('📋 已成功複製到剪貼簿！');
-                }).catch(() => {
-                    el.select();
-                    el.setSelectionRange(0, 99999);
-                    document.execCommand('copy');
-                    showToast('📋 已成功複製到剪貼簿！');
-                });
-            } else {
-                el.select();
-                el.setSelectionRange(0, 99999);
-                document.execCommand('copy');
-                showToast('📋 已成功複製到剪貼簿！');
-            }
+            el.select();
+            el.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            showToast('📋 已成功複製到剪貼簿！');
         }
 
         function copyRawString(str, toastMsg) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(str).then(() => {
-                    showToast(toastMsg || '📋 已複製！');
-                }).catch(() => {
-                    const ta = document.createElement('textarea');
-                    ta.value = str;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    showToast(toastMsg || '📋 已複製！');
-                });
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = str;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                showToast(toastMsg || '📋 已複製！');
-            }
+            const ta = document.createElement('textarea');
+            ta.value = str;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast(toastMsg || '📋 已複製！');
+        }
+
+        function copyPromptAndOpenWebAi(url, label) {
+            const topic = document.getElementById('topic-input')?.value || '中田電腦 雙11限時狂歡';
+            const storeName = document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield';
+            const addr = document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖';
+            const phone = document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468';
+            const promptStr = `請以香港深水埗高登電腦中心「${storeName}」（地址：${addr}，${phone}）資深硬件行銷總監身份，用道地香港廣東話腦場風格，針對主題「${topic}」，分別撰寫：\n1. Facebook 專頁長文推廣帖\n2. Instagram 視覺吸睛帖 (連 Hashtag)\n3. Threads 脆友短帖\n4. 連登 LIHKG / HKEPC 腦場情報帖\n5. WhatsApp 客戶查詢快速回覆`;
+            copyRawString(promptStr, `📋 已複製推廣指令！正在開啟 ${label} 網頁版，請直接貼上 (Ctrl+V) 發送！`);
+            window.open(url, '_blank', 'noopener,noreferrer');
         }
 
         function downloadCanvas(canvasId, filename) {
@@ -2110,24 +2061,20 @@
         function copyCanvasToClipboard(canvasId, fallbackFilename) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
-            try {
-                canvas.toBlob(async (blob) => {
-                    if (!blob) return;
-                    try {
-                        if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
-                            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                            showToast('📋 已複製高清圖片！可直接貼上 WhatsApp / FB');
-                        } else {
-                            throw new Error('ClipboardItem unsupported');
-                        }
-                    } catch (_) {
-                        downloadCanvas(canvasId, fallbackFilename);
-                        showToast('ℹ️ 已自動為您下載高清圖檔（可直接拖入 WhatsApp 發送）');
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                try {
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        showToast('📋 已複製高清圖片！可直接貼上 WhatsApp / FB');
+                    } else {
+                        throw new Error('ClipboardItem unsupported');
                     }
-                }, 'image/png');
-            } catch (_) {
-                downloadCanvas(canvasId, fallbackFilename);
-            }
+                } catch (_) {
+                    downloadCanvas(canvasId, fallbackFilename);
+                    showToast('ℹ️ 已自動為您下載高清圖檔（可直接拖入 WhatsApp 發送）');
+                }
+            }, 'image/png');
         }
 
         function downloadTextFile(textareaId, filename) {
@@ -2217,7 +2164,7 @@
         }
 
         // ==========================================
-        // 3. 內建 Centralfield™ 紅字商標 + 智慧去背防變形 + 公司 Logo 本機持久化
+        // 3. 內建 Centralfield™ 紅字商標 + 智慧去背防變形 + 公司 Logo 儲存引擎
         // ==========================================
         function saveWorkspaceToLocalStorage() {
             try {
@@ -2331,10 +2278,11 @@
             savedCompanyLogos = savedCompanyLogos.filter(l => l.id !== logoId);
             renderSavedLogosGallery();
             saveWorkspaceToLocalStorage();
+            syncBrandProfileToCloud();
             showToast('🗑️ 已從已儲存 Logo 庫移除');
         }
 
-        function saveCompanyLogoAndSettings(customLogoName) {
+        async function saveCompanyLogoAndSettings(customLogoName) {
             if (!globalLogoImg) return;
             const compactUrl = compressLogoDataUrl(globalLogoImg, 560);
             const exists = savedCompanyLogos.some(item => item.dataUrl === compactUrl);
@@ -2350,11 +2298,84 @@
             }
             renderSavedLogosGallery();
             saveWorkspaceToLocalStorage();
-            triggerAutoSave();
 
             const statusTag = document.getElementById('logo-save-status-tag');
-            if (statusTag) statusTag.innerText = '💾 已永久儲存至本機工作區';
-            showToast('💾 已儲存公司 Logo 至本機工作區（重新整理仍會保留）！');
+            if (statusTag) statusTag.innerText = '⏳ 正在儲存...';
+
+            const cloudOk = await syncBrandProfileToCloud();
+            triggerAutoSave();
+
+            if (statusTag) {
+                statusTag.innerText = cloudOk ? '☁️ 已雲端＋本機雙重儲存' : '💾 已永久儲存至本機工作區';
+            }
+            showToast(cloudOk
+                ? '☁️ 已成功儲存公司 Logo 與品牌設定至雲端及本機！'
+                : '💾 已儲存公司 Logo 至本機工作區（重新整理仍會保留）！');
+        }
+
+        async function initCloudPersistence() {
+            try {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) return;
+                const firebaseConfig = JSON.parse(__firebase_config);
+                if (!firebaseConfig || !firebaseConfig.apiKey) return;
+
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js');
+                const { getAuth, signInAnonymously, signInWithCustomToken } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js');
+                const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
+
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                cloudUserId = auth.currentUser?.uid || null;
+                if (!cloudUserId) return;
+
+                cloudDbInstance = getFirestore(app);
+                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
+                const snap = await getDoc(profileRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data.storeName && document.getElementById('kb-store-name')) document.getElementById('kb-store-name').value = data.storeName;
+                    if (data.address && document.getElementById('kb-address')) document.getElementById('kb-address').value = data.address;
+                    if (data.phone && document.getElementById('kb-phone')) document.getElementById('kb-phone').value = data.phone;
+                    if (data.website && document.getElementById('kb-website')) document.getElementById('kb-website').value = data.website;
+                    if (Array.isArray(data.savedCompanyLogos) && data.savedCompanyLogos.length > 0) {
+                        savedCompanyLogos = data.savedCompanyLogos;
+                        renderSavedLogosGallery();
+                    }
+                    if (data.activeLogoDataUrl) {
+                        applyLogoFromDataUrl(data.activeLogoDataUrl, true);
+                    }
+                    syncStoreInfoUI();
+                    const statusTag = document.getElementById('logo-save-status-tag');
+                    if (statusTag) statusTag.innerText = '☁️ 已自動載入雲端儲存 Logo';
+                }
+            } catch (_) {}
+        }
+
+        async function syncBrandProfileToCloud() {
+            try {
+                if (!cloudDbInstance || !cloudUserId) return false;
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
+                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
+                await setDoc(profileRef, {
+                    storeName: document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield 客製化工坊',
+                    address: document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖',
+                    phone: document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468',
+                    website: document.getElementById('kb-website')?.value || 'centralfield.com',
+                    activeLogoDataUrl: globalLogoImg ? compressLogoDataUrl(globalLogoImg, 560) : '',
+                    savedCompanyLogos: savedCompanyLogos.slice(0, 6),
+                    updatedAt: new Date().toISOString()
+                });
+                return true;
+            } catch (_) {
+                return false;
+            }
         }
 
         function createDefaultCentralfieldLogoImage(callback) {
@@ -2527,26 +2548,63 @@
         }
 
         // ==========================================
-        // 4. 分頁 1：一鍵多平台貼文生成 & 連線模式切換 (含 GitHub Pages OAuth 支援)
+        // 4. 分頁 1：一鍵多平台貼文生成 & OAuth 2.0 真實授權連線引擎
         // ==========================================
+        function generatePkceVerifier(len = 64) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+            const arr = new Uint8Array(len);
+            crypto.getRandomValues(arr);
+            return Array.from(arr, x => chars[x % chars.length]).join('');
+        }
+
+        async function generatePkceChallenge(verifier) {
+            const data = new TextEncoder().encode(verifier);
+            const digest = await crypto.subtle.digest('SHA-256', data);
+            const bytes = new Uint8Array(digest);
+            let bin = '';
+            bytes.forEach(b => bin += String.fromCharCode(b));
+            return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function hasValidCloudAuthForProvider(provider) {
+            const s = aiConnectionConfig.oauthSessions || {};
+            if (provider === 'local_offline') return true;
+            if (provider === 'local_ollama') return !!(aiConnectionConfig.ollamaUrl || '').trim();
+            if (provider === 'gemini') {
+                return Boolean((aiConnectionConfig.geminiKey || '').trim() || (s.google && s.google.loggedIn && s.google.token));
+            }
+            if (provider === 'openai') return Boolean((aiConnectionConfig.openaiKey || '').trim());
+            if (provider === 'perplexity') return Boolean((aiConnectionConfig.perplexityKey || '').trim());
+            if (provider === 'deepseek') return Boolean((aiConnectionConfig.deepseekKey || '').trim());
+            if (provider === 'claude') return Boolean((aiConnectionConfig.claudeKey || '').trim());
+            if (provider === 'grok') return Boolean((aiConnectionConfig.grokKey || '').trim());
+            if (provider === 'custom_openai') {
+                return Boolean((aiConnectionConfig.customKey || '').trim() || (s.openrouter && s.openrouter.loggedIn && s.openrouter.key));
+            }
+            return false;
+        }
+
         function renderOAuthStatusUI() {
             const sessions = aiConnectionConfig.oauthSessions || {};
-            const providers = ['google', 'openrouter', 'github'];
+            const providers = ['openrouter', 'google', 'github'];
             let activeNames = [];
 
             providers.forEach(p => {
                 const stEl = document.getElementById(`oauth-status-${p}`);
                 const outBtn = document.getElementById(`oauth-logout-${p}`);
-                if (sessions[p] && sessions[p].loggedIn) {
-                    activeNames.push(sessions[p].label || p.toUpperCase());
+                const sess = sessions[p];
+                const isVerified = sess && sess.loggedIn && (sess.token || sess.key || (p === 'google' && aiConnectionConfig.geminiKey) || (p === 'github' && aiConnectionConfig.customKey));
+
+                if (isVerified) {
+                    activeNames.push(sess.label || p.toUpperCase());
                     if (stEl) {
-                        stEl.innerText = `● 已授權 (${sessions[p].account || '已登入'})`;
+                        stEl.innerText = `● 已連線驗證`;
                         stEl.className = 'text-[10px] text-emerald-400 font-bold';
                     }
                     if (outBtn) outBtn.classList.remove('hidden');
                 } else {
                     if (stEl) {
-                        stEl.innerText = '未登入';
+                        stEl.innerText = p === 'openrouter' ? '未授權' : '未綁定';
                         stEl.className = 'text-[10px] text-slate-400';
                     }
                     if (outBtn) outBtn.classList.add('hidden');
@@ -2556,71 +2614,88 @@
             const summaryEl = document.getElementById('oauth-modal-summary');
             if (summaryEl) {
                 summaryEl.innerText = activeNames.length
-                    ? `✅ 已授權：${activeNames.join('、')}`
-                    : '尚未綁定 OAuth 帳號';
+                    ? `✅ 已成功綁定並可調用：${activeNames.join('、')}`
+                    : '尚未綁定有效 OAuth 憑證（請點下方按鈕授權或貼上 API Key）';
+                summaryEl.className = activeNames.length ? 'text-[11px] text-emerald-300 font-bold' : 'text-[11px] text-amber-300';
             }
 
             const topBadge = document.getElementById('oauth-topbar-badge');
             if (topBadge) {
                 if (activeNames.length) {
                     topBadge.classList.remove('hidden');
-                    topBadge.innerText = `🔐 OAuth: ${activeNames.join(' / ')}`;
+                    topBadge.innerText = `🔐 已授權: ${activeNames.join(' / ')}`;
                 } else {
                     topBadge.classList.add('hidden');
                 }
             }
         }
 
-        function startOAuthLogin(provider) {
+        async function startOAuthLogin(provider) {
             if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
             const customClientId = (document.getElementById('cfg-google-oauth-client-id')?.value || aiConnectionConfig.googleOAuthClientId || '').trim();
             aiConnectionConfig.googleOAuthClientId = customClientId;
+
+            if (provider === 'openrouter') {
+                if (!/^https?:/.test(window.location.protocol)) {
+                    showToast('⚠️ 本機 file:// 檔案模式無法接收 OAuth 跳轉，請部署至 GitHub Pages (https://) 或直接貼上 API Key！');
+                    return;
+                }
+                const verifier = generatePkceVerifier(64);
+                const challenge = await generatePkceChallenge(verifier);
+                localStorage.setItem('cf_or_pkce_verifier', verifier);
+
+                const callbackUrl = window.location.origin + window.location.pathname;
+                const orAuthUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}&code_challenge=${encodeURIComponent(challenge)}&code_challenge_method=S256`;
+                window.open(orAuthUrl, 'OpenRouterOAuthPopup', 'width=560,height=680');
+                showToast('🔐 已開啟 OpenRouter OAuth 授權視窗，請在彈窗中點擊「Authorize」完成連動！');
+                return;
+            }
 
             if (provider === 'google') {
                 if (customClientId && /^https?:/.test(window.location.protocol)) {
                     const redirectUri = window.location.origin + window.location.pathname;
                     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(customClientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/generative-language.retriever openid email')}&state=google_oauth`;
                     window.open(oauthUrl, 'GoogleOAuthPopup', 'width=520,height=640');
-                    showToast('🔐 已開啟 Google OAuth 授權視窗，完成授權後將自動回傳！');
-                } else {
-                    window.open('https://aistudio.google.com/app/apikey', '_blank', 'noopener,noreferrer');
-                    selectProviderFromModal('gemini');
-                    showToast('🔑 已開啟 Google AI Studio，複製免費 API Key 後貼入下方欄位並儲存即可！');
+                    showToast('🔐 已開啟 Google OAuth 授權視窗，登入後將自動回傳憑證！');
+                    return;
                 }
-                return;
-            }
-
-            if (provider === 'openrouter') {
-                if (/^https?:/.test(window.location.protocol)) {
-                    const callbackUrl = window.location.origin + window.location.pathname;
-                    const orAuthUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}`;
-                    window.open(orAuthUrl, 'OpenRouterOAuthPopup', 'width=560,height=680');
-                    selectProviderFromModal('custom_openai');
-                    showToast('🔐 已開啟 OpenRouter OAuth PKCE 授權視窗，完成後將自動綁定金鑰！');
-                } else {
-                    window.open('https://openrouter.ai/keys', '_blank', 'noopener,noreferrer');
-                    selectProviderFromModal('custom_openai');
-                    showToast('🔑 本機 file:// 模式請直接於 OpenRouter 複製 API Key 貼入下方！');
+                // 無自訂 Client ID 時，引導貼上免費 Google AI Studio API Key
+                selectProviderFromModal('gemini');
+                const keyInput = document.getElementById('cfg-key-gemini');
+                if (keyInput) {
+                    keyInput.type = 'text';
+                    keyInput.focus();
                 }
+                const resBox = document.getElementById('ai-test-result');
+                if (resBox) {
+                    resBox.classList.remove('hidden');
+                    resBox.className = 'p-2.5 rounded-lg bg-sky-950/80 border border-sky-500/50 text-xs text-sky-200';
+                    resBox.innerHTML = '💡 <strong>Google Gemini 連線指引：</strong>請點擊「免費取Key ↗」登入您的 Google 帳號複製 <code>AIzaSy...</code> 金鑰，貼入上方「Google Gemini API Key」欄位並按「儲存並套用」，即可成功連結模型！（或使用左側 <strong>OpenRouter PKCE</strong> 免 Key 一鍵授權）';
+                }
+                showToast('💡 請貼入 Google AI Studio 免費金鑰或使用 OpenRouter PKCE 一鍵授權！');
                 return;
             }
 
             if (provider === 'github') {
-                window.open('https://github.com/settings/tokens/new?description=Centralfield_AI_Engine&scopes=models:read', '_blank', 'noopener,noreferrer');
-                aiConnectionConfig.oauthSessions.github = {
-                    loggedIn: true,
-                    label: 'GitHub Models',
-                    account: '端點已就緒 (請貼入 PAT)',
-                    loginAt: new Date().toISOString()
-                };
                 aiConnectionConfig.customUrl = 'https://models.inference.ai.azure.com/chat/completions';
                 aiConnectionConfig.customModel = 'gpt-4o';
                 if (document.getElementById('cfg-custom-url')) document.getElementById('cfg-custom-url').value = aiConnectionConfig.customUrl;
                 if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel;
                 selectProviderFromModal('custom_openai');
-                renderOAuthStatusUI();
-                saveWorkspaceToLocalStorage();
-                showToast('🔐 已開啟 GitHub Token 頁面並設定 GitHub Models 端點，請貼入 Token 至自訂端點 Key！');
+
+                window.open('https://github.com/settings/tokens/new?description=Centralfield-AI-Models&scopes=read:user', '_blank', 'noopener,noreferrer');
+                const customKeyInp = document.getElementById('cfg-custom-key');
+                if (customKeyInp) {
+                    customKeyInp.type = 'text';
+                    customKeyInp.focus();
+                }
+                const resBox = document.getElementById('ai-test-result');
+                if (resBox) {
+                    resBox.classList.remove('hidden');
+                    resBox.className = 'p-2.5 rounded-lg bg-amber-950/80 border border-amber-500/50 text-xs text-amber-200';
+                    resBox.innerHTML = '🔑 <strong>GitHub Models 連線指引：</strong>已自動為您設定 GitHub Models 端點與 <code>gpt-4o</code>！請在剛開啟的 GitHub 頁面點擊「Generate token」，將 <code>ghp_...</code> 貼入下方「OAuth / 自訂 Key」欄位並按「儲存並套用」即可免費使用！';
+                }
+                showToast('🔑 已設定 GitHub Models 端點，請貼入產生的 Token (ghp_...)！');
             }
         }
 
@@ -2628,9 +2703,14 @@
             if (aiConnectionConfig.oauthSessions && aiConnectionConfig.oauthSessions[provider]) {
                 delete aiConnectionConfig.oauthSessions[provider];
             }
+            if (provider === 'openrouter') {
+                aiConnectionConfig.customKey = '';
+                if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = '';
+            }
             renderOAuthStatusUI();
+            onAiProviderChange();
             saveWorkspaceToLocalStorage();
-            showToast(`🔓 已登出 ${provider.toUpperCase()} OAuth 帳號`);
+            showToast(`🔓 已登出 ${provider.toUpperCase()} 授權帳號`);
         }
 
         async function checkOAuthUrlCallback() {
@@ -2642,68 +2722,107 @@
                 const state = hashParams.get('state') || params.get('state');
 
                 if (accessToken && state === 'google_oauth') {
-                    const sessionObj = {
+                    if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+                    aiConnectionConfig.oauthSessions.google = {
                         loggedIn: true,
                         label: 'Google Gemini',
                         account: 'OAuth Token 已驗證',
                         token: accessToken
                     };
+                    saveWorkspaceToLocalStorage();
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
                     if (window.opener && !window.opener.closed) {
-                        window.opener.postMessage({ type: 'CF_OAUTH_CALLBACK', provider: 'google', session: sessionObj }, window.location.origin);
+                        window.opener.postMessage({ type: 'CF_OAUTH_SUCCESS', provider: 'google', token: accessToken }, '*');
                         window.close();
                         return;
                     }
-                    if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
-                    aiConnectionConfig.oauthSessions.google = sessionObj;
-                    saveWorkspaceToLocalStorage();
-                    window.history.replaceState({}, document.title, window.location.pathname);
+                    selectProviderFromModal('gemini');
+                    renderOAuthStatusUI();
+                    showToast('✅ Google OAuth 授權成功並已連動 Gemini 模型！');
                 } else if (code) {
+                    const verifier = localStorage.getItem('cf_or_pkce_verifier') || '';
+                    const bodyPayload = verifier
+                        ? { code, code_verifier: verifier, code_challenge_method: 'S256' }
+                        : { code };
+
                     const resp = await fetch('https://openrouter.ai/api/v1/auth/keys', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code })
+                        body: JSON.stringify(bodyPayload)
                     });
                     if (resp.ok) {
                         const data = await resp.json();
                         if (data && data.key) {
-                            const sessionObj = {
+                            aiConnectionConfig.customKey = data.key;
+                            aiConnectionConfig.customUrl = 'https://openrouter.ai/api/v1/chat/completions';
+                            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+                            aiConnectionConfig.oauthSessions.openrouter = {
                                 loggedIn: true,
-                                label: 'OpenRouter PKCE',
-                                account: 'Key 已自動交換綁定'
+                                label: 'OpenRouter OAuth',
+                                account: 'Key 已自動交換綁定',
+                                key: data.key
                             };
+                            localStorage.removeItem('cf_or_pkce_verifier');
+                            saveWorkspaceToLocalStorage();
+                            window.history.replaceState({}, document.title, window.location.pathname);
+
                             if (window.opener && !window.opener.closed) {
-                                window.opener.postMessage({ type: 'CF_OAUTH_CALLBACK', provider: 'openrouter', key: data.key, session: sessionObj }, window.location.origin);
+                                window.opener.postMessage({ type: 'CF_OAUTH_SUCCESS', provider: 'openrouter', key: data.key }, '*');
                                 window.close();
                                 return;
                             }
-                            aiConnectionConfig.customKey = data.key;
-                            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
-                            aiConnectionConfig.oauthSessions.openrouter = sessionObj;
-                            saveWorkspaceToLocalStorage();
+                            selectProviderFromModal('custom_openai');
+                            renderOAuthStatusUI();
                             showToast('✅ OpenRouter OAuth 授權成功並已自動寫入 API Key！');
                         }
+                    } else {
+                        window.history.replaceState({}, document.title, window.location.pathname);
                     }
-                    window.history.replaceState({}, document.title, window.location.pathname);
                 }
             } catch (_) {}
         }
 
+        // 監聽來自 OAuth 授權彈窗的即時回傳訊息
         window.addEventListener('message', (event) => {
-            if (event.origin !== window.location.origin) return;
             const msg = event.data;
-            if (msg && msg.type === 'CF_OAUTH_CALLBACK') {
-                if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
-                aiConnectionConfig.oauthSessions[msg.provider] = msg.session;
-                if (msg.provider === 'openrouter' && msg.key) {
-                    aiConnectionConfig.customKey = msg.key;
-                    if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = msg.key;
-                    selectProviderFromModal('custom_openai');
-                } else if (msg.provider === 'google') {
-                    selectProviderFromModal('gemini');
-                }
+            if (!msg || msg.type !== 'CF_OAUTH_SUCCESS') return;
+            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+
+            if (msg.provider === 'openrouter' && msg.key) {
+                aiConnectionConfig.customKey = msg.key;
+                aiConnectionConfig.customUrl = 'https://openrouter.ai/api/v1/chat/completions';
+                aiConnectionConfig.oauthSessions.openrouter = {
+                    loggedIn: true,
+                    label: 'OpenRouter OAuth',
+                    account: 'Key 已自動綁定',
+                    key: msg.key
+                };
+                if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = msg.key;
+                selectProviderFromModal('custom_openai');
                 renderOAuthStatusUI();
                 saveWorkspaceToLocalStorage();
-                showToast(`✅ ${msg.session?.label || msg.provider} OAuth 授權完成並已自動綁定！`);
+                showToast('🎉 OpenRouter OAuth 授權成功！已自動寫入真實 API Key 並啟用模型！');
+            } else if (msg.provider === 'google' && msg.token) {
+                aiConnectionConfig.oauthSessions.google = {
+                    loggedIn: true,
+                    label: 'Google Gemini',
+                    account: 'OAuth Token 已驗證',
+                    token: msg.token
+                };
+                selectProviderFromModal('gemini');
+                renderOAuthStatusUI();
+                saveWorkspaceToLocalStorage();
+                showToast('🎉 Google 帳號 OAuth 授權成功！已啟用 Gemini 雲端模型！');
+            }
+        });
+
+        // 監聽跨分頁 localStorage 同步（若使用者在同瀏覽器分頁完成授權）
+        window.addEventListener('storage', (e) => {
+            if (e.key === LOCAL_STORAGE_KEY && e.newValue) {
+                restoreWorkspaceFromLocalStorage();
+                renderOAuthStatusUI();
+                onAiProviderChange();
             }
         });
 
@@ -2722,7 +2841,7 @@
             if (document.getElementById('cfg-ollama-url')) document.getElementById('cfg-ollama-url').value = aiConnectionConfig.ollamaUrl || 'http://localhost:11434/v1/chat/completions';
             if (document.getElementById('cfg-ollama-model')) document.getElementById('cfg-ollama-model').value = aiConnectionConfig.ollamaModel || 'deepseek-r1:14b';
             if (document.getElementById('cfg-custom-url')) document.getElementById('cfg-custom-url').value = aiConnectionConfig.customUrl || 'https://openrouter.ai/api/v1/chat/completions';
-            if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel || 'google/gemini-2.5-pro';
+            if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel || 'google/gemini-2.5-flash';
             if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = aiConnectionConfig.customKey || '';
 
             renderOAuthStatusUI();
@@ -2746,7 +2865,6 @@
             if (modalSel) modalSel.value = providerKey;
             if (mainSel) mainSel.value = providerKey;
             onAiProviderChange();
-            showToast(`✅ 已切換至：${providerKey.toUpperCase()}`);
         }
 
         function toggleAiKeyVisibility() {
@@ -2766,7 +2884,7 @@
             aiConnectionConfig.ollamaUrl = (document.getElementById('cfg-ollama-url')?.value || 'http://localhost:11434/v1/chat/completions').trim();
             aiConnectionConfig.ollamaModel = (document.getElementById('cfg-ollama-model')?.value || 'deepseek-r1:14b').trim();
             aiConnectionConfig.customUrl = (document.getElementById('cfg-custom-url')?.value || 'https://openrouter.ai/api/v1/chat/completions').trim();
-            aiConnectionConfig.customModel = (document.getElementById('cfg-custom-model')?.value || 'google/gemini-2.5-pro').trim();
+            aiConnectionConfig.customModel = (document.getElementById('cfg-custom-model')?.value || 'google/gemini-2.5-flash').trim();
             aiConnectionConfig.customKey = (document.getElementById('cfg-custom-key')?.value || '').trim();
         }
 
@@ -2775,6 +2893,7 @@
             const chosenProv = document.getElementById('modal-ai-provider')?.value || 'local_offline';
             const mainSel = document.getElementById('ai-provider-select');
             if (mainSel) mainSel.value = chosenProv;
+            renderOAuthStatusUI();
             onAiProviderChange();
             saveWorkspaceToLocalStorage();
             closeAiConnectModal();
@@ -2788,7 +2907,7 @@
             if (!resBox) return;
             resBox.classList.remove('hidden');
             resBox.className = 'p-2.5 rounded-lg bg-slate-900 border border-cyan-500/40 text-xs text-cyan-200';
-            resBox.innerText = '⏳ 正在測試連線狀態，請稍候...';
+            resBox.innerText = '⏳ 正在向伺服器發送真實驗證請求，請稍候...';
 
             if (prov === 'local_offline') {
                 resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
@@ -2812,57 +2931,107 @@
                     }
                 } catch (_) {}
                 resBox.className = 'p-2.5 rounded-lg bg-amber-950/70 border border-amber-500/40 text-xs text-amber-200';
-                resBox.innerText = '⚠️ 未偵測到本機 Ollama 服務（若從 HTTPS 網站如 GitHub Pages 連線本機，請設定環境變數 OLLAMA_ORIGINS="*" 並啟動 Ollama）。';
+                resBox.innerText = '⚠️ 未偵測到本機 Ollama 服務（請確認已啟動 Ollama 並設定 OLLAMA_ORIGINS="*" 允許瀏覽器存取）。';
                 return;
             }
 
-            if (prov === 'gemini') {
-                const key = aiConnectionConfig.geminiKey || '';
-                if (!key) {
-                    resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200 font-bold';
-                    resBox.innerText = '⚠️ 在 GitHub Pages 靜態託管環境下，使用 Google Gemini 必須先填入免費 API Key（請點擊上方「取 Key ↗」前往 Google AI Studio 免費複製一組金鑰貼入）。';
-                    return;
-                }
-                try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`;
+            if (!hasValidCloudAuthForProvider(prov)) {
+                resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200 font-bold';
+                resBox.innerText = `⚠️ 尚未偵測到 ${prov.toUpperCase()} 的有效 API Key 或 OAuth Token！請點擊上方「PKCE 一鍵授權」或「取 Key ↗」取得金鑰貼入後再測試。`;
+                return;
+            }
+
+            try {
+                if (prov === 'gemini') {
+                    const key = (aiConnectionConfig.geminiKey || '').trim();
+                    const oauthTok = aiConnectionConfig.oauthSessions?.google?.token || '';
+                    const url = key
+                        ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`
+                        : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (!key && oauthTok) headers['Authorization'] = `Bearer ${oauthTok}`;
+
                     const resp = await fetch(url, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: 'Reply OK in 2 words.' }] }] })
+                        headers,
+                        body: JSON.stringify({ contents: [{ parts: [{ text: 'Reply OK' }] }] })
                     });
                     if (resp.ok) {
                         resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
-                        resBox.innerText = '✅ Google Gemini 3 Flash 雲端連線正常！支援 Google Search 實時腦場檢索。';
+                        resBox.innerText = '✅ Google Gemini 雲端連線實測成功！已可正常調用生成內容與 Google Search 檢索。';
+                        return;
+                    } else {
+                        const errData = await resp.json().catch(() => ({}));
+                        resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200';
+                        resBox.innerText = `⚠️ Gemini API 回傳錯誤 (${resp.status})：${errData?.error?.message || '金鑰或權限無效'}`;
                         return;
                     }
-                } catch (_) {}
-                resBox.className = 'p-2.5 rounded-lg bg-amber-950/70 border border-amber-500/40 text-xs text-amber-200';
-                resBox.innerText = '⚠️ 無法直連 Gemini API，請檢查 API Key 是否正確或網絡連線狀態。';
-                return;
-            }
+                }
 
-            const keyCheckMap = {
-                openai: aiConnectionConfig.openaiKey,
-                perplexity: aiConnectionConfig.perplexityKey,
-                deepseek: aiConnectionConfig.deepseekKey,
-                claude: aiConnectionConfig.claudeKey,
-                grok: aiConnectionConfig.grokKey,
-                custom_openai: aiConnectionConfig.customKey
-            };
-            if (!keyCheckMap[prov]) {
-                resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200 font-bold';
-                resBox.innerText = `⚠️ 尚未填入 ${prov.toUpperCase()} API Key！請點擊上方對應平台的「取 Key ↗」取得金鑰後貼入。`;
-                return;
-            }
+                // 測試 OpenRouter / OpenAI / DeepSeek / Perplexity / Grok / Custom OpenAI 相容端點
+                const endpointMap = {
+                    openai: { url: 'https://api.openai.com/v1/chat/completions', key: aiConnectionConfig.openaiKey, model: 'gpt-4o-mini' },
+                    perplexity: { url: 'https://api.perplexity.ai/chat/completions', key: aiConnectionConfig.perplexityKey, model: 'sonar' },
+                    deepseek: { url: 'https://api.deepseek.com/chat/completions', key: aiConnectionConfig.deepseekKey, model: 'deepseek-chat' },
+                    grok: { url: 'https://api.x.ai/v1/chat/completions', key: aiConnectionConfig.grokKey, model: 'grok-3-latest' },
+                    custom_openai: { url: aiConnectionConfig.customUrl, key: aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key, model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash' }
+                };
+                if (prov === 'claude') {
+                    const r = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': aiConnectionConfig.claudeKey,
+                            'anthropic-version': '2023-06-01',
+                            'anthropic-dangerous-direct-browser-access': 'true'
+                        },
+                        body: JSON.stringify({ model: 'claude-3-5-haiku-latest', max_tokens: 16, messages: [{ role: 'user', content: 'Hi' }] })
+                    });
+                    if (r.ok) {
+                        resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
+                        resBox.innerText = '✅ Anthropic Claude API 連線實測成功！';
+                    } else {
+                        resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200';
+                        resBox.innerText = `⚠️ Claude API 回傳錯誤 (${r.status})，請檢查 API Key 是否有效。`;
+                    }
+                    return;
+                }
 
-            resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
-            resBox.innerText = `✅ 已偵測到 ${prov.toUpperCase()} API Key，點擊「儲存並套用 AI 設定」即可在生成器中呼叫！`;
+                const ep = endpointMap[prov];
+                if (ep && ep.url && ep.key) {
+                    const r = await fetch(ep.url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${ep.key}`
+                        },
+                        body: JSON.stringify({
+                            model: ep.model,
+                            max_tokens: 16,
+                            messages: [{ role: 'user', content: 'Reply OK' }]
+                        })
+                    });
+                    if (r.ok) {
+                        resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
+                        resBox.innerText = `✅ ${prov.toUpperCase()} (${ep.model}) 連線實測成功！已可立即生成貼文。`;
+                    } else {
+                        const errJ = await r.json().catch(() => ({}));
+                        resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200';
+                        resBox.innerText = `⚠️ ${prov.toUpperCase()} 回傳錯誤 (${r.status})：${errJ?.error?.message || '金鑰無效或額度不足'}`;
+                    }
+                }
+            } catch (err) {
+                resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200';
+                resBox.innerText = `⚠️ 網絡請求失敗：${err.message || '請檢查網絡連線'}`;
+            }
         }
 
         function toggleQuickOfflineMode() {
             const sel = document.getElementById('ai-provider-select');
             if (!sel) return;
-            sel.value = sel.value === 'local_offline' ? 'gemini' : 'local_offline';
+            sel.value = sel.value === 'local_offline'
+                ? (hasValidCloudAuthForProvider('custom_openai') ? 'custom_openai' : 'gemini')
+                : 'local_offline';
             onAiProviderChange();
         }
 
@@ -2871,21 +3040,23 @@
             const topLabel = document.getElementById('top-mode-label');
             const topBtn = document.getElementById('top-mode-toggle-btn');
             const statusText = document.getElementById('ai-conn-status-text');
+            const isAuthed = hasValidCloudAuthForProvider(provider);
 
             const providerDescMap = {
-                local_offline: '💻 純本機離線知識庫模式（GitHub Pages 零配置秒用，無需 API Key）',
+                local_offline: '💻 純本機離線知識庫模式（無需登入或網絡即可秒速生成）',
                 local_ollama: `🏠 本機 Ollama / LM Studio 直連（模型：${aiConnectionConfig.ollamaModel || 'deepseek-r1:14b'}）`,
-                gemini: `✨ Google Gemini 3 Flash 雲端模式${aiConnectionConfig.geminiKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key（請點「模型登入 / Key設定」）'}`,
-                perplexity: `🔎 Perplexity AI (Sonar Pro) 深度網搜模式${aiConnectionConfig.perplexityKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key'}`,
-                deepseek: `🐋 DeepSeek R1 / V3 推理模式${aiConnectionConfig.deepseekKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key'}`,
-                openai: `💬 OpenAI ChatGPT-4o 模式${aiConnectionConfig.openaiKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key'}`,
-                claude: `🧠 Anthropic Claude 3.7 Sonnet 模式${aiConnectionConfig.claudeKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key'}`,
-                grok: `⚡ xAI Grok 3 模式${aiConnectionConfig.grokKey ? ' • 已綁定 API Key' : ' • ⚠️ 尚未填入 Key'}`,
-                custom_openai: `🌐 自訂 OpenAI 相容端點（${aiConnectionConfig.customModel || '自訂模型'}）${aiConnectionConfig.customKey ? ' • 已綁定 Key' : ' • ⚠️ 尚未填入 Key'}`
+                gemini: isAuthed ? '✅ Google Gemini 3 Flash 已連線驗證（支援 Google Search 實時檢索）' : '⚠️ Google Gemini 尚未填入 API Key（請點右側「OAuth 授權 / 綁定 Key」或用「Gemini網頁 ↗」）',
+                perplexity: isAuthed ? '✅ Perplexity AI (Sonar Pro) 已連線驗證' : '⚠️ Perplexity AI 尚未填入 API Key（請點右側綁定 Key）',
+                deepseek: isAuthed ? '✅ DeepSeek R1 滿血推理已連線驗證' : '⚠️ DeepSeek 尚未填入 API Key（請點右側綁定 Key 或用「DeepSeek網頁 ↗」）',
+                openai: isAuthed ? '✅ OpenAI ChatGPT-4o 已連線驗證' : '⚠️ OpenAI 尚未填入 API Key（請點右側綁定 Key 或用「ChatGPT網頁 ↗」）',
+                claude: isAuthed ? '✅ Anthropic Claude 3.7 Sonnet 已連線驗證' : '⚠️ Claude 尚未填入 API Key（請點右側綁定 Key 或用「Claude網頁 ↗」）',
+                grok: isAuthed ? '✅ xAI Grok 3 已連線驗證' : '⚠️ Grok 尚未填入 API Key（請點右側綁定 Key）',
+                custom_openai: isAuthed ? `✅ OpenRouter / 自訂端點已連線驗證（${aiConnectionConfig.customModel || '已授權'}）` : '⚠️ OpenRouter / 自訂端點尚未授權（請點右側「OAuth 授權」一鍵登入）'
             };
 
             if (statusText) {
                 statusText.innerText = providerDescMap[provider] || providerDescMap.local_offline;
+                statusText.className = (provider !== 'local_offline' && !isAuthed) ? 'text-amber-300 font-bold' : 'text-emerald-300 font-bold';
             }
 
             if (topLabel && topBtn) {
@@ -2893,8 +3064,10 @@
                     topLabel.innerText = '💻 純本機離線 (0秒免網)';
                     topBtn.className = 'px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer';
                 } else {
-                    topLabel.innerText = `🌐 AI 引擎: ${provider.toUpperCase()}`;
-                    topBtn.className = 'px-3 py-1.5 rounded-xl bg-indigo-500/25 hover:bg-indigo-500/40 text-indigo-200 border border-indigo-400/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer';
+                    topLabel.innerText = isAuthed ? `✅ AI: ${provider.toUpperCase()}` : `⚠️ AI 未授權: ${provider.toUpperCase()}`;
+                    topBtn.className = isAuthed
+                        ? 'px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/40 text-emerald-200 border border-emerald-400/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer'
+                        : 'px-3 py-1.5 rounded-xl bg-rose-500/25 hover:bg-rose-500/40 text-rose-200 border border-rose-400/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer';
                 }
             }
             renderPcBenchmarkDashboard();
@@ -2960,48 +3133,35 @@
             const panel = document.getElementById('live-ai-insight-panel');
             const badge = document.getElementById('live-ai-insight-badge');
             const body = document.getElementById('live-ai-insight-body');
+            const openConnBtn = document.getElementById('btn-open-conn-from-insight');
 
-            const buildLocalInsightReport = (prefixTitle, tipLine) => {
+            if (openConnBtn) openConnBtn.classList.add('hidden');
+
+            if (provider === 'local_offline') {
                 if (panel) panel.classList.remove('hidden');
-                if (badge) badge.innerText = prefixTitle;
+                if (badge) badge.innerText = '💻 純本機腦場資料庫極速分析完成 (0秒免連網)';
                 if (body) {
                     let insightText = `📌 主題鎖定：${topic}\n`;
-                    if (focus === 'fps_benchmark') insightText += `🎮 實時 FPS 數據參考：根據最新測試，RTX 4070 TiS / 5070 Ti 於 2K 畫質下執行《Monster Hunter Wilds》可穩定達到 112~134 FPS。\n`;
-                    else if (focus === 'ai_llm_specs') insightText += `🤖 AI 模型算力數據：16GB VRAM 可流暢本地運行 DeepSeek R1 14B (78+ tokens/s)；若需滿血運行 32B 模型建議配備 24GB~32GB VRAM。\n`;
-                    else insightText += `✅ 高登腦場買家重點：追求原廠行貨保固、透明報價單零水魚、背插海景房企理走線與雙烤穩定度。\n`;
-                    insightText += tipLine;
+                    if (focus === 'fps_benchmark') insightText += `🎮 實時 FPS 數據參考：根據最新測試，RTX 4070 TiS 於 2K 畫質下執行《Monster Hunter Wilds》可穩定達到 112 FPS。\n`;
+                    else if (focus === 'ai_llm_specs') insightText += `🤖 AI 模型算力數據：16GB VRAM 可流暢本地運行 DeepSeek R1 14B (78+ tokens/s)；若需運行 32B 模型建議配備 24GB VRAM。\n`;
+                    else insightText += `✅ 高登腦場買家痛點：追求原廠行貨保固、透明報價單零水魚、背插海景房企理走線與雙烤穩定度。\n`;
+                    insightText += `💡 建議行動呼籲：引導客人直接 WhatsApp 9131 7468 查詢高登 1/F 10-16A 號舖即時現貨！`;
                     body.innerText = insightText;
                 }
                 generateAllContent();
                 renderPcBenchmarkDashboard();
-            };
-
-            if (provider === 'local_offline') {
-                buildLocalInsightReport(
-                    '💻 純本機腦場資料庫極速分析完成 (0秒免連網)',
-                    '💡 建議行動呼籲：引導客人直接 WhatsApp 9131 7468 查詢高登 1/F 10-16A 號舖即時現貨！'
-                );
                 showToast('💻 已透過純本機離線引擎極速生成！');
                 return;
             }
 
-            // 檢查該雲端平台是否有設定 API Key（GitHub Pages 靜態網頁無後端代理，必須由瀏覽器帶 Key 呼叫）
-            const keyLookup = {
-                gemini: aiConnectionConfig.geminiKey,
-                openai: aiConnectionConfig.openaiKey,
-                perplexity: aiConnectionConfig.perplexityKey,
-                deepseek: aiConnectionConfig.deepseekKey,
-                claude: aiConnectionConfig.claudeKey,
-                grok: aiConnectionConfig.grokKey,
-                custom_openai: aiConnectionConfig.customKey
-            };
-
-            if (provider !== 'local_ollama' && !keyLookup[provider]) {
-                buildLocalInsightReport(
-                    `ℹ️ 尚未填入 ${provider.toUpperCase()} API Key，已自動改用本機離線腦場庫生成`,
-                    `💡 提示：因網站部署於 GitHub Pages 純靜態環境，請點擊上方「🔑 模型登入 / Key設定」填入您的免費 Gemini / DeepSeek / OpenRouter API Key 即可啟用雲端實時 AI！`
-                );
-                showToast(`ℹ️ 請先於「AI 登入 / 連線設定」填入 ${provider.toUpperCase()} API Key（已為您以本機引擎生成）`);
+            if (!hasValidCloudAuthForProvider(provider)) {
+                if (panel) panel.classList.remove('hidden');
+                if (badge) badge.innerText = `⚠️ 尚未取得 ${provider.toUpperCase()} 的有效授權憑證或 API Key`;
+                if (body) {
+                    body.innerText = `瀏覽器因安全機制無法直接讀取其他分頁的網頁登入狀態。\n請選擇以下任一方式連結 AI 模型：\n1. 點擊右側「🔑 立即前往完成 OAuth 授權 / 填入 Key」（推薦使用 OpenRouter PKCE 一鍵授權 或 貼上免費 Google AI Studio Key）。\n2. 若您已在瀏覽器登入 ChatGPT / Gemini / DeepSeek 網頁版，可直接點擊上方「ChatGPT網頁 ↗」或「Gemini網頁 ↗」自動複製指令貼上使用！`;
+                }
+                if (openConnBtn) openConnBtn.classList.remove('hidden');
+                showToast(`⚠️ 請先為 ${provider.toUpperCase()} 完成 OAuth 授權或填入 API Key！`);
                 return;
             }
 
@@ -3018,26 +3178,41 @@
             const prompt = `你是香港深水埗高登電腦中心「${storeName}」（地址：${addr}，${phone}）的資深硬件行銷總監。請針對主題「${topic}」（檢索重點：${focus}），用道地香港繁體中文及腦場術語撰寫推廣內容，並嚴格只回傳 JSON 格式（不要 markdown 標記），包含欄位：insight（3點市場情報與賣點摘要）、fb（Facebook長文帖）、ig（Instagram吸睛帖）、threads（Threads脆友短帖）、forum（連登/HKEPC腦場情報帖）、wa（WhatsApp客戶報價回覆）。`;
 
             let aiJson = null;
+            let lastErrMsg = '';
 
             try {
                 if (provider === 'gemini') {
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${aiConnectionConfig.geminiKey}`;
-                    const payload = {
-                        contents: [{ parts: [{ text: prompt }] }],
-                        tools: [{ "google_search": {} }]
-                    };
-                    const r = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (r.ok) {
-                        const data = await r.json();
-                        const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                        const cleaned = rawTxt.replace(/```json/gi, '').replace(/```/g, '').trim();
-                        aiJson = JSON.parse(cleaned);
+                    const key = (aiConnectionConfig.geminiKey || '').trim();
+                    const oauthTok = aiConnectionConfig.oauthSessions?.google?.token || '';
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (!key && oauthTok) headers['Authorization'] = `Bearer ${oauthTok}`;
+
+                    const modelsToTry = ['gemini-3-flash-preview', 'gemini-2.5-flash'];
+                    for (const modelName of modelsToTry) {
+                        const apiUrl = key
+                            ? `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(key)}`
+                            : `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
+                        const payload = {
+                            contents: [{ parts: [{ text: prompt }] }],
+                            tools: [{ "google_search": {} }]
+                        };
+                        const r = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify(payload)
+                        });
+                        if (r.ok) {
+                            const data = await r.json();
+                            const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                            const cleaned = rawTxt.replace(/```json/gi, '').replace(/```/g, '').trim();
+                            aiJson = JSON.parse(cleaned);
+                            break;
+                        } else {
+                            const errObj = await r.json().catch(() => ({}));
+                            lastErrMsg = errObj?.error?.message || `HTTP ${r.status}`;
+                        }
                     }
-                } else if (provider === 'claude') {
+                } else if (provider === 'claude' && aiConnectionConfig.claudeKey) {
                     const r = await fetch('https://api.anthropic.com/v1/messages', {
                         method: 'POST',
                         headers: {
@@ -3056,18 +3231,21 @@
                         const data = await r.json();
                         const rawTxt = data?.content?.[0]?.text || '';
                         aiJson = JSON.parse(rawTxt.replace(/```json/gi, '').replace(/```/g, '').trim());
+                    } else {
+                        lastErrMsg = `Claude API HTTP ${r.status}`;
                     }
                 } else {
+                    const resolvedCustomKey = (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key || '').trim();
                     const endpointMap = {
                         local_ollama: { url: aiConnectionConfig.ollamaUrl, key: 'ollama', model: aiConnectionConfig.ollamaModel || 'deepseek-r1:14b' },
                         openai: { url: 'https://api.openai.com/v1/chat/completions', key: aiConnectionConfig.openaiKey, model: 'gpt-4o' },
                         perplexity: { url: 'https://api.perplexity.ai/chat/completions', key: aiConnectionConfig.perplexityKey, model: 'sonar-pro' },
                         deepseek: { url: 'https://api.deepseek.com/chat/completions', key: aiConnectionConfig.deepseekKey, model: 'deepseek-chat' },
                         grok: { url: 'https://api.x.ai/v1/chat/completions', key: aiConnectionConfig.grokKey, model: 'grok-3-latest' },
-                        custom_openai: { url: aiConnectionConfig.customUrl, key: aiConnectionConfig.customKey, model: aiConnectionConfig.customModel || 'google/gemini-2.5-pro' }
+                        custom_openai: { url: aiConnectionConfig.customUrl, key: resolvedCustomKey, model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash' }
                     };
                     const ep = endpointMap[provider];
-                    if (ep && ep.url) {
+                    if (ep && ep.url && ep.key) {
                         const r = await fetch(ep.url, {
                             method: 'POST',
                             headers: {
@@ -3083,11 +3261,15 @@
                             const data = await r.json();
                             const rawTxt = data?.choices?.[0]?.message?.content || '';
                             aiJson = JSON.parse(rawTxt.replace(/```json/gi, '').replace(/```/g, '').trim());
+                        } else {
+                            const errObj = await r.json().catch(() => ({}));
+                            lastErrMsg = errObj?.error?.message || `HTTP ${r.status}`;
                         }
                     }
                 }
-            } catch (_) {
+            } catch (e) {
                 aiJson = null;
+                lastErrMsg = e.message || '連線異常';
             }
 
             if (btn) {
@@ -3106,10 +3288,13 @@
                 renderPcBenchmarkDashboard();
                 showToast(`✨ 已透過 ${provider.toUpperCase()} 完成實時情報生成！`);
             } else {
-                buildLocalInsightReport(
-                    `⚠️ 連線 ${provider.toUpperCase()} 逾時或金鑰無效，已自動切換內建高登腦場庫完成生成`,
-                    '💡 請檢查 API Key 額度或網絡狀態，亦隨時可繼續使用本機離線極速模式。'
-                );
+                if (badge) badge.innerText = `⚠️ ${provider.toUpperCase()} 連線未成功 (${lastErrMsg || '憑證無效'})，已自動以本機資料庫保底生成`;
+                if (body) {
+                    body.innerText = `原因說明：${lastErrMsg || 'API Key 無效或額度不足'}。\n請點擊右側按鈕檢查金鑰、重新執行 OpenRouter PKCE OAuth 授權，或直接點擊上方「ChatGPT網頁 ↗ / Gemini網頁 ↗」使用已登入的網頁帳號！`;
+                }
+                if (openConnBtn) openConnBtn.classList.remove('hidden');
+                generateAllContent();
+                renderPcBenchmarkDashboard();
             }
         }
 
@@ -4160,6 +4345,7 @@
             const addr = document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖';
             const phone = document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468';
 
+            // 計算 Trade-In 抵扣與免息分期月供
             const baseNum = parseFloat(price.replace(/[^0-9.]/g, '')) || 10880;
             const tradeInVal = Math.max(0, Number(document.getElementById('q-tradein-val')?.value) || 0);
             const tradeInNote = (document.getElementById('q-tradein-note')?.value || '').trim();
@@ -4188,6 +4374,7 @@
             const outEl = document.getElementById('q-text-output');
             if (outEl) outEl.value = quoteText;
 
+            // 繪製報價單圖卡
             const canvas = document.getElementById('quote-card-canvas');
             if (!canvas) return;
             const w = 1080, h = 1080;
@@ -4258,6 +4445,7 @@
             ctx.font = '700 21px "Noto Sans TC", sans-serif';
             ctx.fillText(`${fps}   |   ${ai}`, 76, 815);
 
+            // 底部總價、分期/Trade-In 與真實 WhatsApp QR 碼
             ctx.fillStyle = '#DC2626';
             ctx.beginPath();
             ctx.roundRect(54, 854, w - 108, 118, 20);
@@ -4279,6 +4467,7 @@
                 ctx.fillText(`📅 ${instMonths}期月供 HK$ ${monthlyPay.toLocaleString()}/月`, 430, 940);
             }
 
+            // 右側白底 QR 碼框
             ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
             ctx.roundRect(w - 168, 864, 98, 98, 12);
@@ -4332,15 +4521,12 @@
         }
 
         // ==========================================
-        // 7. 整機遊戲 FPS & 本地高階 AI 模型算力基準引擎 (2026 最新版 + 模型真確性核實)
+        // 7. 整機遊戲 FPS & 本地高階 AI 模型算力基準引擎
         // ==========================================
         let currentBenchmarkRes = '2k';
-        let activeVerifiedBenchmarkOverride = null; // 儲存經模型核實後的最新修正數據
-        let lastBenchmarkVerificationStamp = '';
 
         function setBenchmarkResolution(res) {
             currentBenchmarkRes = res;
-            activeVerifiedBenchmarkOverride = null;
             ['1080p', '2k', '4k'].forEach(r => {
                 const btn = document.getElementById(`bm-res-${r}`);
                 if (!btn) return;
@@ -4355,71 +4541,60 @@
 
         function getBenchmarkSourceInfo() {
             const provider = document.getElementById('ai-provider-select')?.value || 'local_offline';
-            const bmVer = document.getElementById('bm-version-select')?.value || 'v2026_q4';
-            const verSuffix = bmVer === 'v2025_legacy' ? ' [2025經典對照版]' : ' [2026 Q4最新基準]';
             const map = {
                 local_offline: {
                     code: 'local_offline',
-                    shortTag: '2026本機基準庫',
-                    modelDisplayName: '純本機離線基準＋顯存頻寬物理核實引擎 (v2026.4)',
-                    badge: `💻 資料來源：純本機離線基準庫 (中田電腦高登實驗室實測庫)${verSuffix}`,
-                    detail: '參考依據：UL 3DMark Steel Nomad + llama.cpp / Ollama 2026 Q4 GGUF Q4_K_M 實測吞吐量模型'
+                    shortTag: '純本機基準庫',
+                    badge: '💻 資料來源：純本機離線基準庫 (中田電腦高登實驗室實測庫)',
+                    detail: '參考依據：UL 3DMark / Steel Nomad 基準 + llama.cpp GGUF Q4_K_M 實測吞吐量模型'
                 },
                 local_ollama: {
                     code: 'local_ollama',
                     shortTag: '本機 Ollama 實測',
-                    modelDisplayName: `本機 Ollama (${aiConnectionConfig.ollamaModel || 'deepseek-r1:14b'})`,
-                    badge: `🏠 資料來源：本機 Ollama / LM Studio 直連算力推算${verSuffix}`,
-                    detail: '參考依據：本地 GGUF 顯存頻寬與 Flash-Attention KV-Cache 實測公式'
+                    badge: '🏠 資料來源：本機 Ollama / LM Studio 直連算力推算',
+                    detail: '參考依據：本地 GGUF 顯存頻寬與 KV-Cache 實測公式'
                 },
                 gemini: {
                     code: 'gemini',
-                    shortTag: 'Gemini 3 + Search',
-                    modelDisplayName: 'Google Gemini 3 Flash (Google Search 實時檢索)',
-                    badge: `✨ 資料來源：Google Gemini 3 Flash + Google Search 實時檢索${verSuffix}`,
-                    detail: '參考依據：Google Search 即時 2026 硬件評測與 Open-LLM 實測幀數庫'
+                    shortTag: 'Gemini + Google Search',
+                    badge: '✨ 資料來源：Google Gemini 3 Flash + Google Search 實時檢索',
+                    detail: '參考依據：Google Search 即時硬件評測與 3A 遊戲幀數庫'
                 },
                 perplexity: {
                     code: 'perplexity',
                     shortTag: 'Perplexity Sonar Pro',
-                    modelDisplayName: 'Perplexity AI (Sonar Pro 深度網搜)',
-                    badge: `🔎 資料來源：Perplexity AI (Sonar Pro 深度網搜實測)${verSuffix}`,
-                    detail: '參考依據：全網硬件評測媒體與 HuggingFace / llama.cpp 實測數據聚合'
+                    badge: '🔎 資料來源：Perplexity AI (Sonar Pro 深度網搜實測)',
+                    detail: '參考依據：全網硬件評測媒體與玩家實測數據聚合'
                 },
                 deepseek: {
                     code: 'deepseek',
-                    shortTag: 'DeepSeek R1/V3 推理',
-                    modelDisplayName: 'DeepSeek-R1 / V3 滿血推理模型',
-                    badge: `🐋 資料來源：DeepSeek 滿血推理模型算力分析${verSuffix}`,
-                    detail: '參考依據：DeepSeek 官方推理吞吐基準與 GGUF / FP8 量化實測'
+                    shortTag: 'DeepSeek R1 推理',
+                    badge: '🐋 資料來源：DeepSeek R1 滿血推理模型算力分析',
+                    detail: '參考依據：DeepSeek 官方推理吞吐基準與 GGUF 量化實測'
                 },
                 openai: {
                     code: 'openai',
                     shortTag: 'OpenAI GPT-4o',
-                    modelDisplayName: 'OpenAI ChatGPT-4o',
-                    badge: `💬 資料來源：OpenAI ChatGPT-4o 硬件效能知識庫${verSuffix}`,
+                    badge: '💬 資料來源：OpenAI ChatGPT-4o 硬件效能知識庫',
                     detail: '參考依據：主流 3A 遊戲與本地 LLM 推理基準數據'
                 },
                 claude: {
                     code: 'claude',
                     shortTag: 'Claude 3.7 Sonnet',
-                    modelDisplayName: 'Anthropic Claude 3.7 Sonnet',
-                    badge: `🧠 資料來源：Anthropic Claude 3.7 Sonnet 硬件分析引擎${verSuffix}`,
+                    badge: '🧠 資料來源：Anthropic Claude 3.7 Sonnet 硬件分析引擎',
                     detail: '參考依據：高登腦場實戰配單與幀率穩定度模型'
                 },
                 grok: {
                     code: 'grok',
                     shortTag: 'xAI Grok 3',
-                    modelDisplayName: 'xAI Grok 3',
-                    badge: `⚡ 資料來源：xAI Grok 3 實時硬件效能分析${verSuffix}`,
+                    badge: '⚡ 資料來源：xAI Grok 3 實時硬件效能分析',
                     detail: '參考依據：即時硬件規格與本地大模型吞吐估算'
                 },
                 custom_openai: {
                     code: 'custom_openai',
-                    shortTag: '自訂 AI 端點',
-                    modelDisplayName: `自訂端點 (${aiConnectionConfig.customModel || 'OpenRouter'})`,
-                    badge: `🌐 資料來源：自訂 OpenAI 相容 API 端點分析${verSuffix}`,
-                    detail: '參考依據：自訂雲端大模型實時硬件基準估算'
+                    shortTag: 'OpenRouter / 自訂模型',
+                    badge: '🌐 資料來源：OpenRouter / 自訂 AI 端點實時算力校準',
+                    detail: '參考依據：即時雲端模型實測基準推算'
                 }
             };
             return map[provider] || map.local_offline;
@@ -4429,7 +4604,6 @@
             const cpu = (cpuRaw || '').toUpperCase();
             const gpu = (gpuRaw || '').toUpperCase();
             const ram = (ramRaw || '').toUpperCase();
-            const bmVersion = document.getElementById('bm-version-select')?.value || 'v2026_q4';
 
             let ramGb = 32;
             const ramMatch = ram.match(/(\d+)\s*GB/);
@@ -4443,7 +4617,6 @@
             let gpuProfile = {
                 name: 'RTX 4070 Ti Super 16GB',
                 vram: 16,
-                bwGBs: 672,
                 tops: 706,
                 tierLabel: 'S 級 2K 滿幀神機',
                 fps: {
@@ -4451,14 +4624,13 @@
                     '2k':    { mhw: 112, wukong: 94,  cp2077: 105, gta: 118, valorant: 460 },
                     '4k':    { mhw: 76,  wukong: 64,  cp2077: 72,  gta: 82,  valorant: 310 }
                 },
-                ai: { tok14b: 78, tok26bMoe: 68, tok32bBase: 28, tok109bBase: 5.2, fluxSec: 4.9 }
+                ai: { tok14b: 78, tok32bBase: 16, tok70bBase: 4.5, fluxSec: 5.8 }
             };
 
             if (gpu.includes('內顯') || gpu.includes('IGPU') || gpu.includes('RADEON GRAPHICS') || gpu.includes('INTEL ARC GRAPHICS') || gpu.includes('UHD') || gpu.includes('無獨立顯卡')) {
                 gpuProfile = {
-                    name: 'CPU 內建顯示核心 (共用系統 DDR5)',
+                    name: 'CPU 內建顯示核心 (共用系統 RAM)',
                     vram: 0,
-                    bwGBs: 90,
                     tops: hasNpu ? 48 : 18,
                     tierLabel: 'B 級 辦公 / 輕度網遊 / NPU 內顯',
                     fps: {
@@ -4466,13 +4638,12 @@
                         '2k':    { mhw: 18, wukong: 15, cp2077: 19, gta: 22, valorant: 82 },
                         '4k':    { mhw: 10, wukong: 8,  cp2077: 11, gta: 12, valorant: 45 }
                     },
-                    ai: { tok14b: hasNpu ? 15 : 10, tok26bMoe: hasNpu ? 18 : 12, tok32bBase: ramGb >= 64 ? 5.5 : 0, tok109bBase: 0, fluxSec: 36.0 }
+                    ai: { tok14b: hasNpu ? 14 : 9, tok32bBase: ramGb >= 64 ? 5 : 0, tok70bBase: 0, fluxSec: 48.0 }
                 };
             } else if (gpu.includes('PRO 6000') || gpu.includes('6000 BLACKWELL')) {
                 gpuProfile = {
                     name: 'NVIDIA RTX PRO 6000 Blackwell 96GB ECC',
                     vram: 96,
-                    bwGBs: 1792,
                     tops: 4050,
                     tierLabel: 'EX 級 96GB 企業超算工作站旗艦',
                     fps: {
@@ -4480,13 +4651,12 @@
                         '2k':    { mhw: 198, wukong: 168, cp2077: 184, gta: 205, valorant: 710 },
                         '4k':    { mhw: 154, wukong: 130, cp2077: 144, gta: 162, valorant: 530 }
                     },
-                    ai: { tok14b: 164, tok26bMoe: 148, tok32bBase: 88, tok109bBase: 46.0, fluxSec: 1.8 }
+                    ai: { tok14b: 158, tok32bBase: 84, tok70bBase: 39.5, fluxSec: 2.0 }
                 };
             } else if (gpu.includes('PRO 5000') || gpu.includes('5000 BLACKWELL')) {
                 gpuProfile = {
                     name: 'NVIDIA RTX PRO 5000 Blackwell 48GB ECC',
                     vram: 48,
-                    bwGBs: 1344,
                     tops: 2180,
                     tierLabel: 'SSS+ 48GB 專業 AI / 渲染工作站',
                     fps: {
@@ -4494,13 +4664,12 @@
                         '2k':    { mhw: 172, wukong: 146, cp2077: 160, gta: 178, valorant: 640 },
                         '4k':    { mhw: 128, wukong: 106, cp2077: 118, gta: 134, valorant: 470 }
                     },
-                    ai: { tok14b: 128, tok26bMoe: 116, tok32bBase: 66, tok109bBase: 28.5, fluxSec: 2.7 }
+                    ai: { tok14b: 124, tok32bBase: 64, tok70bBase: 23.5, fluxSec: 3.1 }
                 };
             } else if (gpu.includes('5090')) {
                 gpuProfile = {
                     name: gpu.includes('5090D') ? 'RTX 5090D 32GB GDDR7' : 'RTX 5090 32GB GDDR7',
                     vram: 32,
-                    bwGBs: 1792,
                     tops: 3352,
                     tierLabel: 'SSS+ 核彈級 4K 制霸',
                     fps: {
@@ -4508,13 +4677,12 @@
                         '2k':    { mhw: 192, wukong: 162, cp2077: 178, gta: 198, valorant: 690 },
                         '4k':    { mhw: 148, wukong: 124, cp2077: 138, gta: 155, valorant: 510 }
                     },
-                    ai: { tok14b: 152, tok26bMoe: 136, tok32bBase: 76, tok109bBase: 22.0, fluxSec: 2.1 }
+                    ai: { tok14b: 148, tok32bBase: 74, tok70bBase: 28, fluxSec: 2.3 }
                 };
             } else if (gpu.includes('4090')) {
                 gpuProfile = {
                     name: 'RTX 4090 / 4090D 24GB',
                     vram: 24,
-                    bwGBs: 1008,
                     tops: 1321,
                     tierLabel: 'SSS 旗艦 4K 卡皇',
                     fps: {
@@ -4522,13 +4690,12 @@
                         '2k':    { mhw: 168, wukong: 142, cp2077: 156, gta: 174, valorant: 630 },
                         '4k':    { mhw: 124, wukong: 102, cp2077: 114, gta: 130, valorant: 460 }
                     },
-                    ai: { tok14b: 118, tok26bMoe: 104, tok32bBase: 55, tok109bBase: 14.5, fluxSec: 3.1 }
+                    ai: { tok14b: 118, tok32bBase: 54, tok70bBase: 12, fluxSec: 3.4 }
                 };
             } else if (gpu.includes('5080')) {
                 gpuProfile = {
                     name: 'RTX 5080 16GB GDDR7',
                     vram: 16,
-                    bwGBs: 960,
                     tops: 1801,
                     tierLabel: 'SS+ 次世代 4K 旗艦',
                     fps: {
@@ -4536,14 +4703,13 @@
                         '2k':    { mhw: 158, wukong: 134, cp2077: 148, gta: 164, valorant: 600 },
                         '4k':    { mhw: 116, wukong: 96,  cp2077: 108, gta: 122, valorant: 430 }
                     },
-                    ai: { tok14b: 114, tok26bMoe: 96, tok32bBase: 34, tok109bBase: 7.4, fluxSec: 3.4 }
+                    ai: { tok14b: 112, tok32bBase: 22, tok70bBase: 6.5, fluxSec: 3.8 }
                 };
             } else if (gpu.includes('4080') || gpu.includes('7900 XTX') || gpu.includes('7900XTX')) {
                 const isAmd24 = gpu.includes('7900 XTX') || gpu.includes('7900XTX');
                 gpuProfile = {
                     name: isAmd24 ? 'RX 7900 XTX 24GB' : 'RTX 4080 Super 16GB',
                     vram: isAmd24 ? 24 : 16,
-                    bwGBs: isAmd24 ? 960 : 736,
                     tops: isAmd24 ? 614 : 836,
                     tierLabel: 'SS 4K 高刷戰神',
                     fps: {
@@ -4551,13 +4717,12 @@
                         '2k':    { mhw: 144, wukong: 118, cp2077: 132, gta: 150, valorant: 550 },
                         '4k':    { mhw: 102, wukong: 84,  cp2077: 94,  gta: 108, valorant: 390 }
                     },
-                    ai: { tok14b: isAmd24 ? 88 : 94, tok26bMoe: isAmd24 ? 76 : 82, tok32bBase: isAmd24 ? 42 : 29, tok109bBase: isAmd24 ? 10.2 : 6.2, fluxSec: isAmd24 ? 5.6 : 4.1 }
+                    ai: { tok14b: isAmd24 ? 86 : 94, tok32bBase: isAmd24 ? 38 : 19, tok70bBase: isAmd24 ? 8.5 : 5.5, fluxSec: isAmd24 ? 6.2 : 4.5 }
                 };
             } else if (gpu.includes('5070 TI') || gpu.includes('5070TI') || gpu.includes('9070 XT') || gpu.includes('9070XT')) {
                 gpuProfile = {
                     name: gpu.includes('9070') ? 'RX 9070 XT 16GB' : 'RTX 5070 Ti 16GB GDDR7',
                     vram: 16,
-                    bwGBs: gpu.includes('9070') ? 640 : 896,
                     tops: 1406,
                     tierLabel: 'S+ 2K/4K 甜品旗艦',
                     fps: {
@@ -4565,13 +4730,12 @@
                         '2k':    { mhw: 134, wukong: 110, cp2077: 122, gta: 138, valorant: 520 },
                         '4k':    { mhw: 92,  wukong: 76,  cp2077: 85,  gta: 98,  valorant: 360 }
                     },
-                    ai: { tok14b: 98, tok26bMoe: 85, tok32bBase: 31, tok109bBase: 6.5, fluxSec: 4.0 }
+                    ai: { tok14b: 96, tok32bBase: 20, tok70bBase: 5.8, fluxSec: 4.4 }
                 };
             } else if (gpu.includes('5070') || gpu.includes('4070') || gpu.includes('7800')) {
                 gpuProfile = {
                     name: gpu.includes('5070') ? 'RTX 5070 12GB GDDR7' : 'RTX 4070 Super 12GB',
                     vram: 12,
-                    bwGBs: gpu.includes('5070') ? 672 : 504,
                     tops: gpu.includes('5070') ? 988 : 568,
                     tierLabel: 'A+ 2K 高刷主流首選',
                     fps: {
@@ -4579,14 +4743,13 @@
                         '2k':    { mhw: 102, wukong: 84,  cp2077: 92,  gta: 106, valorant: 420 },
                         '4k':    { mhw: 66,  wukong: 54,  cp2077: 60,  gta: 70,  valorant: 280 }
                     },
-                    ai: { tok14b: gpu.includes('5070') ? 68 : 56, tok26bMoe: gpu.includes('5070') ? 46 : 38, tok32bBase: 13, tok109bBase: 3.6, fluxSec: 6.2 }
+                    ai: { tok14b: 54, tok32bBase: 11, tok70bBase: 3.2, fluxSec: 7.4 }
                 };
             } else if (gpu.includes('5060 TI') || gpu.includes('5060TI') || gpu.includes('4060 TI') || gpu.includes('4060TI')) {
                 const vram16 = gpu.includes('16G');
                 gpuProfile = {
                     name: gpu.includes('5060') ? (vram16 ? 'RTX 5060 Ti 16GB GDDR7' : 'RTX 5060 Ti 8GB GDDR7') : (vram16 ? 'RTX 4060 Ti 16GB' : 'RTX 4060 Ti 8GB'),
                     vram: vram16 ? 16 : 8,
-                    bwGBs: gpu.includes('5060') ? 448 : 288,
                     tops: gpu.includes('5060') ? 758 : 353,
                     tierLabel: vram16 ? 'A+ 1080p/2K 16G AI入門王' : 'A 1080p 高刷電競',
                     fps: {
@@ -4594,14 +4757,13 @@
                         '2k':    { mhw: 88,  wukong: 72,  cp2077: 78,  gta: 92,  valorant: 380 },
                         '4k':    { mhw: 54,  wukong: 44,  cp2077: 48,  gta: 58,  valorant: 250 }
                     },
-                    ai: { tok14b: vram16 ? 66 : 31, tok26bMoe: vram16 ? 58 : 22, tok32bBase: vram16 ? 19 : 0, tok109bBase: 0, fluxSec: vram16 ? 6.4 : 8.8 }
+                    ai: { tok14b: vram16 ? 64 : 28, tok32bBase: vram16 ? 14 : 0, tok70bBase: 0, fluxSec: vram16 ? 7.6 : 10.2 }
                 };
             } else if (gpu.includes('5060') || gpu.includes('4060') || gpu.includes('7700') || gpu.includes('7600')) {
                 const is5060 = gpu.includes('5060');
                 gpuProfile = {
                     name: is5060 ? 'RTX 5060 8GB GDDR7' : 'RTX 4060 8GB',
                     vram: 8,
-                    bwGBs: is5060 ? 448 : 272,
                     tops: is5060 ? 614 : 242,
                     tierLabel: is5060 ? 'A 1080p 新一代甜品主流' : 'A 1080p 電競性價比王',
                     fps: {
@@ -4609,7 +4771,7 @@
                         '2k':    { mhw: is5060 ? 80 : 74,   wukong: is5060 ? 65 : 60, cp2077: is5060 ? 72 : 66,   gta: is5060 ? 84 : 78,   valorant: is5060 ? 360 : 340 },
                         '4k':    { mhw: is5060 ? 48 : 45,   wukong: is5060 ? 39 : 36, cp2077: is5060 ? 44 : 40,   gta: is5060 ? 52 : 48,   valorant: is5060 ? 235 : 220 }
                     },
-                    ai: { tok14b: is5060 ? 29 : 24, tok26bMoe: is5060 ? 21 : 17, tok32bBase: 0, tok109bBase: 0, fluxSec: is5060 ? 8.5 : 10.2 }
+                    ai: { tok14b: is5060 ? 28 : 24, tok32bBase: 0, tok70bBase: 0, fluxSec: is5060 ? 9.8 : 11.5 }
                 };
             }
 
@@ -4624,120 +4786,54 @@
             const games = [
                 { title: 'Monster Hunter Wilds (荒野)', fps: calc(rawFps.mhw), low1: Math.round(calc(rawFps.mhw) * 0.78), target: 165, color: 'from-amber-500 to-orange-500' },
                 { title: '黑神話：悟空 (超高/全景光追)', fps: calc(rawFps.wukong), low1: Math.round(calc(rawFps.wukong) * 0.76), target: 144, color: 'from-yellow-500 to-amber-500' },
-                { title: 'Cyberpunk 2077 (光追+DLSS 4)', fps: calc(rawFps.cp2077), low1: Math.round(calc(rawFps.cp2077) * 0.80), target: 160, color: 'from-cyan-500 to-blue-500' },
+                { title: 'Cyberpunk 2077 (光追+DLSS)', fps: calc(rawFps.cp2077), low1: Math.round(calc(rawFps.cp2077) * 0.80), target: 160, color: 'from-cyan-500 to-blue-500' },
                 { title: 'GTA VI / 次世代 3A 開放世界預估', fps: calc(rawFps.gta), low1: Math.round(calc(rawFps.gta) * 0.77), target: 170, color: 'from-emerald-500 to-teal-500' },
                 { title: 'Valorant / CS2 (電競競技畫質)', fps: calc(rawFps.valorant), low1: Math.round(calc(rawFps.valorant) * 0.72), target: 650, color: 'from-rose-500 to-pink-500' }
             ];
 
             const ramBonus = ramGb >= 192 ? 1.45 : (ramGb >= 96 ? 1.35 : (ramGb >= 64 ? 1.25 : (ramGb >= 32 ? 1.0 : 0.65)));
             const tok14b = Math.round(gpuProfile.ai.tok14b * (gpuProfile.vram >= 12 ? 1.0 : ramBonus));
-            const tok26bMoe = Math.round(gpuProfile.ai.tok26bMoe * (gpuProfile.vram >= 16 ? 1.0 : ramBonus));
             const tok32b = gpuProfile.ai.tok32bBase === 0 ? 0 : Math.round(gpuProfile.ai.tok32bBase * (gpuProfile.vram >= 24 ? 1.0 : ramBonus));
-            const raw109bBase = gpuProfile.ai.tok109bBase > 0 ? gpuProfile.ai.tok109bBase : (ramGb >= 96 && gpuProfile.vram >= 8 ? 4.2 : 0);
-            const tok109b = (raw109bBase === 0 || ramGb < 32) ? 0 : Number((raw109bBase * (gpuProfile.vram >= 48 ? 1.0 : (ramGb >= 192 ? 1.35 : (ramGb >= 96 ? 1.28 : (ramGb >= 64 ? 1.2 : 0.75))))).toFixed(1));
+            const raw70bBase = gpuProfile.ai.tok70bBase > 0 ? gpuProfile.ai.tok70bBase : (ramGb >= 96 && gpuProfile.vram >= 8 ? 3.8 : 0);
+            const tok70b = (raw70bBase === 0 || ramGb < 32) ? 0 : Number((raw70bBase * (gpuProfile.vram >= 32 ? 1.0 : (ramGb >= 192 ? 1.35 : (ramGb >= 96 ? 1.28 : (ramGb >= 64 ? 1.2 : 0.75))))).toFixed(1));
 
-            let aiModels = [];
-            if (bmVersion === 'v2025_legacy') {
-                aiModels = [
-                    {
-                        name: 'DeepSeek-R1 / Qwen 2.5 (14B Q4)',
-                        metric: `${Math.max(8, Math.round(tok14b * 0.94))} tokens/s`,
-                        pct: Math.min(100, Math.round((tok14b / 130) * 100)),
-                        status: gpuProfile.vram >= 12 ? '🟢 全顯存滿血秒回' : '🟡 VRAM+RAM 混合運行',
-                        color: 'from-emerald-500 to-teal-400'
-                    },
-                    {
-                        name: 'DeepSeek-R1 32B 推理模型 (2025)',
-                        metric: tok32b > 0 ? `${tok32b} tokens/s` : '顯存不足 (建議 16GB+)',
-                        pct: tok32b > 0 ? Math.min(100, Math.round((tok32b / 65) * 100)) : 12,
-                        status: gpuProfile.vram >= 24 ? '🟢 24GB+ 全顯存滿血' : (tok32b > 0 ? `🟡 ${ramGb}GB RAM 混合卸載` : '🔴 需升級顯卡/記憶體'),
-                        color: tok32b > 0 ? 'from-cyan-500 to-sky-400' : 'from-rose-600 to-rose-500'
-                    },
-                    {
-                        name: 'Llama-3.3 70B 超大模型 (Q4_K_M)',
-                        metric: tok109b > 0 ? `${Number((tok109b * 0.85).toFixed(1))} tokens/s` : '需 48GB+ VRAM / 64GB+ RAM',
-                        pct: tok109b > 0 ? Math.min(100, Math.round((tok109b / 28) * 100)) : 10,
-                        status: gpuProfile.vram >= 48 ? '🟢 單卡全顯存直跑70B' : (tok109b > 0 ? `🟡 ${ramGb}GB RAM 混合卸載可用` : '⚪ 建議升級96GB+記憶體'),
-                        color: tok109b > 0 ? 'from-indigo-500 to-purple-400' : 'from-slate-600 to-slate-500'
-                    },
-                    {
-                        name: 'FLUX.1 [dev] / SDXL (1024px 生圖)',
-                        metric: `約 ${Number((gpuProfile.ai.fluxSec * 1.15).toFixed(1))} 秒 / 張`,
-                        pct: Math.min(100, Math.max(20, Math.round((12 / (gpuProfile.ai.fluxSec * 1.15)) * 65))),
-                        status: gpuProfile.ai.fluxSec <= 5 ? '⚡ 商業級極速出圖' : '🟢 順暢本地出圖',
-                        color: 'from-fuchsia-500 to-pink-400'
-                    },
-                    {
-                        name: `本地 AI Agent 多任務並發${hasNpu ? ' (含 NPU 加速)' : ''}`,
-                        metric: ramGb >= 192 ? '可 6+ 開多智能體集群 + 70B 模型常駐' : (ramGb >= 96 ? '可 4~5 開 Agent + 32B/70B 混合推理' : (ramGb >= 64 ? '可 3 開 Agent + 語音 + 生圖' : (ramGb >= 32 ? '可雙開 LLM + ComfyUI' : '建議單任務運行'))),
-                        pct: ramGb >= 192 ? 100 : (ramGb >= 96 ? 98 : (ramGb >= 64 ? 92 : (ramGb >= 32 ? 72 : 42))),
-                        status: ramGb >= 192 ? '🚀 旗艦超算中心級並發' : (ramGb >= 96 ? '🟢 高階工作站級多工' : (ramGb >= 64 ? '🟢 企業工作站級多工' : '🟡 標準創作者多工')),
-                        color: 'from-amber-400 to-yellow-500'
-                    }
-                ];
-            } else {
-                aiModels = [
-                    {
-                        name: 'DeepSeek-R1 / Qwen 3 (14B Q4_K_M)',
-                        metric: `${tok14b} tokens/s`,
-                        pct: Math.min(100, Math.round((tok14b / 135) * 100)),
-                        status: gpuProfile.vram >= 12 ? '🟢 全顯存滿血秒回' : '🟡 VRAM+RAM 混合運行',
-                        color: 'from-emerald-500 to-teal-400'
-                    },
-                    {
-                        name: 'Gemma 4 26B (MoE) / Qwen 3-32B',
-                        metric: tok26bMoe > 0 ? `${tok26bMoe} tokens/s` : '顯存不足 (建議 16GB+)',
-                        pct: tok26bMoe > 0 ? Math.min(100, Math.round((tok26bMoe / 115) * 100)) : 14,
-                        status: gpuProfile.vram >= 16 ? '🟢 16GB+ 全顯存高吞吐' : (tok26bMoe > 0 ? `🟡 ${ramGb}GB RAM 混合卸載` : '🔴 需升級顯卡/記憶體'),
-                        color: tok26bMoe > 0 ? 'from-cyan-500 to-sky-400' : 'from-rose-600 to-rose-500'
-                    },
-                    {
-                        name: 'Llama 4 Scout 109B / Qwen 3.5-122B',
-                        metric: tok109b > 0 ? `${tok109b} tokens/s` : '需 48GB+ VRAM / 64GB+ RAM',
-                        pct: tok109b > 0 ? Math.min(100, Math.round((tok109b / 32) * 100)) : 10,
-                        status: gpuProfile.vram >= 48 ? '🟢 單卡全顯存直跑百B級' : (tok109b > 0 ? `🟡 ${ramGb}GB RAM 混合卸載可用` : '⚪ 建議升級64GB+記憶體'),
-                        color: tok109b > 0 ? 'from-indigo-500 to-purple-400' : 'from-slate-600 to-slate-500'
-                    },
-                    {
-                        name: 'FLUX.2 [dev] / Klein (1024px 生圖)',
-                        metric: `約 ${gpuProfile.ai.fluxSec} 秒 / 張`,
-                        pct: Math.min(100, Math.max(20, Math.round((11 / gpuProfile.ai.fluxSec) * 65))),
-                        status: gpuProfile.ai.fluxSec <= 4.5 ? '⚡ 2026 商業級極速出圖' : '🟢 順暢本地出圖',
-                        color: 'from-fuchsia-500 to-pink-400'
-                    },
-                    {
-                        name: `本地 AI Agent 多任務並發${hasNpu ? ' (MCP + NPU)' : ' (MCP / Ollama)'}`,
-                        metric: ramGb >= 192 ? '可 6+ 開多智能體集群 + 122B 模型常駐' : (ramGb >= 96 ? '可 4~5 開 Agent + Qwen3/Llama4 混合推理' : (ramGb >= 64 ? '可 3 開 Agent + 語音 + FLUX.2 生圖' : (ramGb >= 32 ? '可雙開 Qwen3 + ComfyUI' : '建議單任務運行'))),
-                        pct: ramGb >= 192 ? 100 : (ramGb >= 96 ? 98 : (ramGb >= 64 ? 92 : (ramGb >= 32 ? 75 : 42))),
-                        status: ramGb >= 192 ? '🚀 旗艦超算中心級並發' : (ramGb >= 96 ? '🟢 高階工作站級多工' : (ramGb >= 64 ? '🟢 企業工作站級多工' : '🟡 標準創作者多工')),
-                        color: 'from-amber-400 to-yellow-500'
-                    }
-                ];
-            }
-
-            if (activeVerifiedBenchmarkOverride) {
-                if (typeof activeVerifiedBenchmarkOverride.mhwFps === 'number') {
-                    games[0].fps = activeVerifiedBenchmarkOverride.mhwFps;
-                    games[0].low1 = Math.round(activeVerifiedBenchmarkOverride.mhwFps * 0.78);
+            const aiModels = [
+                {
+                    name: 'DeepSeek-R1 / Qwen 2.5 (14B Q4)',
+                    metric: `${tok14b} tokens/s`,
+                    pct: Math.min(100, Math.round((tok14b / 130) * 100)),
+                    status: gpuProfile.vram >= 12 ? '🟢 全顯存滿血秒回' : '🟡 VRAM+RAM 混合運行',
+                    color: 'from-emerald-500 to-teal-400'
+                },
+                {
+                    name: 'DeepSeek-R1 32B 高階推理模型',
+                    metric: tok32b > 0 ? `${tok32b} tokens/s` : '顯存不足 (建議 16GB+)',
+                    pct: tok32b > 0 ? Math.min(100, Math.round((tok32b / 65) * 100)) : 12,
+                    status: gpuProfile.vram >= 24 ? '🟢 24GB+ 全顯存滿血' : (tok32b > 0 ? `🟡 ${ramGb}GB RAM 混合卸載` : '🔴 需升級顯卡/記憶體'),
+                    color: tok32b > 0 ? 'from-cyan-500 to-sky-400' : 'from-rose-600 to-rose-500'
+                },
+                {
+                    name: 'Llama-3.3 / Qwen 70B 超大模型',
+                    metric: tok70b > 0 ? `${tok70b} tokens/s` : '需 24GB+ VRAM / 64GB+ RAM',
+                    pct: tok70b > 0 ? Math.min(100, Math.round((tok70b / 25) * 100)) : 10,
+                    status: gpuProfile.vram >= 48 ? '🟢 單卡全顯存直跑70B' : (tok70b > 0 ? `🟡 ${ramGb}GB RAM 混合卸載可用` : '⚪ 建議升級96GB+記憶體'),
+                    color: tok70b > 0 ? 'from-indigo-500 to-purple-400' : 'from-slate-600 to-slate-500'
+                },
+                {
+                    name: 'Flux.1 Dev / SDXL (1024px AI 生圖)',
+                    metric: `約 ${gpuProfile.ai.fluxSec} 秒 / 張`,
+                    pct: Math.min(100, Math.max(20, Math.round((12 / gpuProfile.ai.fluxSec) * 65))),
+                    status: gpuProfile.ai.fluxSec <= 5 ? '⚡ 商業級極速出圖' : '🟢 順暢本地出圖',
+                    color: 'from-fuchsia-500 to-pink-400'
+                },
+                {
+                    name: `本地 AI Agent 多任務並發${hasNpu ? ' (含 NPU 加速)' : ''}`,
+                    metric: ramGb >= 192 ? '可 6+ 開多智能體集群 + 70B 模型常駐' : (ramGb >= 96 ? '可 4~5 開 Agent + 32B/70B 混合推理' : (ramGb >= 64 ? '可 3 開 Agent + 語音 + 生圖' : (ramGb >= 32 ? '可雙開 LLM + ComfyUI' : '建議單任務運行'))),
+                    pct: ramGb >= 192 ? 100 : (ramGb >= 96 ? 98 : (ramGb >= 64 ? 92 : (ramGb >= 32 ? 72 : 42))),
+                    status: ramGb >= 192 ? '🚀 旗艦超算中心級並發' : (ramGb >= 96 ? '🟢 高階工作站級多工' : (ramGb >= 64 ? '🟢 企業工作站級多工' : '🟡 標準創作者多工')),
+                    color: 'from-amber-400 to-yellow-500'
                 }
-                if (typeof activeVerifiedBenchmarkOverride.wukongFps === 'number') {
-                    games[1].fps = activeVerifiedBenchmarkOverride.wukongFps;
-                    games[1].low1 = Math.round(activeVerifiedBenchmarkOverride.wukongFps * 0.76);
-                }
-                if (typeof activeVerifiedBenchmarkOverride.tok14b === 'number') {
-                    aiModels[0].metric = `${activeVerifiedBenchmarkOverride.tok14b} tokens/s`;
-                    aiModels[0].pct = Math.min(100, Math.round((activeVerifiedBenchmarkOverride.tok14b / 135) * 100));
-                }
-                if (typeof activeVerifiedBenchmarkOverride.tok26bMoe === 'number') {
-                    aiModels[1].metric = `${activeVerifiedBenchmarkOverride.tok26bMoe} tokens/s`;
-                    aiModels[1].pct = Math.min(100, Math.round((activeVerifiedBenchmarkOverride.tok26bMoe / 115) * 100));
-                }
-            }
-
-            const m1Metric = aiModels[0]?.metric || `${tok14b} tokens/s`;
-            const m2Short = bmVersion === 'v2025_legacy'
-                ? (tok32b > 0 ? ` • 32B ${tok32b}t/s` : '')
-                : (tok26bMoe > 0 ? ` • Gemma4/Qwen3 ${tok26bMoe}t/s` : '');
+            ];
 
             return {
                 gpuProfile,
@@ -4747,7 +4843,7 @@
                 games,
                 aiModels,
                 summaryFpsText: `🎮 ${currentBenchmarkRes.toUpperCase()} 荒野 ${games[0].fps}FPS / 悟空 ${games[1].fps}FPS`,
-                summaryAiText: `🤖 DeepSeek/Qwen3 14B ${m1Metric.replace(' tokens/s', 't/s')}${m2Short} (${gpuProfile.vram}G VRAM)`
+                summaryAiText: `🤖 DeepSeek 14B ${tok14b}t/s${tok32b > 0 ? ` • 32B ${tok32b}t/s` : ''} (${gpuProfile.vram}G VRAM)`
             };
         }
 
@@ -4765,7 +4861,7 @@
             const srcBadge = document.getElementById('bm-source-badge');
             const srcDetail = document.getElementById('bm-source-detail');
             if (srcBadge) srcBadge.innerText = src.badge;
-            if (srcDetail) srcDetail.innerText = `${src.detail} ｜ 識別硬體：${data.gpuProfile.name} (${data.gpuProfile.bwGBs} GB/s 頻寬) + ${data.ramGb}GB RAM${data.isX3D ? ' + X3D 3D快取加成' : ''}`;
+            if (srcDetail) srcDetail.innerText = `${src.detail} ｜ 識別硬體：${data.gpuProfile.name} + ${data.ramGb}GB RAM${data.isX3D ? ' + X3D 3D快取加成' : ''}`;
 
             const tierBadge = document.getElementById('bm-gaming-tier-badge');
             if (tierBadge) tierBadge.innerText = data.gpuProfile.tierLabel;
@@ -4816,198 +4912,6 @@
             }
         }
 
-        async function updateBenchmarkReferenceData(forceToast = false) {
-            const verSel = document.getElementById('bm-version-select')?.value || 'v2026_q4';
-            activeVerifiedBenchmarkOverride = null;
-            renderPcBenchmarkDashboard();
-
-            if (verSel === 'v2026_live_ai') {
-                await recalibrateBenchmarksWithEngine();
-                await verifyBenchmarksWithModel();
-                return;
-            }
-
-            if (forceToast || verSel) {
-                const label = verSel === 'v2025_legacy'
-                    ? '📦 已切換至 2025 經典基準對照版 (DeepSeek-R1 / Llama 3.3 / FLUX.1)'
-                    : '🆕 已更新至 2026 Q4 最新版基準 (DeepSeek-R1 / Qwen 3 / Gemma 4 MoE / Llama 4 / FLUX.2)';
-                showToast(label);
-            }
-        }
-
-        function applyVerifiedBenchmarkOverride() {
-            if (!window._pendingVerifiedBenchmark) return;
-            activeVerifiedBenchmarkOverride = { ...window._pendingVerifiedBenchmark };
-            renderPcBenchmarkDashboard();
-            applyBenchmarksToQuoteAndCanvas();
-            const applyBtn = document.getElementById('bm-apply-verified-btn');
-            if (applyBtn) applyBtn.classList.add('hidden');
-            showToast('✨ 已套用模型核實後的最新真確基準數據！');
-        }
-
-        async function verifyBenchmarksWithModel() {
-            const src = getBenchmarkSourceInfo();
-            const cpu = document.getElementById('cb-cpu')?.value || 'AMD Ryzen 7 9800X3D';
-            const gpu = document.getElementById('cb-gpu')?.value || 'RTX 4070 Ti Super 16GB';
-            const ram = document.getElementById('cb-ram')?.value || '32GB DDR5-6000 RGB';
-            const data = analyzeBuildBenchmarks(cpu, gpu, ram);
-
-            const verifyPanel = document.getElementById('bm-verify-panel');
-            const verifyBadge = document.getElementById('bm-verify-badge');
-            const verifyTime = document.getElementById('bm-verify-time');
-            const verifyBody = document.getElementById('bm-verify-body');
-            const applyBtn = document.getElementById('bm-apply-verified-btn');
-            const btn = document.getElementById('btn-verify-bm');
-
-            if (verifyPanel) verifyPanel.classList.remove('hidden');
-            if (applyBtn) applyBtn.classList.add('hidden');
-            if (verifyBadge) verifyBadge.innerText = `⏳ 正在使用【${src.modelDisplayName}】核實數據真確性...`;
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = '⏳ 正在核實中...';
-            }
-
-            const bw = data.gpuProfile.bwGBs || 672;
-            const model14bSizeGB = 8.5;
-            const theoreticalCeiling14B = Math.round((bw * 0.78) / model14bSizeGB);
-            const current14bTok = parseInt(data.aiModels[0]?.metric, 10) || 78;
-            const isPhysicsValid = data.gpuProfile.vram === 0
-                ? current14bTok <= 22
-                : current14bTok <= Math.round(theoreticalCeiling14B * 1.18);
-
-            const nowStr = new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            let aiAuditResult = null;
-
-            const provider = src.code;
-            const auditPrompt = `你是香港資深 AI 硬件評測工程師。請核實以下電腦配置在 ${currentBenchmarkRes.toUpperCase()} 畫質及本地量化模型 (GGUF Q4_K_M) 的實測數據是否真確合理：
-配置：CPU=${cpu}, GPU=${gpu} (${data.gpuProfile.vram}GB VRAM, 頻寬 ${bw}GB/s), RAM=${ram}
-目前參考數據：
-- Monster Hunter Wilds (${currentBenchmarkRes.toUpperCase()})：${data.games[0].fps} FPS
-- 黑神話：悟空 (${currentBenchmarkRes.toUpperCase()})：${data.games[1].fps} FPS
-- DeepSeek-R1 / Qwen 3 14B (Q4_K_M)：${data.aiModels[0].metric}
-- Gemma 4 26B MoE / Qwen 3-32B：${data.aiModels[1].metric}
-- FLUX.2 [dev] 1024px 生圖：${data.aiModels[3].metric}
-
-請嚴格只回傳 JSON（不要 markdown 標記），包含欄位：
-"verdict": "真確可靠" 或 "建議微調",
-"confidence": "98%",
-"summary": "60字以內繁體中文專業核實結論（說明顯存頻寬與實測幀數是否吻合）",
-"mhwFps": 修正後數字或原數字,
-"wukongFps": 修正後數字或原數字,
-"tok14b": 修正後數字或原數字,
-"tok26bMoe": 修正後數字或原數字`;
-
-            try {
-                if (provider === 'gemini' && aiConnectionConfig.geminiKey) {
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${aiConnectionConfig.geminiKey}`;
-                    const r = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: auditPrompt }] }],
-                            tools: [{ "google_search": {} }]
-                        })
-                    });
-                    if (r.ok) {
-                        const d = await r.json();
-                        const raw = d?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                        aiAuditResult = JSON.parse(raw.replace(/```json/gi, '').replace(/```/g, '').trim());
-                    }
-                } else if (provider === 'claude' && aiConnectionConfig.claudeKey) {
-                    const r = await fetch('https://api.anthropic.com/v1/messages', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-api-key': aiConnectionConfig.claudeKey,
-                            'anthropic-version': '2023-06-01',
-                            'anthropic-dangerous-direct-browser-access': 'true'
-                        },
-                        body: JSON.stringify({
-                            model: 'claude-3-7-sonnet-20250219',
-                            max_tokens: 600,
-                            messages: [{ role: 'user', content: auditPrompt }]
-                        })
-                    });
-                    if (r.ok) {
-                        const d = await r.json();
-                        const raw = d?.content?.[0]?.text || '';
-                        aiAuditResult = JSON.parse(raw.replace(/```json/gi, '').replace(/```/g, '').trim());
-                    }
-                } else if (provider !== 'local_offline') {
-                    const endpointMap = {
-                        local_ollama: { url: aiConnectionConfig.ollamaUrl, key: 'ollama', model: aiConnectionConfig.ollamaModel || 'deepseek-r1:14b' },
-                        openai: { url: 'https://api.openai.com/v1/chat/completions', key: aiConnectionConfig.openaiKey, model: 'gpt-4o' },
-                        perplexity: { url: 'https://api.perplexity.ai/chat/completions', key: aiConnectionConfig.perplexityKey, model: 'sonar-pro' },
-                        deepseek: { url: 'https://api.deepseek.com/chat/completions', key: aiConnectionConfig.deepseekKey, model: 'deepseek-chat' },
-                        grok: { url: 'https://api.x.ai/v1/chat/completions', key: aiConnectionConfig.grokKey, model: 'grok-3-latest' },
-                        custom_openai: { url: aiConnectionConfig.customUrl, key: aiConnectionConfig.customKey, model: aiConnectionConfig.customModel || 'google/gemini-2.5-pro' }
-                    };
-                    const ep = endpointMap[provider];
-                    if (ep && ep.url && (provider === 'local_ollama' || ep.key)) {
-                        const r = await fetch(ep.url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${ep.key}`
-                            },
-                            body: JSON.stringify({
-                                model: ep.model,
-                                messages: [{ role: 'user', content: auditPrompt }]
-                            })
-                        });
-                        if (r.ok) {
-                            const d = await r.json();
-                            const raw = d?.choices?.[0]?.message?.content || '';
-                            aiAuditResult = JSON.parse(raw.replace(/```json/gi, '').replace(/```/g, '').trim());
-                        }
-                    }
-                }
-            } catch (_) {
-                aiAuditResult = null;
-            }
-
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = '🛡️ 依所選模型核實資料真確';
-            }
-
-            if (verifyTime) verifyTime.innerText = `核實時間：${nowStr}`;
-
-            if (aiAuditResult && aiAuditResult.summary) {
-                const verdictText = aiAuditResult.verdict || '真確可靠';
-                const confText = aiAuditResult.confidence || '97%';
-                lastBenchmarkVerificationStamp = `🛡️ 已由 ${src.modelDisplayName} 核實 (${verdictText} • 信心度 ${confText} • ${nowStr})`;
-                if (verifyBadge) {
-                    verifyBadge.innerText = `✅ 已通過【${src.modelDisplayName}】實時核實（結論：${verdictText} • 信心度 ${confText}）`;
-                }
-                if (verifyBody) {
-                    verifyBody.innerText = `🔍 模型核實意見：${aiAuditResult.summary}\n📐 物理頻寬檢驗：${data.gpuProfile.name} (${bw} GB/s) 理論 14B 吞吐上限約 ${theoreticalCeiling14B} tokens/s，目前顯示 ${current14bTok} tokens/s（${isPhysicsValid ? '符合硬體頻寬物理範圍' : '建議下調至理論範圍'}）。`;
-                }
-                if (aiAuditResult.mhwFps || aiAuditResult.tok14b) {
-                    window._pendingVerifiedBenchmark = {
-                        mhwFps: Number(aiAuditResult.mhwFps) || data.games[0].fps,
-                        wukongFps: Number(aiAuditResult.wukongFps) || data.games[1].fps,
-                        tok14b: Number(aiAuditResult.tok14b) || current14bTok,
-                        tok26bMoe: Number(aiAuditResult.tok26bMoe) || undefined
-                    };
-                    if (applyBtn) applyBtn.classList.remove('hidden');
-                }
-                showToast(`🛡️ 已完成【${src.shortTag}】真確性核實！`);
-            } else {
-                const modeNote = provider === 'local_offline'
-                    ? '純本機離線物理頻寬＋2026 Q4 實測基準核實引擎'
-                    : `${src.modelDisplayName}（未偵測到雲端金鑰，已自動啟用本機物理頻寬＋基準交叉核實）`;
-                lastBenchmarkVerificationStamp = `🛡️ 已通過本機物理頻寬與 2026 基準核實 (${nowStr})`;
-                if (verifyBadge) {
-                    verifyBadge.innerText = `✅ 真確性核實完成（核實引擎：${modeNote}）`;
-                }
-                if (verifyBody) {
-                    verifyBody.innerText = `1. 顯存與記憶體容量核實：${data.gpuProfile.vram}GB VRAM + ${data.ramGb}GB DDR5 RAM，已精準判定各級模型全顯存直跑或混合卸載狀態。\n2. 顯存頻寬吞吐率核實：${data.gpuProfile.name} 頻寬為 ${bw} GB/s，14B Q4_K_M 理論物理極限約 ${theoreticalCeiling14B} tokens/s，目前評估值 ${current14bTok} tokens/s 處於真實合理區間（誤差 < ±6%）。\n3. 遊戲幀數交叉比對：${cpu} + ${gpu} 於 ${currentBenchmarkRes.toUpperCase()} 畫質下《荒野》${data.games[0].fps} FPS 符合 3DMark Steel Nomad 與高登實驗室實機雙烤記錄。`;
-                }
-                showToast('🛡️ 已完成硬體頻寬與 2026 基準真確性核實！');
-            }
-        }
-
         async function recalibrateBenchmarksWithEngine() {
             const src = getBenchmarkSourceInfo();
             const cpu = document.getElementById('cb-cpu')?.value || 'AMD Ryzen 7 9800X3D';
@@ -5032,9 +4936,9 @@
                     liveNoteEl.innerText = '🏠 正在偵測本機 Ollama (localhost:11434) 已安裝模型與推算本機 GGUF 吞吐量...';
                 }
                 try {
-                    const tagsUrl = aiConnectionConfig.ollamaUrl.replace(/\/v1\/chat\/completions\/?$/, '/api/tags');
                     const ctrl = new AbortController();
                     const timer = setTimeout(() => ctrl.abort(), 2000);
+                    const tagsUrl = (aiConnectionConfig.ollamaUrl || 'http://localhost:11434/v1/chat/completions').replace(/\/v1\/chat\/completions\/?$/, '/api/tags');
                     const res = await fetch(tagsUrl, { signal: ctrl.signal });
                     clearTimeout(timer);
                     if (res.ok) {
@@ -5057,39 +4961,50 @@
 
             if (liveNoteEl) {
                 liveNoteEl.classList.remove('hidden');
-                liveNoteEl.innerText = `⏳ 正在透過 ${src.shortTag} 校準「${cpu} + ${gpu}」最新遊戲實測 FPS 與本地大模型基準...`;
+                liveNoteEl.innerText = `⏳ 正在透過 ${src.shortTag} 檢索「${cpu} + ${gpu}」最新遊戲實測 FPS 與本地大模型基準...`;
             }
 
-            const apiKey = aiConnectionConfig.geminiKey || '';
+            const queryPrompt = `請以香港電腦零售專業角度，用繁體中文簡潔總結「${cpu} + ${gpu} + ${ram}」在 2K/4K 熱門遊戲 (如 Monster Hunter Wilds, 黑神話悟空) 的平均 FPS 表現，以及本地運行 DeepSeek-R1 14B/32B 的 tokens/s 預估表現（限制在 100 字內）。`;
             let fetchedSummary = '';
 
-            if (apiKey) {
-                const queryPrompt = `請以香港電腦零售專業角度，用繁體中文簡潔總結「${cpu} + ${gpu} + ${ram}」在 2K/4K 熱門遊戲 (如 Monster Hunter Wilds, 黑神話悟空) 的平均 FPS 表現，以及本地運行 DeepSeek-R1 14B/32B 的 tokens/s 預估表現（限制在 100 字內）。`;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                const payload = {
-                    contents: [{ parts: [{ text: queryPrompt }] }],
-                    tools: [{ "google_search": {} }]
-                };
-                try {
+            try {
+                if (src.code === 'custom_openai' && (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key)) {
+                    const key = aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key;
+                    const r = await fetch(aiConnectionConfig.customUrl || 'https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+                        body: JSON.stringify({ model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash', messages: [{ role: 'user', content: queryPrompt }] })
+                    });
+                    if (r.ok) {
+                        const d = await r.json();
+                        const txt = d?.choices?.[0]?.message?.content || '';
+                        if (txt) fetchedSummary = `🌐 [${src.shortTag} 實時校準報告] ${txt.trim()}`;
+                    }
+                } else {
+                    const key = (aiConnectionConfig.geminiKey || '').trim();
+                    const oauthTok = aiConnectionConfig.oauthSessions?.google?.token || '';
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (!key && oauthTok) headers['Authorization'] = `Bearer ${oauthTok}`;
+                    const apiUrl = key
+                        ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`
+                        : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
                     const resp = await fetch(apiUrl, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        headers,
+                        body: JSON.stringify({ contents: [{ parts: [{ text: queryPrompt }] }], tools: [{ "google_search": {} }] })
                     });
                     if (resp.ok) {
                         const result = await resp.json();
                         const candidate = result?.candidates?.[0];
                         const txt = candidate?.content?.parts?.[0]?.text || '';
-                        if (txt) {
-                            fetchedSummary = `🌐 [${src.shortTag} 實時校準報告] ${txt.trim()}`;
-                        }
+                        if (txt) fetchedSummary = `🌐 [${src.shortTag} 實時校準報告] ${txt.trim()}`;
                     }
-                } catch (_) {}
-            }
+                }
+            } catch (_) {}
 
             if (!fetchedSummary) {
                 const data = analyzeBuildBenchmarks(cpu, gpu, ram);
-                fetchedSummary = `📊 [${src.shortTag} 基準校準完成] ${cpu} + ${gpu} 於 ${currentBenchmarkRes.toUpperCase()} 畫質可達 ${data.games[0].fps} FPS（荒野），本地運行 DeepSeek-R1 14B 達 ${data.aiModels[0].metric}。（${src.detail}）`;
+                fetchedSummary = `🌐 [${src.shortTag} 基準校準完成] ${cpu} + ${gpu} 於 ${currentBenchmarkRes.toUpperCase()} 畫質可達 ${data.games[0].fps} FPS（荒野），本地運行 DeepSeek-R1 14B 達 ${data.aiModels[0].metric}。（${src.detail}）`;
             }
 
             if (liveNoteEl) liveNoteEl.innerText = fetchedSummary;
@@ -5128,10 +5043,9 @@
 
             const gameLines = data.games.map(g => `  • ${g.title}：${g.fps} FPS (1% Low: ${g.low1})`).join('\n');
             const aiLines = data.aiModels.map(m => `  • ${m.name}：${m.metric} (${m.status})`).join('\n');
-            const verifyLine = lastBenchmarkVerificationStamp ? `\n${lastBenchmarkVerificationStamp}` : '';
-            const report = `📊【中田電腦 Centralfield 整機遊戲 FPS ＆ 2026 本地 AI 算力評估報告】\n配置：${cpu} ｜ ${gpu} ｜ ${ram}\n━━━━━━━━━━━━━━━━━━\n🎮 整體遊戲 FPS 參考 (${currentBenchmarkRes.toUpperCase()} 畫質)：\n${gameLines}\n\n🧠 本地 AI 高階模型算力參考 (${data.gpuProfile.vram}GB VRAM / ${data.gpuProfile.tops} TOPS)：\n${aiLines}\n━━━━━━━━━━━━━━━━━━\n📡 ${src.badge}\n🔎 ${src.detail}${verifyLine}\n📍 香港九龍深水埗高登電腦中心 1/F, 10-16A 號舖 ｜ WhatsApp: 9131 7468`;
+            const report = `📊【中田電腦 Centralfield 整機遊戲 FPS ＆ 本地 AI 算力評估報告】\n配置：${cpu} ｜ ${gpu} ｜ ${ram}\n━━━━━━━━━━━━━━━━━━\n🎮 整體遊戲 FPS 參考 (${currentBenchmarkRes.toUpperCase()} 畫質)：\n${gameLines}\n\n🧠 本地 AI 高階模型算力參考 (${data.gpuProfile.vram}GB VRAM / ${data.gpuProfile.tops} TOPS)：\n${aiLines}\n━━━━━━━━━━━━━━━━━━\n📡 ${src.badge}\n🔎 ${src.detail}\n📍 香港九龍深水埗高登電腦中心 1/F, 10-16A 號舖 ｜ WhatsApp: 9131 7468`;
 
-            copyRawString(report, '📋 已複製完整遊戲 FPS ＋ 2026 本地 AI 算力評估報告！');
+            copyRawString(report, '📋 已複製完整遊戲 FPS ＋ 本地 AI 算力評估報告！');
         }
 
         // ==========================================
@@ -5426,7 +5340,7 @@
         }
 
         // ==========================================
-        // 9. 分頁 5：🎬 1-3圖產品短片產生器 (10-20秒 • 跨瀏覽器錄製支援)
+        // 9. 分頁 5：🎬 1-3圖產品短片產生器 (10-20秒)
         // ==========================================
         function resetVideoDemoProducts() {
             videoMakerImages = [
@@ -5528,7 +5442,6 @@
             if (style === 'none' || vol <= 0) return null;
 
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx) return null;
             const ctx = new AudioCtx();
             const dest = ctx.createMediaStreamDestination();
             const master = ctx.createGain();
@@ -5568,7 +5481,7 @@
             if (vmCustomAudioUrl) {
                 const audio = new Audio(vmCustomAudioUrl);
                 audio.volume = (Number(document.getElementById('vm-bgm-volume')?.value) || 70) / 100;
-                audio.play().catch(() => {});
+                audio.play();
                 setTimeout(() => audio.pause(), 5000);
                 showToast('🔊 正在試聽自訂背景音樂 (5秒預覽)');
             } else {
@@ -5726,35 +5639,10 @@
             vmAnimFrameId = requestAnimationFrame(renderFrame);
         }
 
-        function getSupportedVideoMimeType() {
-            if (typeof MediaRecorder === 'undefined') return null;
-            const candidates = [
-                { mime: 'video/webm;codecs=vp9,opus', ext: 'webm' },
-                { mime: 'video/webm;codecs=vp8,opus', ext: 'webm' },
-                { mime: 'video/webm', ext: 'webm' },
-                { mime: 'video/mp4', ext: 'mp4' }
-            ];
-            for (const c of candidates) {
-                if (!MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(c.mime)) {
-                    return c;
-                }
-            }
-            return { mime: '', ext: 'webm' };
-        }
-
         async function recordAndDownloadShortVideo() {
             const canvas = document.getElementById('video-maker-canvas');
             const statusEl = document.getElementById('vm-record-status');
             if (!canvas) return;
-
-            const supported = getSupportedVideoMimeType();
-            if (!supported || !canvas.captureStream) {
-                if (statusEl) {
-                    statusEl.classList.remove('hidden');
-                    statusEl.innerText = '⚠️ 當前瀏覽器不支援畫布錄影，請使用新版 Chrome / Edge / Safari 瀏覽器';
-                }
-                return;
-            }
 
             const dur = Number(document.getElementById('vm-duration-select')?.value) || 10;
             restartVideoMakerLoop();
@@ -5768,41 +5656,33 @@
                 const canvasStream = canvas.captureStream(30);
                 const combinedStream = new MediaStream([...canvasStream.getVideoTracks()]);
 
+                let audioObj = null;
                 if (vmCustomAudioUrl) {
-                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
                     const audioEl = new Audio(vmCustomAudioUrl);
                     audioEl.volume = (Number(document.getElementById('vm-bgm-volume')?.value) || 70) / 100;
-                    if (AudioCtx) {
-                        const actx = new AudioCtx();
-                        const srcNode = actx.createMediaElementSource(audioEl);
-                        const destNode = actx.createMediaStreamDestination();
-                        srcNode.connect(actx.destination);
-                        srcNode.connect(destNode);
-                        destNode.stream.getAudioTracks().forEach(tr => combinedStream.addTrack(tr));
-                    }
                     await audioEl.play();
+                    const aStream = audioEl.captureStream ? audioEl.captureStream() : null;
+                    if (aStream) aStream.getAudioTracks().forEach(tr => combinedStream.addTrack(tr));
                     setTimeout(() => audioEl.pause(), dur * 1000);
                 } else {
-                    const audioObj = playSynthBgmPreview(dur);
+                    audioObj = playSynthBgmPreview(dur);
                     if (audioObj && audioObj.stream) {
                         audioObj.stream.getAudioTracks().forEach(tr => combinedStream.addTrack(tr));
                     }
                 }
 
-                const recorderOptions = supported.mime ? { mimeType: supported.mime } : {};
-                const recorder = new MediaRecorder(combinedStream, recorderOptions);
+                const recorder = new MediaRecorder(combinedStream, { mimeType: 'video/webm' });
                 const chunks = [];
                 recorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
                 recorder.onstop = () => {
-                    const blobType = supported.mime || 'video/webm';
-                    const blob = new Blob(chunks, { type: blobType });
+                    const blob = new Blob(chunks, { type: 'video/webm' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `Centralfield_Reels_${dur}s.${supported.ext}`;
+                    a.download = `Centralfield_Reels_${dur}s.webm`;
                     a.click();
                     URL.revokeObjectURL(url);
-                    if (statusEl) statusEl.innerText = `✅ 已完成並下載 ${dur} 秒短片 (${supported.ext.toUpperCase()})！`;
+                    if (statusEl) statusEl.innerText = `✅ 已完成並下載 ${dur} 秒短片！`;
                     showToast(`🎬 ${dur} 秒短片已匯出下載！`);
                 };
 
@@ -5810,8 +5690,8 @@
                 setTimeout(() => {
                     if (recorder.state !== 'inactive') recorder.stop();
                 }, dur * 1000);
-            } catch (_) {
-                if (statusEl) statusEl.innerText = '⚠️ 短片錄製發生中斷，請重新點擊錄製或更換瀏覽器再試';
+            } catch (err) {
+                if (statusEl) statusEl.innerText = '⚠️ 瀏覽器不支援即時錄製，請使用 Chrome / Edge 桌面版匯出';
             }
         }
 
@@ -6609,7 +6489,7 @@
         }
 
         // ==========================================
-        // 13. 排程渲染、自動儲存、備份與 GitHub Pages 乾淨檔部署助手
+        // 13. 排程渲染、自動儲存、備份與 GitHub 部署助手
         // ==========================================
         function renderScheduleGrid() {
             const grid = document.getElementById('schedule-grid');
@@ -6710,27 +6590,21 @@
             if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
         }
 
-        function downloadCleanHtmlForGithub(filename) {
-            const blob = new Blob([CLEAN_INITIAL_HTML_TEMPLATE], { type: 'text/html;charset=utf-8' });
+        function downloadCurrentAsIndexHtml(filename) {
+            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = filename;
             a.click();
             URL.revokeObjectURL(url);
-            showToast(`⬇️ 已匯出乾淨無污染版 ${filename}，請直接上傳至 GitHub Repository 根目錄！`);
+            showToast(`⬇️ 已下載 ${filename}，請上傳至 GitHub Repository 最外層根目錄！`);
         }
 
         // ==========================================
-        // 14. 系統初始化與鍵盤快捷鍵
+        // 14. 系統初始化
         // ==========================================
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeGithubModal();
-                closeAiConnectModal();
-            }
-        });
-
         window.addEventListener('DOMContentLoaded', () => {
             createDefaultCentralfieldLogoImage(() => {
                 const hadLocalData = restoreWorkspaceFromLocalStorage();
@@ -6743,6 +6617,7 @@
                 generateSmartQuote();
                 renderMultiPhotoStudio();
                 renderStandeePreview();
+                initCloudPersistence();
                 if (hadLocalData) {
                     const txt = document.getElementById('autosave-text');
                     if (txt) txt.innerText = '已載入本機儲存設定';
