@@ -192,6 +192,11 @@
             <span id="resetBtnLabel">還原基準庫</span>
           </button>
 
+          <button type="button" data-action="open-batch-match" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 transition" title="批次模擬跟隨對手最低價">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>批次跟價試算</span>
+          </button>
+
           <button type="button" data-action="copy-summary" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 transition" title="複製當前篩選統計摘要至剪貼簿">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span>複製摘要</span>
@@ -692,6 +697,70 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Batch Price-Match Simulator Modal -->
+  <div id="batchMatchModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" data-modal-backdrop="batch">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-lg w-full shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-indigo-950 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <h3 class="text-base font-bold">批次一鍵跟價模擬器（Batch Price-Match）</h3>
+        </div>
+        <button type="button" data-action="close-batch-modal" class="p-1.5 rounded-lg text-indigo-300 hover:text-white hover:bg-indigo-900 transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 text-xs sm:text-sm">
+        <p class="text-slate-600 leading-relaxed">
+          自動針對<strong>「目前篩選條件下，對手平過中田的項目」</strong>進行批量調價模擬，即時評估奪回最低價優勢所需讓利幅度（隨時可按頂部「還原基準庫」恢復原價）。
+        </p>
+        <div class="space-y-2">
+          <label for="batchMaxGapSelect" class="block text-xs font-bold text-slate-700">選擇跟價門檻條件：</label>
+          <select id="batchMaxGapSelect" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-white font-medium text-slate-800">
+            <option value="50">僅跟進價差 ≤ HK$50 的微幅落後項目（高性價比搶單）</option>
+            <option value="100" selected>僅跟進價差 ≤ HK$100 的主力落後項目</option>
+            <option value="300">僅跟進價差 ≤ HK$300 的項目</option>
+            <option value="999999">跟進目前篩選列表內「全部」落後項目</option>
+          </select>
+        </div>
+        <div id="batchMatchPreviewBox" class="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200 text-xs text-indigo-950 space-y-1"></div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" data-action="close-batch-modal" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">
+            取消
+          </button>
+          <button type="button" data-action="execute-batch-match" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-xs">
+            確認執行批次跟價
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Multi-SKU Build Basket Bar -->
+  <div id="basketBar" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-4xl bg-slate-900/95 backdrop-blur-md text-white rounded-2xl border border-slate-700 shadow-2xl px-4 py-3">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold tabular-nums" id="basketCountBadge">0</span>
+          <span class="text-xs sm:text-sm font-bold">已選比價籃試算</span>
+        </div>
+        <div class="h-4 w-px bg-slate-700 hidden sm:block"></div>
+        <div class="text-xs flex flex-wrap items-center gap-3 tabular-nums">
+          <span>中田全單：<strong class="text-white text-sm" id="basketBaseTotal">HK$0</strong></span>
+          <span>全場最低組合：<strong class="text-emerald-400 text-sm" id="basketMinTotal">HK$0</strong></span>
+          <span id="basketDiffBadge" class="px-2 py-0.5 rounded-md text-[11px] font-bold"></span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="button" data-action="copy-basket-quote" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition">
+          複製整單報價對比
+        </button>
+        <button type="button" data-action="clear-basket" class="px-2.5 py-1.5 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+          清空
+        </button>
       </div>
     </div>
   </div>
@@ -1318,7 +1387,8 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
         pendingFortressMatches: [],
         remoteFeedUrl: '',
         isSyncing: false,
-        lastSyncLog: []
+        lastSyncLog: [],
+        basketIds: new Set()
       };
 
       /**
@@ -2436,7 +2506,10 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           thead.innerHTML = `
             <tr>
               <th class="sticky-header-col bg-slate-100 px-3.5 py-3 font-bold text-slate-800 min-w-[260px] sm:min-w-[350px] max-w-[440px] border-r border-slate-200">
-                中田型號 / 規格
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-slate-400" title="勾選加入比價籃試算">籃</span>
+                  <span>中田型號 / 規格</span>
+                </div>
               </th>
               <th class="px-3 py-3 text-right font-bold text-slate-900 whitespace-nowrap min-w-[106px] bg-slate-200/70 border-r border-slate-200">
                 <div class="text-[10px] font-semibold text-emerald-700">基準店舖</div>
@@ -2518,15 +2591,25 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
                 diffBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 tabular-nums">0</span>`;
               }
 
+              const isSelected = state.basketIds.has(item.id);
               return `
-                <tr data-row-id="${Utils.escapeHtml(item.id)}" class="hover:bg-slate-50/90 cursor-pointer transition group ${item.syncChange ? 'bg-teal-50/25' : ''}">
-                  <td class="sticky-col bg-white group-hover:bg-slate-50 px-3.5 py-2.5 border-r border-slate-200 max-w-[440px]">
-                    <div class="min-w-0 flex-1">
-                      <div class="mb-0.5 flex flex-wrap items-center gap-0.5">
-                        ${catBadge}${packBadge}${fpsBadge}${syncBadge}${modBadge}
-                      </div>
-                      <div class="font-medium text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 group-hover:text-emerald-700 transition" title="${Utils.escapeHtml(item.model)}">
-                        ${Utils.highlightSearchText(item.model, state.searchQuery)}
+                <tr data-row-id="${Utils.escapeHtml(item.id)}" class="hover:bg-slate-50/90 cursor-pointer transition group ${isSelected ? 'bg-indigo-50/40' : (item.syncChange ? 'bg-teal-50/25' : '')}">
+                  <td class="sticky-col ${isSelected ? 'bg-indigo-50/90' : 'bg-white'} group-hover:bg-slate-50 px-3.5 py-2.5 border-r border-slate-200 max-w-[440px]">
+                    <div class="flex items-start gap-2.5">
+                      <input
+                        type="checkbox"
+                        data-basket-check="${Utils.escapeHtml(item.id)}"
+                        ${isSelected ? 'checked' : ''}
+                        class="mt-1 rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4 shrink-0 cursor-pointer"
+                        title="加入多選比價籃"
+                      />
+                      <div class="min-w-0 flex-1">
+                        <div class="mb-0.5 flex flex-wrap items-center gap-0.5">
+                          ${catBadge}${packBadge}${fpsBadge}${syncBadge}${modBadge}
+                        </div>
+                        <div class="font-medium text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 group-hover:text-emerald-700 transition" title="${Utils.escapeHtml(item.model)}">
+                          ${Utils.highlightSearchText(item.model, state.searchQuery)}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -2564,6 +2647,52 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
               下一頁
             </button>
           `;
+          this.renderBasketBar();
+        },
+
+        renderBasketBar() {
+          const bar = document.getElementById('basketBar');
+          if (!bar) return;
+          if (state.basketIds.size === 0) {
+            bar.classList.add('hidden');
+            return;
+          }
+
+          const selectedItems = state.products
+            .filter(p => state.basketIds.has(p.id))
+            .map(PricingEngine.evaluate);
+
+          const baseSum = selectedItems.reduce((acc, i) => acc + (i.basePrice || 0), 0);
+          const minSum = selectedItems.reduce((acc, i) => acc + (i.minPrice || i.basePrice || 0), 0);
+          const diff = baseSum - minSum;
+
+          bar.classList.remove('hidden');
+          document.getElementById('basketCountBadge').textContent = selectedItems.length;
+          document.getElementById('basketBaseTotal').textContent = `HK$${Utils.formatHKD(baseSum)}`;
+          document.getElementById('basketMinTotal').textContent = `HK$${Utils.formatHKD(minSum)}`;
+
+          const diffEl = document.getElementById('basketDiffBadge');
+          if (diff > 0) {
+            diffEl.className = 'px-2 py-0.5 rounded-md text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+            diffEl.textContent = `拆買平 HK$${Utils.formatHKD(diff)}`;
+          } else {
+            diffEl.className = 'px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            diffEl.textContent = '中田全單最平';
+          }
+        },
+
+        updateBatchMatchPreview() {
+          const box = document.getElementById('batchMatchPreviewBox');
+          const select = document.getElementById('batchMaxGapSelect');
+          if (!box || !select) return;
+          const maxGap = parseInt(select.value, 10) || 100;
+          const candidates = PricingEngine.getFilteredAndSortedItems().filter(
+            i => i.diff > 0 && i.diff <= maxGap && i.minPrice !== null
+          );
+          const totalCut = candidates.reduce((acc, i) => acc + i.diff, 0);
+          box.innerHTML = candidates.length > 0
+            ? `<div>符合條件項目：<strong>${candidates.length} 項</strong>（平均每項下調 <strong>HK$${Utils.formatHKD(Math.round(totalCut / candidates.length))}</strong>，合計讓利 <strong>HK$${Utils.formatHKD(totalCut)}</strong>）</div>`
+            : `<div class="text-slate-500">目前篩選範圍內沒有價差 ≤ HK$${Utils.formatHKD(maxGap)} 的落後項目。</div>`;
         },
 
         renderBuildsView() {
@@ -2932,11 +3061,24 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           UI.renderAll();
         });
 
-        // Table row click -> open detail modal
+        // Table row click -> open detail modal (ignore basket checkbox clicks)
         document.getElementById('comparisonTableBody').addEventListener('click', e => {
+          const cb = e.target.closest('input[data-basket-check]');
+          if (cb) {
+            e.stopPropagation();
+            const id = cb.getAttribute('data-basket-check');
+            if (cb.checked) state.basketIds.add(id);
+            else state.basketIds.delete(id);
+            UI.renderAll();
+            return;
+          }
           const row = e.target.closest('tr[data-row-id]');
           if (!row) return;
           UI.openDetailModal(row.getAttribute('data-row-id'));
+        });
+
+        document.getElementById('batchMaxGapSelect')?.addEventListener('change', () => {
+          UI.updateBatchMatchPreview();
         });
 
         // File upload for batch import
@@ -2983,12 +3125,76 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
             UI.closeSyncModal();
             return;
           }
+          if (backdrop === 'batch') {
+            document.getElementById('batchMatchModal')?.classList.add('hidden');
+            return;
+          }
 
           const actionEl = e.target.closest('[data-action]');
           if (!actionEl) return;
           const action = actionEl.getAttribute('data-action');
 
           switch (action) {
+            case 'open-batch-match':
+              UI.updateBatchMatchPreview();
+              document.getElementById('batchMatchModal')?.classList.remove('hidden');
+              break;
+
+            case 'close-batch-modal':
+              document.getElementById('batchMatchModal')?.classList.add('hidden');
+              break;
+
+            case 'execute-batch-match': {
+              const maxGap = parseInt(document.getElementById('batchMaxGapSelect')?.value || '100', 10);
+              const candidates = PricingEngine.getFilteredAndSortedItems().filter(
+                i => i.diff > 0 && i.diff <= maxGap && i.minPrice !== null
+              );
+              if (candidates.length === 0) {
+                Utils.showToast('目前條件下沒有可跟價的項目', 'error');
+                return;
+              }
+              for (const c of candidates) {
+                const target = state.products.find(p => p.id === c.id);
+                if (target) {
+                  target.prices[CONFIG.BASE_STORE] = c.minPrice;
+                  target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
+                }
+              }
+              DataStore.saveToStorage();
+              document.getElementById('batchMatchModal')?.classList.add('hidden');
+              UI.renderAll();
+              Utils.showToast(`已完成批次跟價模擬，共調整 ${candidates.length} 項中田售價！`);
+              break;
+            }
+
+            case 'copy-basket-quote': {
+              const selectedItems = state.products
+                .filter(p => state.basketIds.has(p.id))
+                .map(PricingEngine.evaluate);
+              if (selectedItems.length === 0) return;
+              const baseSum = selectedItems.reduce((acc, i) => acc + (i.basePrice || 0), 0);
+              const minSum = selectedItems.reduce((acc, i) => acc + (i.minPrice || i.basePrice || 0), 0);
+              const lines = selectedItems.map((item, idx) =>
+                `${idx + 1}. [${item.category}] ${item.model} — 中田 $${Utils.formatHKD(item.basePrice)}｜最低 $${Utils.formatHKD(item.minPrice)} (${item.lowestStores.join('/')})`
+              );
+              const quoteText = [
+                `【中田多件清單比價試算｜${state.lastUpdated}】`,
+                ...lines,
+                `--------------------------------`,
+                `中田全單總計：HK$${Utils.formatHKD(baseSum)}`,
+                `全場最低組合：HK$${Utils.formatHKD(minSum)}（差額 HK$${Utils.formatHKD(baseSum - minSum)}）`
+              ].join('\n');
+              navigator.clipboard.writeText(quoteText)
+                .then(() => Utils.showToast('已複製多件清單比價試算表至剪貼簿！'))
+                .catch(() => Utils.showToast('無法存取剪貼簿', 'error'));
+              break;
+            }
+
+            case 'clear-basket':
+              state.basketIds.clear();
+              UI.renderAll();
+              break;
+
             case 'one-click-sync':
               SyncEngine.runOneClickSync();
               break;
