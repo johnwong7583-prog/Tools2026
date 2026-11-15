@@ -425,7 +425,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 mb-1">海報畫布比例</label>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">2B. 海報畫布比例</label>
                                 <select id="sp-aspect-select" onchange="renderSingleProductPoster()" class="w-full p-2.5 rounded-xl cf-input text-xs">
                                     <option value="1:1" selected>📐 1:1 正方形 (FB / IG / 門市海報)</option>
                                     <option value="4:5">📱 4:5 垂直滿版 (IG / Threads 推薦)</option>
@@ -1283,18 +1283,34 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-slate-400 mb-1">4. 標價牌視覺主題 (10款)</label>
-                                <select id="st-theme-select" onchange="renderStandeePreview()" class="w-full p-2.5 rounded-xl cf-input">
-                                    <option value="double11" selected>🛒 雙11紅藍狂歡 POP</option>
-                                    <option value="asus_rog">🛡️ Powered by ASUS 信仰黑紅</option>
-                                    <option value="asus_white">❄️ ASUS ROG 吹雪純白冰藍</option>
-                                    <option value="msi_dragon">🐉 Powered by MSI 龍魂黑金</option>
-                                    <option value="aorus_orange">🦅 GIGABYTE AORUS 雕族黑橘</option>
-                                    <option value="nvidia_rtx">🟢 NVIDIA GeForce RTX 光追黑綠</option>
-                                    <option value="amd_ryzen">🔴 AMD Ryzen X3D 戰神赤紅</option>
-                                    <option value="black_friday">🖤 Black Friday 黑色星期五黑金</option>
-                                    <option value="luxury_gold">👑 尊爵 VIP 黑金旗艦店</option>
-                                    <option value="ai_green">⚡ AI Computer 翠綠超算</option>
+                                <label class="block text-amber-300 font-bold mb-1">4. 標價牌視覺主題 (20款分類精選)</label>
+                                <select id="st-theme-select" onchange="renderStandeePreview()" class="w-full p-2.5 rounded-xl cf-input font-bold">
+                                    <optgroup label="🛡️ 品牌信仰與硬件聯名">
+                                        <option value="double11" selected>🛒 雙11紅藍狂歡 POP (經典紅藍)</option>
+                                        <option value="asus_rog">🛡️ Powered by ASUS 信仰黑紅</option>
+                                        <option value="asus_tuf">🪖 ASUS TUF Gaming 軍規黑黃</option>
+                                        <option value="asus_white">❄️ ASUS ROG 吹雪純白冰藍</option>
+                                        <option value="proart_studio">🎨 ASUS ProArt 創作者黑金</option>
+                                        <option value="rog_eva_purple">👾 機甲紫綠初號機限定</option>
+                                        <option value="msi_dragon">🐉 Powered by MSI 龍魂黑金</option>
+                                        <option value="aorus_orange">🦅 GIGABYTE AORUS 雕族黑橘</option>
+                                        <option value="nvidia_rtx">🟢 NVIDIA GeForce RTX 光追黑綠</option>
+                                        <option value="amd_ryzen">🔴 AMD Ryzen X3D 戰神赤紅</option>
+                                    </optgroup>
+                                    <optgroup label="🧠 AI 超算與極簡旗艦">
+                                        <option value="agent_ai">🧠 Agent Computer 紫青神經網</option>
+                                        <option value="ai_green">⚡ AI Computer 翠綠超算</option>
+                                        <option value="cyber_blue">🌌 極速賽博深藍電競</option>
+                                        <option value="minimal_nordic">🤍 極簡銀白 / 旗艦工作室風</option>
+                                        <option value="luxury_gold">👑 尊爵 VIP 黑金旗艦店</option>
+                                    </optgroup>
+                                    <optgroup label="🎪 門市節慶與促銷特賣">
+                                        <option value="black_friday">🖤 Black Friday 黑色星期五黑金</option>
+                                        <option value="hk_fest">🎫 香港電腦節 / 消費券紫金賞</option>
+                                        <option value="xmas_fest">🎄 聖誕及除夕紅綠金狂歡</option>
+                                        <option value="cny_gold_red">🧧 新春開年紅金賀歲賞</option>
+                                        <option value="back_to_school">🎓 開學季 / 學生專享藍青</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -1374,6 +1390,26 @@
                             <div>
                                 <label class="block text-[10px] text-slate-400 mb-0.5">門市貨品編號 (SKU)</label>
                                 <input type="text" id="st-sku" value="CF-PC9800X3D" placeholder="選填 SKU" oninput="renderStandeePreview()" class="w-full p-2 rounded cf-input text-cyan-300 font-mono">
+                            </div>
+                        </div>
+
+                        <!-- 核心規格 (CPU / GPU / RAM / SSD) 字體大小調節器 -->
+                        <div class="cf-subcard p-2.5 rounded-xl border-cyan-500/35 space-y-2 text-xs">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="font-bold text-cyan-300">🔤 規格字體大小 (CPU / GPU / RAM / SSD)</span>
+                                <span id="st-spec-font-scale-val" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-200 font-black text-[11px]">100% (標準)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] text-slate-400 shrink-0">細</span>
+                                <input type="range" id="st-spec-font-scale" min="75" max="165" step="5" value="100" oninput="setStandeeSpecFontScale(this.value)" class="w-full accent-cyan-400">
+                                <span class="text-[11px] text-slate-400 shrink-0">特大</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 text-[11px]">
+                                <button type="button" onclick="setStandeeSpecFontScale(85)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">細字 85%</button>
+                                <button type="button" onclick="setStandeeSpecFontScale(100)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold cursor-pointer">標準 100%</button>
+                                <button type="button" onclick="setStandeeSpecFontScale(120)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold cursor-pointer">加大 120%</button>
+                                <button type="button" onclick="setStandeeSpecFontScale(140)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold cursor-pointer">特大醒目 140%</button>
+                                <button type="button" onclick="setStandeeSpecFontScale(160)" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold cursor-pointer">超大店面 160%</button>
                             </div>
                         </div>
 
@@ -1683,6 +1719,86 @@
     <script>
         // 儲存初始乾淨 HTML 快照，確保匯出 index.html / 404.html 時不含執行期暫態 DOM
         const PRISTINE_HTML_SNAPSHOT = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        // ==========================================
+        // 1. 全域狀態與 2026 品牌知識庫預設資料
+        // ==========================================
+        const LOCAL_STORAGE_KEY = 'centralfield_pro_workspace_v7';
+
+        let globalLogoImg = null;         // 全域預設 Centralfield™ 紅字商標 Image
+        let savedCompanyLogos = [];       // 已儲存公司 Logo 庫 [{id, name, dataUrl, savedAt}]
+        let cloudDbInstance = null;       // 選用雲端資料庫實例
+        let cloudUserId = null;
+
+        let spCustomLogoImg = null;       // 單品海報專屬覆蓋 Logo
+        let spLogoHidden = false;         // 是否隱藏海報 Logo
+        let spCustomBgImg = null;         // 單品海報自訂背景圖
+        let spUploadedProducts = [];      // 多件上傳產品陣列 [{img, xPct, yPct, scale, priceTag, label}]
+        let draggingProductIdx = -1;      // 畫布拖曳狀態
+        let hoveredProductIdx = -1;       // 畫布懸停產品索引
+
+        let multiStudioPhotos = [];       // 多圖實拍拼圖相片陣列
+        let standeeCustomLogo = null;     // 標價牌專屬 Logo
+        let standeeProductImg = null;     // 標價牌附帶產品實拍圖 Image 物件
+        let standeeProductImgUrl = '';    // 標價牌附帶產品實拍圖 DataURL
+
+        let videoMakerImages = [];        // 短片產生器 1-3 張產品圖
+        let vmCustomAudioUrl = null;      // 短片自訂背景音樂 URL
+        let vmAnimFrameId = null;
+        let vmLoopStartTime = 0;
+
+        let qrCodeCache = {};             // WhatsApp QR Code 離屏畫布快取
+
+        // 2026 市場主流客戶預算層級預設庫 (8大配置)
+        const DEFAULT_BUDGET_TIERS = [
+            { id: 'tier_2026_4980', label: '💼 HK$ 4,980 - 2026 商務文書 / AI 辦公內顯機 (Ultra 5 245K + Xe2內顯)', price: 'HK$ 4,980', cpu: 'Intel Core Ultra 5 245K (內建NPU)', gpu: 'Intel Arc 140V / Xe2 Core Ultra 內建顯示核心', mb: 'B860M WIFI7 商務主板', ram: '32GB DDR5-6000 雙通道', ssd: '1TB Gen4 NVMe SSD', case: '精緻 M-ATX 靜音商務機箱 + 650W金牌', fps: '🎮 1080p 競技網遊 155+ FPS', ai: '🤖 NPU+Xe2 加速本地 14B/27B 輕量模型' },
+            { id: 'tier_2026_7680', label: '⚡ HK$ 7,680 - 1080p/2K 高性價比甜品機 (Ryzen 5 9600X + RTX 5060 Ti 16G)', price: 'HK$ 7,680', cpu: 'AMD Ryzen 5 9600X', gpu: 'RTX 5060 Ti 16GB GDDR7', mb: 'B850M WIFI', ram: '32GB DDR5-6000 RGB', ssd: '1TB Gen4 NVMe SSD', case: '全景海景房機箱 + 240水冷', fps: '🎮 1080p 荒野 128FPS / 2K 88FPS', ai: '🤖 16G大顯存流暢運行 Gemma 4 / Qwen3.6-27B' },
+            { id: 'tier_2026_9480', label: '🎯 HK$ 9,480 - 2K 高刷主流電競組合 (Ryzen 7 9700X + RTX 5070 Super 18G)', price: 'HK$ 9,480', cpu: 'AMD Ryzen 7 9700X', gpu: 'RTX 5070 Super 18GB GDDR7', mb: 'B850M AORUS ELITE WIFI7', ram: '32GB DDR5-6000 RGB', ssd: '2TB Gen4 NVMe SSD', case: '全景無立柱海景房 + 360水冷', fps: '🎮 2K 荒野 122FPS / 悟空 102FPS', ai: '🤖 18G顯存本地運行 Qwen3.6-27B 86t/s' },
+            { id: 'tier_2026_11480', label: '🔥 HK$ 11,480 - 2K/4K 滿幀電競神機 (9800X3D + RTX 5070 Ti 16G)', price: 'HK$ 11,480', cpu: 'AMD Ryzen 7 9800X3D', gpu: 'RTX 5070 Ti 16GB GDDR7', mb: 'B850 GAMING X WIFI7', ram: '32GB DDR5-6000 RGB', ssd: '2TB Gen4 NVMe SSD', case: '全景無立柱海景房 + 360水冷', fps: '🎮 2K 荒野 146FPS / 悟空 120FPS', ai: '🤖 Gemma 4 / Qwen3.6-27B 102t/s (16G GDDR7)' },
+            { id: 'tier_2026_12680', label: '❄️ HK$ 12,680 - ROG 吹雪純白無立柱海景房 (9800X3D + 純白 RTX 5070 Ti)', price: 'HK$ 12,680', cpu: 'AMD Ryzen 7 9800X3D', gpu: '純白 RTX 5070 Ti 16GB GDDR7', mb: 'ROG STRIX B850-A 吹雪純白板', ram: '32GB DDR5-6000 冰白 RGB', ssd: '2TB PCIe 4.0 NVMe SSD', case: '純白無立柱全景海景房 + 純白360水冷', fps: '🎮 2K 全開 146+ FPS / 4K 順跑', ai: '🤖 滿血運行 Gemma 4 / Qwen3.6-27B 本地模型' },
+            { id: 'tier_2026_15800', label: '🛡️ HK$ 15,800 - Powered by ASUS 4K 光追旗艦 (9850X3D + TUF RTX 5080)', price: 'HK$ 15,800', cpu: 'AMD Ryzen 7 9850X3D', gpu: 'ASUS TUF RTX 5080 16GB GDDR7', mb: 'ASUS TUF X870-PLUS WIFI7', ram: '32GB DDR5-6400 RGB', ssd: '2TB Kingston KC3000 PCIe 4.0', case: 'ASUS TUF GT502 海景房 + ROG 360水冷', fps: '🎮 4K 荒野 120FPS / 光追+DLSS 4 全開', ai: '🤖 Gemma 4 / Qwen3.6-27B 118t/s (1801 TOPS)' },
+            { id: 'tier_2026_20800', label: '🧠 HK$ 20,800 - 本地 DeepSeek / AI Agent 24GB 算力工作站 (285K + 5080 Super)', price: 'HK$ 20,800', cpu: 'Intel Core Ultra 9 285K (內建NPU)', gpu: 'RTX 5080 Super 24GB GDDR7', mb: 'Z890 AORUS MASTER', ram: '64GB DDR5-6400 雙通道', ssd: '4TB Gen4 NVMe 高速SSD', case: '靜音散熱工作站機箱 + 1000W ATX3.1', fps: '🎮 4K 極限畫質 130+ FPS', ai: '🤖 24G顯存滿血運行 DeepSeek-V4.1 / R1-32B 60t/s' },
+            { id: 'tier_2026_32800', label: '👑 HK$ 32,800 - 2026 終極 4K 卡皇 / 企業 AI 超算旗艦 (9950X3D2 + RTX 5090D)', price: 'HK$ 32,800', cpu: 'AMD Ryzen 9 9950X3D2', gpu: 'RTX 5090D 32GB GDDR7', mb: 'X870E AORUS XTREME AI TOP', ram: '96GB DDR5-6400 雙通道 (48GB×2 非二進制大容量)', ssd: '4TB PCIe 5.0 極速 NVMe SSD', case: '旗艦全塔散熱海景房 + 1200W ATX3.1 白金牌', fps: '🎮 4K 原生光追 152+ FPS 制霸全場', ai: '🤖 32G顯存極速推理 DeepSeek 32B 80t/s • Llama 4 Scout' }
+        ];
+
+        let customBudgetTiers = JSON.parse(JSON.stringify(DEFAULT_BUDGET_TIERS));
+
+        // 單品 / 節慶 POP 海報 22 款範本
+        const singleProductPresets = {
+            double11_combo: { theme: 'double11_pop', title: '雙11', ribbon: '限時狂歡', sub: '大量精選產品 雙11優惠', cats: 'Router | Mesh Wi-Fi | NAS | 顯示器 | 充電配件', price: '激減低至 5 折起', orig: '高登門市現貨發售', badge: '限量狂賞', cta: '立即選購' },
+            black_friday_mega: { theme: 'black_friday', title: 'BLACK FRIDAY', ribbon: '黑色星期五狂減', sub: '年度最強硬件清貨激賞', cats: 'RTX 50系列 | 電競螢幕 | SSD | 路由器 | 整機', price: '全場低至 45 折', orig: '限時四天 • 售完即止', badge: '年度最低', cta: '立即搶購' },
+            xmas_holiday: { theme: 'xmas_fest', title: '聖誕狂歡', ribbon: '除夕年終大激賞', sub: '送禮自用砌機升級首選', cats: '電競掌機 | 海景房主機 | 顯示器 | 周邊配件', price: '買機送 $500 禮券', orig: '高登門市聖誕照常營業', badge: '節日限定', cta: '立即選購' },
+            hk_computer_fest: { theme: 'hk_fest', title: '電腦節', ribbon: '消費券狂賞', sub: '中田電腦門市同步激減', cats: '砌機組合 | 電競螢幕 | Wi-Fi 7 | SSD | 配件', price: '滿額即減 $800', orig: '支援各大電子消費券', badge: '會場同步', cta: '立即搶購' },
+            back_to_school_uni: { theme: 'back_to_school', title: '開學優惠', ribbon: '大學生 / 教職員專享', sub: '學習剪片 3D 繪圖全能主機', cats: '文書砌機 | 護眼螢幕 | 外置SSD | Wi-Fi 7', price: '學生證即減 $400', orig: '免費預裝文書及測試軟件', badge: '開學必備', cta: '立即查詢' },
+            cny_gold: { theme: 'cny_red', title: '新春賞', ribbon: '開年大激減', sub: '新春賀歲 砌機升級優惠', cats: '9800X3D | RTX 50系列 | 海景房 | 顯示器', price: '開年利是減 $688', orig: '送限量電競大禮包', badge: '賀歲特惠', cta: '立即選購' },
+            asus_rog_bundle: { theme: 'asus_rog', title: 'ROG信仰', ribbon: 'POWERED BY ASUS', sub: '華碩官方認證全家桶電競主機', cats: 'ROG Strix | TUF Gaming | 龍神水冷 | 吹雪主板', price: 'HK$ 15,800', orig: '原價 $17,500 • 送ROG滑鼠墊', badge: '官方認證', cta: '預訂信仰機' },
+            asus_tuf_gaming: { theme: 'asus_tuf', title: 'TUF軍規', ribbon: 'POWERED BY ASUS', sub: '硬派軍規穩定散熱電競組合', cats: 'TUF B850 | TUF RTX 5070 Ti | GT502機箱 | 850W金牌', price: 'HK$ 11,980', orig: '原價 $13,200 • 三年上門保固', badge: '軍規耐用', cta: '立即選購' },
+            asus_proart: { theme: 'asus_proart', title: 'ProArt', ribbon: '創作者專業工作站', sub: '專為 3D 渲染、剪片與 AI 設計打造', cats: 'ProArt Z890 | RTX 5080 | 64GB DDR5 | PA602', price: 'HK$ 19,800', orig: '送 3 個月 Adobe Creative Cloud', badge: '創作者首選', cta: '查詢配置' },
+            asus_rog_white: { theme: 'asus_white', title: '吹雪純白', ribbon: 'POWERED BY ASUS', sub: '極致全白無立柱海景房美學主機', cats: 'ROG吹雪主板 | 純白RTX 5070 Ti | 飛龍純白水冷', price: 'HK$ 12,680', orig: '原價 $14,200 • 免費全白定制線', badge: '顏值天花板', cta: '立即訂製' },
+            asus_diy_mobo_gpu: { theme: 'asus_rog', title: 'ASUS DIY', ribbon: '板卡升級狂賞', sub: '華碩主機板 + 顯示卡同購激減', cats: 'Z890 / X870 | B850 | RTX 5080 / 5070Ti | 電源', price: '組合即減 $500', orig: '香港行貨漢科/代理保固', badge: '現貨齊全', cta: 'WhatsApp留貨' },
+            msi_dragon_bundle: { theme: 'msi_dragon', title: 'MSI龍魂', ribbon: 'POWERED BY MSI', sub: '微星龍魂官方認證電競整機', cats: 'MPG刀鋒鈦 | GAMING TRIO | MAG海景房 | 水冷', price: 'HK$ 13,480', orig: '原價 $14,900 • 送微星電競耳機', badge: '龍魂認證', cta: '立即選購' },
+            aorus_eagle: { theme: 'aorus_orange', title: 'AORUS', ribbon: 'TEAM UP. FIGHT ON.', sub: '技嘉雕族神鷹旗艦電競主機', cats: 'Z890 AORUS | MASTER顯卡 | 冰雕純白 | 360水冷', price: 'HK$ 16,200', orig: '原價 $17,800 • 註冊享延長保固', badge: '雕族旗艦', cta: '立即搶購' },
+            nvidia_rtx_green: { theme: 'nvidia_rtx', title: 'GEFORCE RTX', ribbon: 'DLSS 4 光追世代', sub: '全景光線追蹤 ✕ AI 多幀生成極致體驗', cats: 'RTX 5090D | RTX 5080 | RTX 5070 Ti | G-SYNC螢幕', price: '現貨組合特惠', orig: '香港原廠行貨保固', badge: 'RTX ON', cta: '立即查詢' },
+            amd_ryzen_x3d: { theme: 'amd_ryzen', title: 'RYZEN X3D', ribbon: '千幀電競遊戲戰神', sub: '第二代 3D V-Cache 技術制霸全場', cats: '9950X3D2 | 9850X3D | 9800X3D | X870E旗艦板', price: '板U套裝激減', orig: '高登門市現貨即買即砌', badge: 'X3D神U', cta: '立即出機' },
+            agent_computer: { theme: 'agent_ai', title: 'AGENT PC', ribbon: '24H 自主智能體電腦', sub: '本地部署 OpenManus / AutoGPT / Ollama', cats: 'Core Ultra 9 | 64GB RAM | 24GB VRAM | 4TB SSD', price: 'HK$ 20,800', orig: '企業私隱數據零外洩 • 預裝環境', badge: 'AI智能體', cta: '預約技術諮詢' },
+            ai_computer: { theme: 'ai_npu', title: 'AI 超算', ribbon: '2100+ AI TOPS 算力', sub: '秒跑 DeepSeek-V4 32B ＆ Flux.1 生圖', cats: 'NPU雙引擎 | RTX 5080 Super 24G | 64GB DDR5', price: 'HK$ 20,800', orig: '免費預裝 ComfyUI + Ollama', badge: '本地大模型', cta: '立即體驗' },
+            synology_nas_cloud: { theme: 'luxury_gold', title: '私人雲端', ribbon: 'SYNOLOGY NAS 企業儲存', sub: '相片自動備份 • 4K影音串流 • 團隊協作', cats: 'DS923+ | DS423+ | 企業級硬碟 | 10GbE網卡', price: '買機送安裝設定', orig: '高登門市全線現貨供應', badge: '資料安全', cta: '查詢套裝' },
+            wifi7_mesh_pack: { theme: 'cyber_blue', title: 'WI-FI 7', ribbon: '極速三頻全屋無縫覆蓋', sub: '320MHz 超寬頻段 • 告別穿牆死角延遲', cats: 'ASUS ROG路由 | Netgear Orbi | Linksys | TP-Link', price: '低至 $999 起', orig: '買兩隻裝再享額外折扣', badge: '極速升級', cta: '立即選購' },
+            rtx5090_flagship: { theme: 'cyber_blue', title: 'RTX 5090D', ribbon: '次世代卡皇震撼登場', sub: '32GB GDDR7 • DLSS 4 多幀生成', cats: 'RTX 5090D | RTX 5080 Super | ATX 3.1 1200W火牛', price: '歡迎查詢現貨', orig: '砌機優先留貨特惠', badge: '卡皇降臨', cta: 'WhatsApp查詢' },
+            mhwilds_rig: { theme: 'double11_pop', title: '荒野神機', ribbon: '2K 極高畫質 146 FPS', sub: 'Monster Hunter Wilds 狩獵推薦配置', cats: 'Ryzen 7 9800X3D | RTX 5070 Ti 16G | 32GB DDR5', price: 'HK$ 11,480', orig: '原價 $12,800 • 雙烤實測滿幀', badge: '獵人必備', cta: '立即出機' },
+            white_seaview: { theme: 'asus_white', title: '純白海景', ribbon: '270° 無立柱全景透視', sub: '9把積木幻彩風扇 + 360水冷散熱', cats: '9800X3D | 純白RTX 5070 Ti | 32GB RGB | 2TB SSD', price: 'HK$ 12,680', orig: '原價 $14,200 • 包全白訂製線', badge: '熱賣爆款', cta: '立即選購' }
+        };
+
+        // 每週行銷自動排程預設資料
+        const scheduleData = [
+            { day: '星期一 Mon', tag: '開工升級日', topic: '辦公室 / 剪片工作站 64GB RAM + 4TB SSD 升級特惠', color: 'border-blue-500/40 text-blue-300' },
+            { day: '星期二 Tue', tag: 'AI 算力日', topic: 'Agent Computer & AI Computer 本地部署 DeepSeek-V4 / Gemma 4 實測', color: 'border-emerald-500/40 text-emerald-300' },
+            { day: '星期三 Wed', tag: 'ASUS 信仰日', topic: 'Powered by ASUS 華碩 ROG / TUF 全家桶 RTX 50 海景房激減', color: 'border-rose-500/40 text-rose-300' },
+            { day: '星期四 Thu', tag: 'MSI / AORUS 日', topic: 'Powered by MSI 微星龍魂 & AORUS 雕族 B850/Z890 板卡套裝優惠', color: 'border-amber-500/40 text-amber-300' },
+            { day: '星期五 Fri', tag: '週末打機夜', topic: 'Monster Hunter Wilds 2K 滿幀 9800X3D + RTX 5070 Ti 神單現貨即取', color: 'border-purple-500/40 text-purple-300' },
+            { day: '星期六 Sat', tag: '高登狂歡日', topic: '雙11 / 週末門市限時狂歡：Router / NAS / 顯示器低至5折', color: 'border-pink-500/40 text-pink-300' },
+            { day: '星期日 Sun', tag: '交機實拍秀', topic: '本週中田電腦客人實拍海景房走線展示 ＆ 下週預訂', color: 'border-cyan-500/40 text-cyan-300' }
+        ];
 
         // ==========================================
         // 2. 雙引擎連線狀態管理 (純本機離線 + Google Gemini 3 雙環境自適應)
@@ -5039,18 +5155,40 @@
         // ==========================================
         // 11. 分頁 6：🖨️ 門市 A4 / 半A4 (雙模省紙) 標價牌完整引擎
         // ==========================================
+        function setStandeeSpecFontScale(val) {
+            const scaleNum = Math.min(165, Math.max(75, Number(val) || 100));
+            const slider = document.getElementById('st-spec-font-scale');
+            if (slider) slider.value = scaleNum;
+            const label = document.getElementById('st-spec-font-scale-val');
+            if (label) {
+                const tag = scaleNum <= 90 ? '緊湊細字' : (scaleNum <= 105 ? '標準' : (scaleNum <= 125 ? '加大清晰' : (scaleNum <= 145 ? '特大醒目' : '超大店面')));
+                label.innerText = `${scaleNum}% (${tag})`;
+            }
+            renderStandeePreview();
+        }
+
         function getStandeeThemeConfig(themeKey) {
             const map = {
-                double11:      { headerBg: 'linear-gradient(135deg, #DC2626 0%, #1E3A8A 100%)', c1: '#DC2626', c2: '#1E3A8A', accent: '#DC2626', badgeBg: '#FACC15', badgeText: '#7F1D1D', isDark: true },
-                asus_rog:      { headerBg: 'linear-gradient(135deg, #09090B 0%, #BE123C 100%)', c1: '#09090B', c2: '#BE123C', accent: '#E11D48', badgeBg: '#F43F5E', badgeText: '#FFFFFF', isDark: true },
-                asus_white:    { headerBg: 'linear-gradient(135deg, #0284C7 0%, #38BDF8 100%)', c1: '#0284C7', c2: '#38BDF8', accent: '#0369A1', badgeBg: '#FFFFFF', badgeText: '#0369A1', isDark: true },
-                msi_dragon:    { headerBg: 'linear-gradient(135deg, #111827 0%, #991B1B 60%, #D97706 100%)', c1: '#111827', c2: '#991B1B', accent: '#DC2626', badgeBg: '#FBBF24', badgeText: '#111827', isDark: true },
-                aorus_orange:  { headerBg: 'linear-gradient(135deg, #0F172A 0%, #EA580C 100%)', c1: '#0F172A', c2: '#EA580C', accent: '#EA580C', badgeBg: '#FDBA74', badgeText: '#7C2D12', isDark: true },
-                nvidia_rtx:    { headerBg: 'linear-gradient(135deg, #052E16 0%, #16A34A 100%)', c1: '#052E16', c2: '#16A34A', accent: '#15803D', badgeBg: '#4ADE80', badgeText: '#052E16', isDark: true },
-                amd_ryzen:     { headerBg: 'linear-gradient(135deg, #1F0707 0%, #EA580C 100%)', c1: '#1F0707', c2: '#EA580C', accent: '#DC2626', badgeBg: '#FACC15', badgeText: '#7F1D1D', isDark: true },
-                black_friday:  { headerBg: 'linear-gradient(135deg, #09090B 0%, #27272A 100%)', c1: '#09090B', c2: '#27272A', accent: '#B45309', badgeBg: '#FACC15', badgeText: '#09090B', isDark: true },
-                luxury_gold:   { headerBg: 'linear-gradient(135deg, #1C1917 0%, #B45309 100%)', c1: '#1C1917', c2: '#B45309', accent: '#B45309', badgeBg: '#FDE047', badgeText: '#451A03', isDark: true },
-                ai_green:      { headerBg: 'linear-gradient(135deg, #064E3B 0%, #0D9488 100%)', c1: '#064E3B', c2: '#0D9488', accent: '#0F766E', badgeBg: '#34D399', badgeText: '#064E3B', isDark: true }
+                double11:       { headerBg: 'linear-gradient(135deg, #DC2626 0%, #1E3A8A 100%)', c1: '#DC2626', c2: '#1E3A8A', border: '#1E3A8A', cellBg: '#F8FAFC', cellBorder: '#CBD5E1', gpuBg: '#FFF1F2', gpuBorder: '#FECDD3', gpuLabel: '#E11D48', gpuText: '#881337', accent: '#DC2626', badgeBg: '#FACC15', badgeText: '#7F1D1D', footerBg: '#0F172A' },
+                asus_rog:       { headerBg: 'linear-gradient(135deg, #09090B 0%, #BE123C 100%)', c1: '#09090B', c2: '#BE123C', border: '#9F1239', cellBg: '#FAFAFA', cellBorder: '#D4D4D8', gpuBg: '#FFF1F2', gpuBorder: '#FDA4AF', gpuLabel: '#BE123C', gpuText: '#881337', accent: '#E11D48', badgeBg: '#F43F5E', badgeText: '#FFFFFF', footerBg: '#09090B' },
+                asus_tuf:       { headerBg: 'linear-gradient(135deg, #111827 0%, #854D0E 65%, #EAB308 100%)', c1: '#111827', c2: '#A16207', border: '#854D0E', cellBg: '#FEFCE8', cellBorder: '#FDE047', gpuBg: '#FEF9C3', gpuBorder: '#FACC15', gpuLabel: '#A16207', gpuText: '#713F12', accent: '#EAB308', badgeBg: '#FACC15', badgeText: '#111827', footerBg: '#111827' },
+                asus_white:     { headerBg: 'linear-gradient(135deg, #0284C7 0%, #38BDF8 100%)', c1: '#0284C7', c2: '#38BDF8', border: '#0284C7', cellBg: '#F0F9FF', cellBorder: '#BAE6FD', gpuBg: '#E0F2FE', gpuBorder: '#7DD3FC', gpuLabel: '#0369A1', gpuText: '#0C4A6E', accent: '#0369A1', badgeBg: '#FFFFFF', badgeText: '#0369A1', footerBg: '#0C4A6E' },
+                proart_studio:  { headerBg: 'linear-gradient(135deg, #0A0A0A 0%, #292524 55%, #B45309 100%)', c1: '#0A0A0A', c2: '#B45309', border: '#78350F', cellBg: '#FAF8F5', cellBorder: '#E7E5E4', gpuBg: '#FFFBEB', gpuBorder: '#FCD34D', gpuLabel: '#B45309', gpuText: '#78350F', accent: '#D97706', badgeBg: '#FBBF24', badgeText: '#1C1917', footerBg: '#1C1917' },
+                rog_eva_purple: { headerBg: 'linear-gradient(135deg, #2E1065 0%, #581C87 65%, #15803D 100%)', c1: '#2E1065', c2: '#15803D', border: '#581C87', cellBg: '#FAF5FF', cellBorder: '#E9D5FF', gpuBg: '#F0FDF4', gpuBorder: '#86EFAC', gpuLabel: '#15803D', gpuText: '#14532D', accent: '#7E22CE', badgeBg: '#4ADE80', badgeText: '#14532D', footerBg: '#2E1065' },
+                msi_dragon:     { headerBg: 'linear-gradient(135deg, #111827 0%, #991B1B 60%, #D97706 100%)', c1: '#111827', c2: '#991B1B', border: '#991B1B', cellBg: '#F9FAFB', cellBorder: '#D1D5DB', gpuBg: '#FEF2F2', gpuBorder: '#FCA5A5', gpuLabel: '#B91C1C', gpuText: '#7F1D1D', accent: '#DC2626', badgeBg: '#FBBF24', badgeText: '#111827', footerBg: '#111827' },
+                aorus_orange:   { headerBg: 'linear-gradient(135deg, #0F172A 0%, #EA580C 100%)', c1: '#0F172A', c2: '#EA580C', border: '#C2410C', cellBg: '#F8FAFC', cellBorder: '#CBD5E1', gpuBg: '#FFF7ED', gpuBorder: '#FDBA74', gpuLabel: '#C2410C', gpuText: '#7C2D12', accent: '#EA580C', badgeBg: '#FDBA74', badgeText: '#7C2D12', footerBg: '#0F172A' },
+                nvidia_rtx:     { headerBg: 'linear-gradient(135deg, #052E16 0%, #16A34A 100%)', c1: '#052E16', c2: '#16A34A', border: '#15803D', cellBg: '#F8FAFC', cellBorder: '#CBD5E1', gpuBg: '#F0FDF4', gpuBorder: '#86EFAC', gpuLabel: '#15803D', gpuText: '#14532D', accent: '#15803D', badgeBg: '#4ADE80', badgeText: '#052E16', footerBg: '#052E16' },
+                amd_ryzen:      { headerBg: 'linear-gradient(135deg, #1F0707 0%, #EA580C 100%)', c1: '#1F0707', c2: '#EA580C', border: '#9A3412', cellBg: '#FFF7ED', cellBorder: '#FED7AA', gpuBg: '#FEF2F2', gpuBorder: '#FCA5A5', gpuLabel: '#C2410C', gpuText: '#7C2D12', accent: '#DC2626', badgeBg: '#FACC15', badgeText: '#7F1D1D', footerBg: '#1F0707' },
+                agent_ai:       { headerBg: 'linear-gradient(135deg, #0F0720 0%, #5B21B6 55%, #0891B2 100%)', c1: '#0F0720', c2: '#6D28D9', border: '#5B21B6', cellBg: '#F5F3FF', cellBorder: '#DDD6FE', gpuBg: '#ECFEFF', gpuBorder: '#A5F3FC', gpuLabel: '#0E7490', gpuText: '#164E63', accent: '#7C3AED', badgeBg: '#38BDF8', badgeText: '#0F172A', footerBg: '#0F0720' },
+                ai_green:       { headerBg: 'linear-gradient(135deg, #064E3B 0%, #0D9488 100%)', c1: '#064E3B', c2: '#0D9488', border: '#0F766E', cellBg: '#F0FDFA', cellBorder: '#99F6E4', gpuBg: '#ECFDF5', gpuBorder: '#6EE7B7', gpuLabel: '#047857', gpuText: '#064E3B', accent: '#0F766E', badgeBg: '#34D399', badgeText: '#064E3B', footerBg: '#064E3B' },
+                cyber_blue:     { headerBg: 'linear-gradient(135deg, #020617 0%, #1D4ED8 65%, #06B6D4 100%)', c1: '#020617', c2: '#1D4ED8', border: '#1D4ED8', cellBg: '#EFF6FF', cellBorder: '#BFDBFE', gpuBg: '#ECFEFF', gpuBorder: '#67E8F9', gpuLabel: '#1D4ED8', gpuText: '#1E3A8A', accent: '#2563EB', badgeBg: '#38BDF8', badgeText: '#020617', footerBg: '#020617' },
+                minimal_nordic: { headerBg: 'linear-gradient(135deg, #1E293B 0%, #475569 100%)', c1: '#1E293B', c2: '#475569', border: '#334155', cellBg: '#F8FAFC', cellBorder: '#E2E8F0', gpuBg: '#F1F5F9', gpuBorder: '#CBD5E1', gpuLabel: '#334155', gpuText: '#0F172A', accent: '#334155', badgeBg: '#E2E8F0', badgeText: '#0F172A', footerBg: '#1E293B' },
+                luxury_gold:    { headerBg: 'linear-gradient(135deg, #1C1917 0%, #B45309 100%)', c1: '#1C1917', c2: '#B45309', border: '#92400E', cellBg: '#FFFBEB', cellBorder: '#FDE68A', gpuBg: '#FEF3C7', gpuBorder: '#FCD34D', gpuLabel: '#92400E', gpuText: '#451A03', accent: '#B45309', badgeBg: '#FDE047', badgeText: '#451A03', footerBg: '#1C1917' },
+                black_friday:   { headerBg: 'linear-gradient(135deg, #09090B 0%, #27272A 100%)', c1: '#09090B', c2: '#27272A', border: '#18181B', cellBg: '#F4F4F5', cellBorder: '#D4D4D8', gpuBg: '#FEFCE8', gpuBorder: '#FDE047', gpuLabel: '#A16207', gpuText: '#18181B', accent: '#B45309', badgeBg: '#FACC15', badgeText: '#09090B', footerBg: '#09090B' },
+                hk_fest:        { headerBg: 'linear-gradient(135deg, #2E1065 0%, #7E22CE 65%, #CA8A04 100%)', c1: '#2E1065', c2: '#7E22CE', border: '#6B21A8', cellBg: '#FAF5FF', cellBorder: '#E9D5FF', gpuBg: '#FEFCE8', gpuBorder: '#FDE047', gpuLabel: '#6B21A8', gpuText: '#3B0764', accent: '#9333EA', badgeBg: '#FACC15', badgeText: '#3B0764', footerBg: '#2E1065' },
+                xmas_fest:      { headerBg: 'linear-gradient(135deg, #064E3B 0%, #991B1B 65%, #DC2626 100%)', c1: '#064E3B', c2: '#B91C1C', border: '#991B1B', cellBg: '#F0FDF4', cellBorder: '#BBF7D0', gpuBg: '#FEF2F2', gpuBorder: '#FECACA', gpuLabel: '#B91C1C', gpuText: '#7F1D1D', accent: '#15803D', badgeBg: '#FACC15', badgeText: '#7F1D1D', footerBg: '#064E3B' },
+                cny_gold_red:   { headerBg: 'linear-gradient(135deg, #7F1D1D 0%, #DC2626 65%, #D97706 100%)', c1: '#7F1D1D', c2: '#DC2626', border: '#991B1B', cellBg: '#FEF2F2', cellBorder: '#FECACA', gpuBg: '#FFFBEB', gpuBorder: '#FDE047', gpuLabel: '#B91C1C', gpuText: '#7F1D1D', accent: '#DC2626', badgeBg: '#FDE047', badgeText: '#7F1D1D', footerBg: '#7F1D1D' },
+                back_to_school: { headerBg: 'linear-gradient(135deg, #0C4A6E 0%, #0284C7 60%, #0D9488 100%)', c1: '#0C4A6E', c2: '#0284C7', border: '#0369A1', cellBg: '#F0F9FF', cellBorder: '#BAE6FD', gpuBg: '#F0FDFA', gpuBorder: '#99F6E4', gpuLabel: '#0F766E', gpuText: '#134E4A', accent: '#0284C7', badgeBg: '#38BDF8', badgeText: '#082F49', footerBg: '#0C4A6E' }
             };
             return map[themeKey] || map.double11;
         }
@@ -5247,6 +5385,30 @@
                 document.getElementById('st-ssd').value = '2TB PCIe 4.0 NVMe SSD';
                 document.getElementById('st-mb').value = 'ROG STRIX B650-A 吹雪純白板';
                 document.getElementById('st-gift').value = '🎁 免費升級純白定制模組線 + 9把積木風扇';
+            } else if (type === 'monitor_item') {
+                document.getElementById('st-theme-select').value = 'nvidia_rtx';
+                document.getElementById('st-title').value = '27吋 2K 240Hz QD-OLED 電競顯示器';
+                document.getElementById('st-price').value = 'HK$ 4,680';
+                document.getElementById('st-orig-price').value = '原價 $5,499';
+                document.getElementById('st-sku').value = 'MON-OLED240';
+                document.getElementById('st-cpu').value = '0.03ms 極速灰階反應 • 240Hz 刷新率';
+                document.getElementById('st-gpu').value = '99% DCI-P3 廣色域 • DisplayHDR True Black';
+                document.getElementById('st-ram').value = '支援 G-SYNC Compatible ＆ FreeSync';
+                document.getElementById('st-ssd').value = '雙 HDMI 2.1 + DP 1.4 + Type-C 供電';
+                document.getElementById('st-mb').value = '三年香港原廠行貨上門保固（包光點死點檢查）';
+                document.getElementById('st-gift').value = '🎁 門市現貨可即場試機 • 買機加購再減 $200';
+            } else if (type === 'router_item') {
+                document.getElementById('st-theme-select').value = 'double11';
+                document.getElementById('st-title').value = 'ASUS ROG Wi-Fi 7 三頻 BE19000 電競路由';
+                document.getElementById('st-price').value = 'HK$ 2,699';
+                document.getElementById('st-orig-price').value = '原價 $3,299';
+                document.getElementById('st-sku').value = 'NET-WIFI7BE';
+                document.getElementById('st-cpu').value = '320MHz 超寬頻段 • 19000Mbps 極速吞吐';
+                document.getElementById('st-gpu').value = '雙 10G WAN/LAN 光纖電競極速埠';
+                document.getElementById('st-ram').value = 'AiMesh 全屋無縫漫遊擴展支援';
+                document.getElementById('st-ssd').value = 'AiProtection 商業級網絡安全防護';
+                document.getElementById('st-mb').value = '三年香港代理行貨保固';
+                document.getElementById('st-gift').value = '🎁 買兩隻 Mesh 套裝額外再減 $300';
             }
             renderStandeePreview();
             showToast('✅ 已套用標價牌範本！');
@@ -5290,9 +5452,12 @@
                 : '';
 
             const qrDataUrl = showQr ? getWhatsAppQrDataUrl(`你好中田電腦！我想查詢門市展示【${specData.title} (${specData.price})】現貨。`) : '';
+            const fontScale = (Number(document.getElementById('st-spec-font-scale')?.value) || 100) / 100;
+            const valFontPx = ((isHalfHeight ? 12.5 : 17) * fontScale).toFixed(1);
+            const lblFontPx = ((isHalfHeight ? 9.5 : 11.5) * (1 + (fontScale - 1) * 0.55)).toFixed(1);
 
             return `
-                <div style="border: 2.5px solid #0f172a; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: ${isHalfHeight ? '134mm' : '278mm'}; background: #ffffff; position: relative;">
+                <div style="border: 2.5px solid ${th.border}; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: ${isHalfHeight ? '134mm' : '278mm'}; background: #ffffff; position: relative;">
                     <div style="background: ${th.headerBg}; color: #ffffff; padding: ${isHalfHeight ? '9px 15px' : '18px 24px'}; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
                         <div style="display:flex; align-items:center; gap:10px;">
                             ${logoHtml}
@@ -5306,22 +5471,22 @@
 
                     <div style="padding: ${isHalfHeight ? '8px 15px' : '18px 24px'}; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;">
                         <div style="display: flex; gap: 10px; align-items: stretch; flex: 1;">
-                            <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: ${isHalfHeight ? '6px' : '12px'}; font-size: ${isHalfHeight ? '12px' : '16px'};">
-                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center;">
-                                    <span style="color:#64748b; font-size:10px; font-weight:700;">${lbl1}</span>
-                                    <strong style="color:#0f172a; line-height:1.25;">${specData.cpu}</strong>
+                            <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: ${isHalfHeight ? '6px' : '12px'};">
+                                <div style="background:${th.cellBg}; border:1.5px solid ${th.cellBorder}; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+                                    <span style="color:#64748b; font-size:${lblFontPx}px; font-weight:700; line-height:1.15;">${lbl1}</span>
+                                    <strong style="color:#0f172a; font-size:${valFontPx}px; line-height:1.22; word-break:break-word;">${specData.cpu}</strong>
                                 </div>
-                                <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center;">
-                                    <span style="color:#e11d48; font-size:10px; font-weight:700;">${lbl2}</span>
-                                    <strong style="color:#881337; line-height:1.25;">${specData.gpu}</strong>
+                                <div style="background:${th.gpuBg}; border:1.5px solid ${th.gpuBorder}; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+                                    <span style="color:${th.gpuLabel}; font-size:${lblFontPx}px; font-weight:700; line-height:1.15;">${lbl2}</span>
+                                    <strong style="color:${th.gpuText}; font-size:${valFontPx}px; line-height:1.22; word-break:break-word;">${specData.gpu}</strong>
                                 </div>
-                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center;">
-                                    <span style="color:#64748b; font-size:10px; font-weight:700;">${lbl3}</span>
-                                    <strong style="color:#0f172a; line-height:1.25;">${specData.ram}</strong>
+                                <div style="background:${th.cellBg}; border:1.5px solid ${th.cellBorder}; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+                                    <span style="color:#64748b; font-size:${lblFontPx}px; font-weight:700; line-height:1.15;">${lbl3}</span>
+                                    <strong style="color:#0f172a; font-size:${valFontPx}px; line-height:1.22; word-break:break-word;">${specData.ram}</strong>
                                 </div>
-                                <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center;">
-                                    <span style="color:#64748b; font-size:10px; font-weight:700;">${lbl4}</span>
-                                    <strong style="color:#0f172a; line-height:1.25;">${specData.ssd}</strong>
+                                <div style="background:${th.cellBg}; border:1.5px solid ${th.cellBorder}; border-radius:8px; padding:${isHalfHeight ? '5px 9px' : '10px 14px'}; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+                                    <span style="color:#64748b; font-size:${lblFontPx}px; font-weight:700; line-height:1.15;">${lbl4}</span>
+                                    <strong style="color:#0f172a; font-size:${valFontPx}px; line-height:1.22; word-break:break-word;">${specData.ssd}</strong>
                                 </div>
                             </div>
                             ${standeeProductImgUrl ? `
@@ -5339,8 +5504,8 @@
                             </div>
 
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="background:#dc2626; color:#ffffff; padding:${isHalfHeight ? '5px 14px' : '10px 22px'}; border-radius:10px; text-align:right; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
-                                    ${specData.origPrice ? `<div style="font-size:${isHalfHeight ? '10px' : '13px'}; text-decoration:line-through; color:#fecaca; font-weight:700;">${specData.origPrice}</div>` : ''}
+                                <div style="background:${th.accent}; color:#ffffff; padding:${isHalfHeight ? '5px 14px' : '10px 22px'}; border-radius:10px; text-align:right; box-shadow:0 3px 8px rgba(15,23,42,0.2);">
+                                    ${specData.origPrice ? `<div style="font-size:${isHalfHeight ? '10px' : '13px'}; text-decoration:line-through; color:rgba(255,255,255,0.82); font-weight:700;">${specData.origPrice}</div>` : ''}
                                     <div style="font-size:${isHalfHeight ? '21px' : '32px'}; font-weight:900; line-height:1.1;">${specData.price}</div>
                                 </div>
                                 ${qrDataUrl ? `
@@ -5353,7 +5518,7 @@
                         </div>
                     </div>
 
-                    <div style="background:#0f172a; color:#f8fafc; padding:${isHalfHeight ? '6px 15px' : '12px 24px'}; display:flex; justify-content:space-between; align-items:center; font-size:${isHalfHeight ? '10px' : '13px'};">
+                    <div style="background:${th.footerBg}; color:#f8fafc; padding:${isHalfHeight ? '6px 15px' : '12px 24px'}; display:flex; justify-content:space-between; align-items:center; font-size:${isHalfHeight ? '10px' : '13px'};">
                         <span>📍 ${addr}</span>
                         <span style="color:#34d399; font-weight:900;">📲 ${phone}</span>
                     </div>
@@ -5465,9 +5630,10 @@
             };
 
             const drawOneCardOnCanvas = (spec, x, y, cw, ch) => {
+                const fontScale = (Number(document.getElementById('st-spec-font-scale')?.value) || 100) / 100;
                 ctx.save();
                 ctx.fillStyle = '#FFFFFF';
-                ctx.strokeStyle = '#0F172A';
+                ctx.strokeStyle = th.border;
                 ctx.lineWidth = 4;
                 ctx.beginPath();
                 ctx.roundRect(x, y, cw, ch, 22);
@@ -5517,28 +5683,30 @@
 
                 const cellW = (gridW - 16) / 2;
                 const cellH = (gridH - 16) / 2;
+                const pngLblPx = Math.round((ch > 1000 ? 16 : 14) * (1 + (fontScale - 1) * 0.55));
+                const pngValPx = Math.round((ch > 1000 ? 25 : 20) * fontScale);
                 for (let i = 0; i < 4; i++) {
                     const col = i % 2;
                     const row = Math.floor(i / 2);
                     const bx = x + 28 + col * (cellW + 16);
                     const by = bodyY + row * (cellH + 16);
 
-                    ctx.fillStyle = i === 1 ? '#FFF1F2' : '#F8FAFC';
-                    ctx.strokeStyle = i === 1 ? '#FECDD3' : '#CBD5E1';
+                    ctx.fillStyle = i === 1 ? th.gpuBg : th.cellBg;
+                    ctx.strokeStyle = i === 1 ? th.gpuBorder : th.cellBorder;
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.roundRect(bx, by, cellW, cellH, 12);
                     ctx.fill();
                     ctx.stroke();
 
-                    ctx.fillStyle = i === 1 ? '#E11D48' : '#64748B';
-                    ctx.font = '700 15px "Noto Sans TC", sans-serif';
+                    ctx.fillStyle = i === 1 ? th.gpuLabel : '#64748B';
+                    ctx.font = `700 ${pngLblPx}px "Noto Sans TC", sans-serif`;
                     ctx.textAlign = 'left';
                     ctx.fillText(lbls[i], bx + 14, by + 24);
 
-                    ctx.fillStyle = i === 1 ? '#881337' : '#0F172A';
-                    ctx.font = `900 ${ch > 1000 ? 23 : 19}px "Noto Sans TC", sans-serif`;
-                    ctx.fillText(vals[i].slice(0, 26), bx + 14, by + cellH * 0.66);
+                    ctx.fillStyle = i === 1 ? th.gpuText : '#0F172A';
+                    ctx.font = `900 ${pngValPx}px "Noto Sans TC", sans-serif`;
+                    ctx.fillText(vals[i].slice(0, 26), bx + 14, by + cellH * 0.68);
                 }
 
                 if (hasProdImg && standeeProductImg) {
@@ -5572,7 +5740,7 @@
                 const qrSpace = showQr ? 112 : 0;
                 const priceBoxW = 285;
                 const priceBoxX = x + cw - 44 - qrSpace - priceBoxW;
-                ctx.fillStyle = '#DC2626';
+                ctx.fillStyle = th.accent;
                 ctx.beginPath();
                 ctx.roundRect(priceBoxX, pBarY + 12, priceBoxW, priceBarH - 24, 12);
                 ctx.fill();
@@ -5588,7 +5756,7 @@
                 }
 
                 const footY = y + ch - footerH;
-                ctx.fillStyle = '#0F172A';
+                ctx.fillStyle = th.footerBg;
                 ctx.fillRect(x, footY, cw, footerH);
                 ctx.fillStyle = '#F8FAFC';
                 ctx.font = '700 17px "Noto Sans TC", sans-serif';
