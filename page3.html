@@ -2001,6 +2001,546 @@
         ];
 
         // ==========================================
+        // 2. 工具函式：Toast、複製、下載、QR 碼、分頁切換
+        // ==========================================
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            if (!box) return;
+            box.innerText = msg;
+            box.classList.remove('opacity-0');
+            box.classList.add('opacity-100');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                box.classList.remove('opacity-100');
+                box.classList.add('opacity-0');
+            }, 2600);
+        }
+
+        function copyText(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.select();
+            el.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            showToast('📋 已成功複製到剪貼簿！');
+        }
+
+        function copyRawString(str, toastMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = str;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast(toastMsg || '📋 已複製！');
+        }
+
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast(`⬇️ 已匯出高清圖片：${filename}`);
+        }
+
+        function copyCanvasToClipboard(canvasId, fallbackFilename) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                try {
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        showToast('📋 已複製高清圖片！可直接貼上 WhatsApp / FB');
+                    } else {
+                        throw new Error('ClipboardItem unsupported');
+                    }
+                } catch (_) {
+                    downloadCanvas(canvasId, fallbackFilename);
+                    showToast('ℹ️ 已自動為您下載高清圖檔（可直接拖入 WhatsApp 發送）');
+                }
+            }, 'image/png');
+        }
+
+        function downloadTextFile(textareaId, filename) {
+            const el = document.getElementById(textareaId);
+            if (!el) return;
+            const blob = new Blob([el.value], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`⬇️ 已下載 ${filename}`);
+        }
+
+        function getWhatsAppQrCanvas(customMsg) {
+            const phoneRaw = document.getElementById('kb-phone')?.value || '91317468';
+            const digits = phoneRaw.replace(/\D/g, '') || '91317468';
+            const fullPhone = digits.length === 8 ? `852${digits}` : digits;
+            const msg = customMsg || '你好中田電腦！我想查詢最新產品優惠及配置報價。';
+            const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
+
+            if (qrCodeCache[waUrl]) return qrCodeCache[waUrl];
+
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    const tempDiv = document.createElement('div');
+                    new QRCode(tempDiv, {
+                        text: waUrl,
+                        width: 180,
+                        height: 180,
+                        colorDark: '#0F172A',
+                        colorLight: '#FFFFFF',
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                    const qrCanvas = tempDiv.querySelector('canvas');
+                    if (qrCanvas) {
+                        qrCodeCache[waUrl] = qrCanvas;
+                        return qrCanvas;
+                    }
+                }
+            } catch (_) {
+                // 降級處理
+            }
+            return null;
+        }
+
+        function getWhatsAppQrDataUrl(customMsg) {
+            const qrCanvas = getWhatsAppQrCanvas(customMsg);
+            return qrCanvas ? qrCanvas.toDataURL('image/png') : '';
+        }
+
+        function drawRealQrOnCanvas(ctx, x, y, size, customMsg) {
+            const qrCanvas = getWhatsAppQrCanvas(customMsg);
+            if (qrCanvas) {
+                ctx.drawImage(qrCanvas, x, y, size, size);
+                return;
+            }
+            ctx.fillStyle = '#0F172A';
+            const cell = size / 7;
+            for (let r = 0; r < 7; r++) {
+                for (let c = 0; c < 7; c++) {
+                    if ((r + c) % 2 === 0 || (r < 2 && c < 2) || (r > 4 && c > 4)) {
+                        ctx.fillRect(x + c * cell, y + r * cell, cell - 1, cell - 1);
+                    }
+                }
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.className = 'nav-btn active flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left whitespace-nowrap bg-rose-600 text-white shadow-lg shadow-rose-950/50 transition cursor-pointer';
+                } else {
+                    btn.className = 'nav-btn flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left whitespace-nowrap text-slate-300 hover:bg-slate-800 transition cursor-pointer';
+                }
+            });
+
+            if (tabId === 'single_product') renderSingleProductPoster();
+            if (tabId === 'quotator') { generateSmartQuote(); renderPcBenchmarkDashboard(); }
+            if (tabId === 'photo_studio') renderMultiPhotoStudio();
+            if (tabId === 'standee') renderStandeePreview();
+            if (tabId === 'store_tools') { calculateRetailMargin(); renderWarrantyDirectory(); }
+            if (tabId === 'geo_ai') generateGeoAiCorpus();
+        }
+
+        // ==========================================
+        // 3. 內建 Centralfield™ 紅字商標 + 智慧去背防變形 + 公司 Logo 儲存引擎
+        // ==========================================
+        function saveWorkspaceToLocalStorage() {
+            try {
+                const payload = {
+                    storeName: document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield 客製化工坊',
+                    address: document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖',
+                    phone: document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468',
+                    website: document.getElementById('kb-website')?.value || 'centralfield.com',
+                    aiProvider: document.getElementById('ai-provider-select')?.value || 'local_offline',
+                    aiConnectionConfig,
+                    activeLogoDataUrl: globalLogoImg ? compressLogoDataUrl(globalLogoImg, 560) : '',
+                    savedCompanyLogos: savedCompanyLogos.slice(0, 6),
+                    customBudgetTiers
+                };
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
+            } catch (_) {
+                // 忽略無痕模式或容量限制
+            }
+        }
+
+        function restoreWorkspaceFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (data.storeName && document.getElementById('kb-store-name')) document.getElementById('kb-store-name').value = data.storeName;
+                if (data.address && document.getElementById('kb-address')) document.getElementById('kb-address').value = data.address;
+                if (data.phone && document.getElementById('kb-phone')) document.getElementById('kb-phone').value = data.phone;
+                if (data.website && document.getElementById('kb-website')) document.getElementById('kb-website').value = data.website;
+                if (data.aiProvider && document.getElementById('ai-provider-select')) {
+                    document.getElementById('ai-provider-select').value = data.aiProvider;
+                }
+                if (data.aiConnectionConfig && typeof data.aiConnectionConfig === 'object') {
+                    aiConnectionConfig = { ...aiConnectionConfig, ...data.aiConnectionConfig };
+                }
+                if (Array.isArray(data.savedCompanyLogos) && data.savedCompanyLogos.length > 0) {
+                    savedCompanyLogos = data.savedCompanyLogos;
+                    renderSavedLogosGallery();
+                }
+                if (data.activeLogoDataUrl) {
+                    applyLogoFromDataUrl(data.activeLogoDataUrl, true);
+                }
+                if (Array.isArray(data.customBudgetTiers) && data.customBudgetTiers.length > 0) {
+                    customBudgetTiers = data.customBudgetTiers;
+                }
+                syncStoreInfoUI();
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function compressLogoDataUrl(imgOrCanvas, maxWidth = 560) {
+            const srcW = imgOrCanvas.naturalWidth || imgOrCanvas.width || 300;
+            const srcH = imgOrCanvas.naturalHeight || imgOrCanvas.height || 80;
+            const scale = srcW > maxWidth ? (maxWidth / srcW) : 1;
+            const c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(srcW * scale));
+            c.height = Math.max(1, Math.round(srcH * scale));
+            c.getContext('2d').drawImage(imgOrCanvas, 0, 0, c.width, c.height);
+            return c.toDataURL('image/png');
+        }
+
+        function applyLogoFromDataUrl(dataUrl, silentToast = false) {
+            if (!dataUrl) return;
+            const img = new Image();
+            img.onload = () => {
+                globalLogoImg = img;
+                const prev = document.getElementById('kb-logo-preview');
+                if (prev) prev.src = img.src;
+                renderSingleProductPoster();
+                generateSmartQuote();
+                renderMultiPhotoStudio();
+                renderStandeePreview();
+                renderSavedLogosGallery();
+                saveWorkspaceToLocalStorage();
+                if (!silentToast) showToast('✅ 已套用所選公司 Logo 至全系統！');
+            };
+            img.src = dataUrl;
+        }
+
+        function renderSavedLogosGallery() {
+            const box = document.getElementById('saved-logos-gallery');
+            const countEl = document.getElementById('saved-logos-count');
+            if (countEl) countEl.innerText = `${savedCompanyLogos.length} 個已儲存`;
+            if (!box) return;
+
+            if (!savedCompanyLogos.length) {
+                box.innerHTML = '<div class="col-span-full text-[11px] text-slate-500 py-2">尚無已儲存的 Logo，請點擊上方「上載公司 Logo」並儲存</div>';
+                return;
+            }
+
+            const currentSrc = globalLogoImg ? globalLogoImg.src : '';
+            box.innerHTML = savedCompanyLogos.map((item, idx) => {
+                const isCurrent = currentSrc === item.dataUrl;
+                return `
+                    <div class="p-2 rounded-lg bg-slate-900 border ${isCurrent ? 'border-emerald-500 shadow' : 'border-slate-700'} flex flex-col gap-1.5">
+                        <div onclick="applyLogoFromDataUrl(savedCompanyLogos[${idx}].dataUrl)" class="h-10 bg-white rounded flex items-center justify-center p-1 cursor-pointer overflow-hidden">
+                            <img src="${item.dataUrl}" alt="${item.name}" class="max-w-full max-h-full object-contain">
+                        </div>
+                        <div class="flex items-center justify-between gap-1 text-[10px]">
+                            <span class="truncate text-slate-300 font-bold" title="${item.name}">${item.name}</span>
+                            ${item.id !== 'default_centralfield'
+                                ? `<button type="button" onclick="deleteSavedCompanyLogo('${item.id}')" class="text-rose-400 hover:text-rose-300 font-bold shrink-0 cursor-pointer">✕</button>`
+                                : `<span class="text-emerald-400 shrink-0">預設</span>`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteSavedCompanyLogo(logoId) {
+            savedCompanyLogos = savedCompanyLogos.filter(l => l.id !== logoId);
+            renderSavedLogosGallery();
+            saveWorkspaceToLocalStorage();
+            syncBrandProfileToCloud();
+            showToast('🗑️ 已從已儲存 Logo 庫移除');
+        }
+
+        async function saveCompanyLogoAndSettings(customLogoName) {
+            if (!globalLogoImg) return;
+            const compactUrl = compressLogoDataUrl(globalLogoImg, 560);
+            const exists = savedCompanyLogos.some(item => item.dataUrl === compactUrl);
+            if (!exists) {
+                const label = customLogoName || `公司 Logo #${savedCompanyLogos.length + 1}`;
+                savedCompanyLogos.unshift({
+                    id: 'logo_' + Date.now(),
+                    name: label,
+                    dataUrl: compactUrl,
+                    savedAt: new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })
+                });
+                if (savedCompanyLogos.length > 8) savedCompanyLogos = savedCompanyLogos.slice(0, 8);
+            }
+            renderSavedLogosGallery();
+            saveWorkspaceToLocalStorage();
+
+            const statusTag = document.getElementById('logo-save-status-tag');
+            if (statusTag) statusTag.innerText = '⏳ 正在儲存...';
+
+            const cloudOk = await syncBrandProfileToCloud();
+            triggerAutoSave();
+
+            if (statusTag) {
+                statusTag.innerText = cloudOk ? '☁️ 已雲端＋本機雙重儲存' : '💾 已永久儲存至本機工作區';
+            }
+            showToast(cloudOk
+                ? '☁️ 已成功儲存公司 Logo 與品牌設定至雲端及本機！'
+                : '💾 已儲存公司 Logo 至本機工作區（重新整理仍會保留）！');
+        }
+
+        async function initCloudPersistence() {
+            try {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) return;
+                const firebaseConfig = JSON.parse(__firebase_config);
+                if (!firebaseConfig || !firebaseConfig.apiKey) return;
+
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js');
+                const { getAuth, signInAnonymously, signInWithCustomToken } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js');
+                const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
+
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                cloudUserId = auth.currentUser?.uid || null;
+                if (!cloudUserId) return;
+
+                cloudDbInstance = getFirestore(app);
+                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
+                const snap = await getDoc(profileRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data.storeName && document.getElementById('kb-store-name')) document.getElementById('kb-store-name').value = data.storeName;
+                    if (data.address && document.getElementById('kb-address')) document.getElementById('kb-address').value = data.address;
+                    if (data.phone && document.getElementById('kb-phone')) document.getElementById('kb-phone').value = data.phone;
+                    if (data.website && document.getElementById('kb-website')) document.getElementById('kb-website').value = data.website;
+                    if (Array.isArray(data.savedCompanyLogos) && data.savedCompanyLogos.length > 0) {
+                        savedCompanyLogos = data.savedCompanyLogos;
+                        renderSavedLogosGallery();
+                    }
+                    if (data.activeLogoDataUrl) {
+                        applyLogoFromDataUrl(data.activeLogoDataUrl, true);
+                    }
+                    syncStoreInfoUI();
+                    const statusTag = document.getElementById('logo-save-status-tag');
+                    if (statusTag) statusTag.innerText = '☁️ 已自動載入雲端儲存 Logo';
+                }
+            } catch (_) {
+                // 離線或靜態部署環境自動使用本機儲存模式
+            }
+        }
+
+        async function syncBrandProfileToCloud() {
+            try {
+                if (!cloudDbInstance || !cloudUserId) return false;
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js');
+                const profileRef = doc(cloudDbInstance, 'artifacts', appId, 'public', 'data', 'centralfield_brand', 'main_profile');
+                await setDoc(profileRef, {
+                    storeName: document.getElementById('kb-store-name')?.value || '中田電腦 Centralfield 客製化工坊',
+                    address: document.getElementById('kb-address')?.value || '香港九龍深水埗高登電腦中心1/F, 10-16A號舖',
+                    phone: document.getElementById('kb-phone')?.value || 'WhatsApp: 9131 7468',
+                    website: document.getElementById('kb-website')?.value || 'centralfield.com',
+                    activeLogoDataUrl: globalLogoImg ? compressLogoDataUrl(globalLogoImg, 560) : '',
+                    savedCompanyLogos: savedCompanyLogos.slice(0, 6),
+                    updatedAt: new Date().toISOString()
+                });
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function createDefaultCentralfieldLogoImage(callback) {
+            const c = document.createElement('canvas');
+            c.width = 640;
+            c.height = 130;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = '#E11D2E';
+            ctx.font = '900 94px Georgia, "Times New Roman", serif';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Centralfield', 12, 72);
+
+            const textW = ctx.measureText('Centralfield').width;
+            ctx.font = '900 24px Inter, Arial, sans-serif';
+            ctx.fillText('TM', 14 + textW, 34);
+
+            const defaultDataUrl = c.toDataURL('image/png');
+            if (!savedCompanyLogos.some(l => l.id === 'default_centralfield')) {
+                savedCompanyLogos.push({
+                    id: 'default_centralfield',
+                    name: 'Centralfield™ 預設',
+                    dataUrl: defaultDataUrl,
+                    savedAt: '內建'
+                });
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                globalLogoImg = img;
+                const prev = document.getElementById('kb-logo-preview');
+                if (prev) prev.src = img.src;
+                renderSavedLogosGallery();
+                if (callback) callback(img);
+            };
+            img.src = defaultDataUrl;
+        }
+
+        function resetDefaultCentralfieldLogo() {
+            createDefaultCentralfieldLogoImage(() => {
+                renderSingleProductPoster();
+                generateSmartQuote();
+                renderMultiPhotoStudio();
+                renderStandeePreview();
+                saveWorkspaceToLocalStorage();
+                showToast('↩️ 已還原 Centralfield™ 官方紅字商標！');
+            });
+        }
+
+        function removeBackgroundAndTrimImage(imgElement, tolerance = 35) {
+            const w = imgElement.naturalWidth || imgElement.width || 300;
+            const h = imgElement.naturalHeight || imgElement.height || 100;
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imgElement, 0, 0, w, h);
+
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const data = imgData.data;
+
+            const corners = [
+                [0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]
+            ];
+            let bgR = 0, bgG = 0, bgB = 0, bgA = 0;
+            corners.forEach(([cx, cy]) => {
+                const idx = (cy * w + cx) * 4;
+                bgR += data[idx]; bgG += data[idx + 1]; bgB += data[idx + 2]; bgA += data[idx + 3];
+            });
+            bgR /= 4; bgG /= 4; bgB /= 4; bgA /= 4;
+
+            if (bgA > 200) {
+                const tol = Number(tolerance) || 35;
+                for (let i = 0; i < data.length; i += 4) {
+                    const dr = data[i] - bgR;
+                    const dg = data[i + 1] - bgG;
+                    const db = data[i + 2] - bgB;
+                    const dist = Math.sqrt(dr * dr + dg * dg + db * db);
+                    if (dist < tol) {
+                        data[i + 3] = 0;
+                    } else if (dist < tol * 1.45) {
+                        const alphaFactor = (dist - tol) / (tol * 0.45);
+                        data[i + 3] = Math.round(data[i + 3] * alphaFactor);
+                    }
+                }
+                ctx.putImageData(imgData, 0, 0);
+            }
+
+            let minX = w, minY = h, maxX = 0, maxY = 0;
+            let hasOpaque = false;
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const a = data[(y * w + x) * 4 + 3];
+                    if (a > 15) {
+                        hasOpaque = true;
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+
+            if (!hasOpaque) return canvas;
+            const trimW = Math.max(1, maxX - minX + 1);
+            const trimH = Math.max(1, maxY - minY + 1);
+            const trimmed = document.createElement('canvas');
+            trimmed.width = trimW;
+            trimmed.height = trimH;
+            trimmed.getContext('2d').drawImage(canvas, minX, minY, trimW, trimH, 0, 0, trimW, trimH);
+            return trimmed;
+        }
+
+        function getProportionalDimensions(srcW, srcH, maxW, maxH) {
+            const safeW = Math.max(1, srcW || 100);
+            const safeH = Math.max(1, srcH || 100);
+            const ratio = Math.min(maxW / safeW, maxH / safeH);
+            return {
+                width: Math.round(safeW * ratio),
+                height: Math.round(safeH * ratio)
+            };
+        }
+
+        function createTintedLogoCanvas(sourceImgOrCanvas, tintMode) {
+            const w = sourceImgOrCanvas.width || sourceImgOrCanvas.naturalWidth || 200;
+            const h = sourceImgOrCanvas.height || sourceImgOrCanvas.naturalHeight || 60;
+            const off = document.createElement('canvas');
+            off.width = w;
+            off.height = h;
+            const octx = off.getContext('2d');
+            octx.drawImage(sourceImgOrCanvas, 0, 0, w, h);
+
+            if (tintMode === 'pure_white' || tintMode === 'theme_gold') {
+                octx.globalCompositeOperation = 'source-in';
+                octx.fillStyle = tintMode === 'pure_white' ? '#FFFFFF' : '#FACC15';
+                octx.fillRect(0, 0, w, h);
+                octx.globalCompositeOperation = 'source-over';
+            }
+            return off;
+        }
+
+        function handleGlobalLogoUpload(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            const cleanFileName = file.name.replace(/\.[^/.]+$/, '').slice(0, 16) || '自訂公司 Logo';
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const tol = document.getElementById('kb-bg-tolerance')?.value || 35;
+                    const trimmedCanvas = removeBackgroundAndTrimImage(img, tol);
+                    const finalImg = new Image();
+                    finalImg.onload = () => {
+                        globalLogoImg = finalImg;
+                        const prev = document.getElementById('kb-logo-preview');
+                        if (prev) prev.src = finalImg.src;
+                        renderSingleProductPoster();
+                        generateSmartQuote();
+                        renderMultiPhotoStudio();
+                        renderStandeePreview();
+                        saveCompanyLogoAndSettings(cleanFileName);
+                    };
+                    finalImg.src = trimmedCanvas.toDataURL('image/png');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        // ==========================================
         // 4. 分頁 1：一鍵多平台貼文生成 & 連線模式切換 (含 OAuth 登入)
         // ==========================================
         function renderOAuthStatusUI() {
