@@ -223,7 +223,7 @@
                             <span id="oauth-topbar-badge" class="hidden px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold"></span>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <button type="button" onclick="openAiConnectModal()" class="px-2.5 py-1 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 font-bold cursor-pointer">🔐 OAuth 授權 / 綁定 Key</button>
+                            <button type="button" onclick="openAiConnectModal()" class="px-2.5 py-1 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/40 font-bold cursor-pointer">🔐 多模型跳轉授權 / 綁定 Key</button>
                             <button type="button" onclick="copyPromptAndOpenWebAi('https://chatgpt.com/', 'ChatGPT')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 ChatGPT 網頁版">ChatGPT網頁 ↗</button>
                             <button type="button" onclick="copyPromptAndOpenWebAi('https://gemini.google.com/', 'Gemini')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 Gemini 網頁版">Gemini網頁 ↗</button>
                             <button type="button" onclick="copyPromptAndOpenWebAi('https://chat.deepseek.com/', 'DeepSeek')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-slate-700 font-bold cursor-pointer" title="複製推廣指令並開啟已登入的 DeepSeek 網頁版">DeepSeek網頁 ↗</button>
@@ -1652,11 +1652,35 @@
                 <div>
                     <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-key text-amber-400"></i>
-                        <span>AI 模型 OAuth 登入 ＆ API 連線設定中樞</span>
+                        <span>AI 模型 OAuth 跳轉授權 ＆ 多模型連線中樞</span>
                     </h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">說明：瀏覽器因安全隔離無法直接讀取其他網頁分頁的登入狀態，請透過下方「OAuth 2.0 一鍵授權」或貼上免費 API Key 進行真實連線</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">推薦使用「OpenRouter 統一 OAuth 2.0 跳轉授權」一次登入解鎖全 6 大模型，或點擊各模型「🔐 跳轉授權登入」單獨綁定</p>
                 </div>
                 <button type="button" onclick="closeAiConnectModal()" class="text-slate-400 hover:text-white text-lg px-2 cursor-pointer">✕</button>
+            </div>
+
+            <!-- 互動式跳轉授權精靈橫幅 (點擊任何模型的「🔐 跳轉授權登入」即刻開啟) -->
+            <div id="oauth-guided-wizard" class="hidden p-3.5 rounded-xl bg-gradient-to-r from-indigo-950 to-purple-950 border-2 border-amber-400/70 space-y-2.5 text-xs shadow-lg">
+                <div class="flex items-center justify-between gap-2">
+                    <span id="wizard-title" class="font-black text-amber-300 text-sm">🔐 正在進行跳轉授權登入</span>
+                    <button type="button" onclick="document.getElementById('oauth-guided-wizard').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer">✕ 關閉引導</button>
+                </div>
+                <p id="wizard-desc" class="text-slate-200 leading-relaxed"></p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="wizard-token-input" placeholder="貼上授權取得的 API Key (如 sk-... / AIza... / pplx-... / xai-... / ghp_...)" class="flex-1 px-3 py-2 rounded-lg bg-slate-950 border border-amber-400/50 text-white font-mono">
+                    <button type="button" onclick="completeGuidedOAuthFromClipboard()" class="px-3.5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black cursor-pointer shrink-0">
+                        📋 自動讀取剪貼簿並連結
+                    </button>
+                    <button type="button" onclick="completeGuidedOAuthManual()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer shrink-0">
+                        ✅ 確認綁定
+                    </button>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-purple-200">
+                    <a id="wizard-reopen-link" href="#" target="_blank" rel="noopener noreferrer" class="underline font-bold hover:text-white">↗ 沒看到彈窗？點此重新開啟官方授權頁面</a>
+                    <button type="button" onclick="startOAuthLogin('openrouter')" class="px-2.5 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold cursor-pointer">
+                        🌐 改用 OpenRouter 統一 OAuth 一鍵授權全模型
+                    </button>
+                </div>
             </div>
 
             <!-- 0. OAuth 2.0 一鍵帳號授權登入 (真實 PKCE ＆ Token 跨視窗回傳) -->
@@ -1664,54 +1688,53 @@
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="font-black text-emerald-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-shield-halved"></i>
-                        <span>0. OAuth 2.0 帳號授權登入 (授權後自動回傳金鑰至本系統)</span>
+                        <span>0. OAuth 2.0 跳轉授權中心 (一次登入自動解鎖全系列模型)</span>
                     </span>
                     <span id="oauth-modal-summary" class="text-[11px] text-slate-400">尚未綁定有效 OAuth 憑證</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <!-- OpenRouter PKCE OAuth (推薦：無需 Client ID 即可一鍵登入換取真實 Key) -->
-                    <div class="p-3 rounded-xl bg-slate-900 border border-purple-500/50 flex flex-col justify-between gap-2">
+                    <!-- OpenRouter PKCE OAuth (一次授權解鎖 GPT-4o / Claude / DeepSeek / Perplexity / Grok / Gemini) -->
+                    <div class="p-3 rounded-xl bg-slate-900 border border-purple-500/60 flex flex-col justify-between gap-2">
                         <div>
                             <div class="flex items-center justify-between">
-                                <span class="font-black text-purple-300"><i class="fa-solid fa-network-wired mr-1"></i>OpenRouter PKCE</span>
+                                <span class="font-black text-purple-300"><i class="fa-solid fa-network-wired mr-1"></i>統一全模型 OAuth</span>
                                 <span id="oauth-status-openrouter" class="text-[10px] text-slate-400">未授權</span>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1">支援真實 SHA-256 PKCE OAuth 跳轉，登入後自動回傳 Key 解鎖 GPT-4o / Claude / DeepSeek。</p>
+                            <p class="text-[11px] text-slate-300 mt-1">OpenRouter PKCE 跳轉授權，<strong>登入一次即解鎖全部 6 大 AI 模型</strong>！</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('openrouter')" class="flex-1 py-1.5 px-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] cursor-pointer">🔐 PKCE 一鍵授權</button>
+                            <button type="button" onclick="startOAuthLogin('openrouter')" class="flex-1 py-1.5 px-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] cursor-pointer">🔐 一鍵跳轉授權</button>
                             <button type="button" id="oauth-logout-openrouter" onclick="logoutOAuthAccount('openrouter')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
                         </div>
                     </div>
 
-                    <!-- Google Gemini 帳號授權 / 快速取 Key -->
+                    <!-- Google Gemini 帳號授權 -->
                     <div class="p-3 rounded-xl bg-slate-900 border border-sky-500/40 flex flex-col justify-between gap-2">
                         <div>
                             <div class="flex items-center justify-between">
                                 <span class="font-black text-sky-300"><i class="fa-brands fa-google mr-1"></i>Google Gemini 帳號</span>
                                 <span id="oauth-status-google" class="text-[10px] text-slate-400">未綁定</span>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1">有 Client ID 可走 Google OAuth 彈窗；無 Client ID 請點右側取免費 Key 貼入下方。</p>
+                            <p class="text-[11px] text-slate-400 mt-1">支援 Google OAuth 跳轉授權，或一鍵跳轉 AI Studio 取得免費 Key。</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] cursor-pointer">🔐 Google 授權</button>
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-[11px]">免費取Key ↗</a>
+                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] cursor-pointer">🔐 跳轉授權登入</button>
                             <button type="button" id="oauth-logout-google" onclick="logoutOAuthAccount('google')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
                         </div>
                     </div>
 
-                    <!-- GitHub Models 帳號 Token 直連 -->
+                    <!-- GitHub Models 帳號授權 -->
                     <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/40 flex flex-col justify-between gap-2">
                         <div>
                             <div class="flex items-center justify-between">
                                 <span class="font-black text-amber-300"><i class="fa-brands fa-github mr-1"></i>GitHub Models 帳號</span>
                                 <span id="oauth-status-github" class="text-[10px] text-slate-400">未綁定</span>
                             </div>
-                            <p class="text-[11px] text-slate-400 mt-1">登入 GitHub 產生免費 PAT (`ghp_...`) 並貼入下方「自訂端點 Key」即可免費調用 GPT-4o。</p>
+                            <p class="text-[11px] text-slate-400 mt-1">跳轉 GitHub 授權產生免費 Token (`ghp_...`) 免費調用 GPT-4o / DeepSeek。</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button type="button" onclick="startOAuthLogin('github')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-[11px] cursor-pointer">🔑 設定 GitHub 端點</button>
+                            <button type="button" onclick="startOAuthLogin('github')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-[11px] cursor-pointer">🔐 跳轉授權登入</button>
                             <button type="button" id="oauth-logout-github" onclick="logoutOAuthAccount('github')" class="hidden px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/70 text-rose-300 text-[11px] font-bold cursor-pointer">登出</button>
                         </div>
                     </div>
@@ -1720,25 +1743,24 @@
                 <!-- 選填：自訂 Google OAuth 2.0 Client ID -->
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 pt-1">
                     <span class="text-[11px] text-slate-400 shrink-0">Google OAuth 2.0 Client ID (選填)：</span>
-                    <input type="text" id="cfg-google-oauth-client-id" placeholder="xxxx.apps.googleusercontent.com (若無 Client ID，建議直接用上方 OpenRouter PKCE 或貼上 Gemini Key)" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-[11px] text-slate-200 font-mono">
+                    <input type="text" id="cfg-google-oauth-client-id" placeholder="xxxx.apps.googleusercontent.com (若無 Client ID，可直接點上方統一全模型 OAuth)" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-[11px] text-slate-200 font-mono">
                 </div>
             </div>
 
-            <!-- 1. 各大 AI 模型官方登入與 API Key 申請傳送門 -->
+            <!-- 1. 各大 AI 平台一鍵跳轉授權登入入口 -->
             <div class="space-y-2">
-                <div class="text-xs font-black text-amber-300">1. 各大 AI 平台官方網頁登入 ＆ API Key 申請入口：</div>
+                <div class="text-xs font-black text-amber-300">1. 各大 AI 模型獨立跳轉授權登入 (支援單獨授權 或 經統一 OAuth 自動驅動)：</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
                     <!-- Google Gemini -->
                     <div class="p-3 rounded-xl bg-slate-950 border border-sky-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-sky-300">✨ Google Gemini 3</span>
-                            <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] font-bold">Google Search</span>
+                            <span id="card-auth-badge-gemini" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">登入 Google AI Studio 免費建立 Key 後貼入下方即可連網搜尋。</p>
+                        <p class="text-[11px] text-slate-400">支援 Google Search 實時搜尋高登腦場最新行情。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-sky-600/30 hover:bg-sky-600/50 text-center text-sky-200 font-bold">取 Key ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('gemini')" class="px-2.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold cursor-pointer">選用</button>
+                            <button type="button" onclick="startOAuthLogin('google')" class="flex-1 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('gemini')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
 
@@ -1746,13 +1768,12 @@
                     <div class="p-3 rounded-xl bg-slate-950 border border-emerald-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-emerald-300">💬 OpenAI ChatGPT</span>
-                            <span class="text-[10px] text-slate-400">GPT-4o / o3</span>
+                            <span id="card-auth-badge-openai" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">登入 ChatGPT 網頁版或於 OpenAI Platform 取得 API Key。</p>
+                        <p class="text-[11px] text-slate-400">GPT-4o / o3 旗艦模型，點擊立即跳轉授權。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
-                            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 text-center text-emerald-200 font-bold">取 Key ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('openai')" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer">選用</button>
+                            <button type="button" onclick="startOAuthLogin('openai')" class="flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('openai')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
 
@@ -1760,13 +1781,12 @@
                     <div class="p-3 rounded-xl bg-slate-950 border border-cyan-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-cyan-300">🔎 Perplexity AI</span>
-                            <span class="text-[10px] text-slate-400">Sonar Pro 網搜</span>
+                            <span id="card-auth-badge-perplexity" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">專精實時全網搜尋、香港腦場價格對比與來源引用。</p>
+                        <p class="text-[11px] text-slate-400">Sonar Pro 實時深度網搜與買家口碑分析。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://www.perplexity.ai/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
-                            <a href="https://www.perplexity.ai/settings/api" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 text-center text-cyan-200 font-bold">取 Key ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('perplexity')" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold cursor-pointer">選用</button>
+                            <button type="button" onclick="startOAuthLogin('perplexity')" class="flex-1 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('perplexity')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
 
@@ -1774,13 +1794,12 @@
                     <div class="p-3 rounded-xl bg-slate-950 border border-indigo-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-indigo-300">🐋 DeepSeek 深度求索</span>
-                            <span class="text-[10px] text-slate-400">R1 / V3 推理</span>
+                            <span id="card-auth-badge-deepseek" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">強大中文深度邏輯推理與硬件規格性價比分析。</p>
+                        <p class="text-[11px] text-slate-400">DeepSeek R1 滿血推理與硬件規格避坑對比。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
-                            <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-center text-indigo-200 font-bold">取 Key ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('deepseek')" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold cursor-pointer">選用</button>
+                            <button type="button" onclick="startOAuthLogin('deepseek')" class="flex-1 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('deepseek')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
 
@@ -1788,27 +1807,25 @@
                     <div class="p-3 rounded-xl bg-slate-950 border border-amber-500/40 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-black text-amber-300">🧠 Anthropic Claude</span>
-                            <span class="text-[10px] text-slate-400">Claude 3.7</span>
+                            <span id="card-auth-badge-claude" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">極致地道香港廣東話語感與細膩銷售文案撰寫。</p>
+                        <p class="text-[11px] text-slate-400">Claude 3.7 Sonnet，極致地道香港廣東話語感。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">網頁登入 ↗</a>
-                            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-amber-600/30 hover:bg-amber-600/50 text-center text-amber-200 font-bold">取 Key ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('claude')" class="px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold cursor-pointer">選用</button>
+                            <button type="button" onclick="startOAuthLogin('claude')" class="flex-1 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('claude')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
 
-                    <!-- xAI Grok / 本機 Ollama -->
+                    <!-- xAI Grok -->
                     <div class="p-3 rounded-xl bg-slate-950 border border-rose-500/40 space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="font-black text-rose-300">⚡ xAI Grok / 🏠 Ollama</span>
-                            <span class="text-[10px] text-slate-400">Grok 3 / 本機</span>
+                            <span class="font-black text-rose-300">⚡ xAI Grok 3</span>
+                            <span id="card-auth-badge-grok" class="text-[10px] text-slate-400">未連結</span>
                         </div>
-                        <p class="text-[11px] text-slate-400">登入 Grok 實時社群熱話，或下載本機 Ollama 離線運行。</p>
+                        <p class="text-[11px] text-slate-400">Grok 3 實時科技社群熱話與高衝擊標題生成。</p>
                         <div class="flex gap-1.5">
-                            <a href="https://grok.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-center text-slate-200 font-bold">Grok ↗</a>
-                            <a href="https://ollama.com/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-rose-600/30 hover:bg-rose-600/50 text-center text-rose-200 font-bold">Ollama ↗</a>
-                            <button type="button" onclick="selectProviderFromModal('local_ollama')" class="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold cursor-pointer">本機</button>
+                            <button type="button" onclick="startOAuthLogin('grok')" class="flex-1 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-black cursor-pointer">🔐 跳轉授權登入</button>
+                            <button type="button" onclick="selectProviderFromModal('grok')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold cursor-pointer">選用</button>
                         </div>
                     </div>
                 </div>
@@ -1817,7 +1834,7 @@
             <!-- 2. 連線模式與 API Key / 本機端點設定 -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="font-black text-cyan-300">2. 選擇預設 AI 引擎 ＆ 貼上 API Key (自動儲存於本機瀏覽器)</span>
+                    <span class="font-black text-cyan-300">2. 當前預設 AI 引擎 ＆ 已綁定金鑰管理 (自動儲存於本機瀏覽器)</span>
                     <button type="button" onclick="toggleAiKeyVisibility()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold cursor-pointer">
                         👁️ 顯示 / 隱藏金鑰
                     </button>
@@ -1840,7 +1857,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                        <label class="block text-slate-400 mb-1">✨ Google Gemini API Key (可於上方免費取Key)</label>
+                        <label class="block text-slate-400 mb-1">✨ Google Gemini API Key</label>
                         <input type="password" id="cfg-key-gemini" placeholder="AIzaSy..." class="ai-key-input w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono">
                     </div>
                     <div>
@@ -1942,6 +1959,7 @@
         let vmLoopStartTime = 0;
 
         let qrCodeCache = {};             // WhatsApp QR Code 離屏畫布快取
+        let currentGuidedOAuthProvider = '';
 
         // AI 模型連線與金鑰設定
         let aiConnectionConfig = {
@@ -2016,7 +2034,7 @@
             window._toastTimer = setTimeout(() => {
                 box.classList.remove('opacity-100');
                 box.classList.add('opacity-0');
-            }, 2800);
+            }, 3000);
         }
 
         function copyText(elementId) {
@@ -2548,7 +2566,7 @@
         }
 
         // ==========================================
-        // 4. 分頁 1：一鍵多平台貼文生成 & OAuth 2.0 真實授權連線引擎
+        // 4. 分頁 1：一鍵多平台貼文生成 & 多模型跳轉授權 / OAuth 2.0 引擎
         // ==========================================
         function generatePkceVerifier(len = 64) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -2566,20 +2584,41 @@
             return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
         }
 
+        function isOpenRouterOAuthActive() {
+            const s = aiConnectionConfig.oauthSessions || {};
+            const key = (aiConnectionConfig.customKey || (s.openrouter && s.openrouter.key) || '').trim();
+            const url = (aiConnectionConfig.customUrl || '').trim();
+            return Boolean(key && (url.includes('openrouter.ai') || (s.openrouter && s.openrouter.loggedIn)));
+        }
+
+        function getOpenRouterSlugForProvider(provider) {
+            const slugMap = {
+                gemini: 'google/gemini-2.5-flash',
+                openai: 'openai/gpt-4o',
+                perplexity: 'perplexity/sonar-pro',
+                deepseek: 'deepseek/deepseek-r1',
+                claude: 'anthropic/claude-3.7-sonnet',
+                grok: 'x-ai/grok-3',
+                custom_openai: aiConnectionConfig.customModel || 'google/gemini-2.5-flash'
+            };
+            return slugMap[provider] || 'google/gemini-2.5-flash';
+        }
+
         function hasValidCloudAuthForProvider(provider) {
             const s = aiConnectionConfig.oauthSessions || {};
             if (provider === 'local_offline') return true;
             if (provider === 'local_ollama') return !!(aiConnectionConfig.ollamaUrl || '').trim();
+            const viaOr = isOpenRouterOAuthActive();
             if (provider === 'gemini') {
-                return Boolean((aiConnectionConfig.geminiKey || '').trim() || (s.google && s.google.loggedIn && s.google.token));
+                return Boolean((aiConnectionConfig.geminiKey || '').trim() || (s.google && s.google.loggedIn && s.google.token) || viaOr);
             }
-            if (provider === 'openai') return Boolean((aiConnectionConfig.openaiKey || '').trim());
-            if (provider === 'perplexity') return Boolean((aiConnectionConfig.perplexityKey || '').trim());
-            if (provider === 'deepseek') return Boolean((aiConnectionConfig.deepseekKey || '').trim());
-            if (provider === 'claude') return Boolean((aiConnectionConfig.claudeKey || '').trim());
-            if (provider === 'grok') return Boolean((aiConnectionConfig.grokKey || '').trim());
+            if (provider === 'openai') return Boolean((aiConnectionConfig.openaiKey || '').trim() || viaOr);
+            if (provider === 'perplexity') return Boolean((aiConnectionConfig.perplexityKey || '').trim() || viaOr);
+            if (provider === 'deepseek') return Boolean((aiConnectionConfig.deepseekKey || '').trim() || viaOr);
+            if (provider === 'claude') return Boolean((aiConnectionConfig.claudeKey || '').trim() || viaOr);
+            if (provider === 'grok') return Boolean((aiConnectionConfig.grokKey || '').trim() || viaOr);
             if (provider === 'custom_openai') {
-                return Boolean((aiConnectionConfig.customKey || '').trim() || (s.openrouter && s.openrouter.loggedIn && s.openrouter.key));
+                return Boolean((aiConnectionConfig.customKey || '').trim() || viaOr);
             }
             return false;
         }
@@ -2593,12 +2632,13 @@
                 const stEl = document.getElementById(`oauth-status-${p}`);
                 const outBtn = document.getElementById(`oauth-logout-${p}`);
                 const sess = sessions[p];
-                const isVerified = sess && sess.loggedIn && (sess.token || sess.key || (p === 'google' && aiConnectionConfig.geminiKey) || (p === 'github' && aiConnectionConfig.customKey));
+                const isVerified = (p === 'openrouter' && isOpenRouterOAuthActive()) ||
+                    (sess && sess.loggedIn && (sess.token || sess.key || (p === 'google' && aiConnectionConfig.geminiKey) || (p === 'github' && aiConnectionConfig.customKey)));
 
                 if (isVerified) {
-                    activeNames.push(sess.label || p.toUpperCase());
+                    activeNames.push(sess?.label || (p === 'openrouter' ? 'OpenRouter 全模型 OAuth' : p.toUpperCase()));
                     if (stEl) {
-                        stEl.innerText = `● 已連線驗證`;
+                        stEl.innerText = `● 已授權連線`;
                         stEl.className = 'text-[10px] text-emerald-400 font-bold';
                     }
                     if (outBtn) outBtn.classList.remove('hidden');
@@ -2611,11 +2651,36 @@
                 }
             });
 
+            // 同步更新 6 大模型卡片的即時連線徽章
+            const cardList = [
+                { key: 'gemini', direct: Boolean((aiConnectionConfig.geminiKey || '').trim() || sessions.google?.token) },
+                { key: 'openai', direct: Boolean((aiConnectionConfig.openaiKey || '').trim()) },
+                { key: 'perplexity', direct: Boolean((aiConnectionConfig.perplexityKey || '').trim()) },
+                { key: 'deepseek', direct: Boolean((aiConnectionConfig.deepseekKey || '').trim()) },
+                { key: 'claude', direct: Boolean((aiConnectionConfig.claudeKey || '').trim()) },
+                { key: 'grok', direct: Boolean((aiConnectionConfig.grokKey || '').trim()) }
+            ];
+            const viaOr = isOpenRouterOAuthActive();
+            cardList.forEach(item => {
+                const badgeEl = document.getElementById(`card-auth-badge-${item.key}`);
+                if (!badgeEl) return;
+                if (item.direct) {
+                    badgeEl.innerText = '● 官方已授權';
+                    badgeEl.className = 'text-[10px] text-emerald-400 font-bold';
+                } else if (viaOr) {
+                    badgeEl.innerText = '● 統一OAuth已解鎖';
+                    badgeEl.className = 'text-[10px] text-purple-300 font-bold';
+                } else {
+                    badgeEl.innerText = '未連結';
+                    badgeEl.className = 'text-[10px] text-slate-400';
+                }
+            });
+
             const summaryEl = document.getElementById('oauth-modal-summary');
             if (summaryEl) {
                 summaryEl.innerText = activeNames.length
                     ? `✅ 已成功綁定並可調用：${activeNames.join('、')}`
-                    : '尚未綁定有效 OAuth 憑證（請點下方按鈕授權或貼上 API Key）';
+                    : '尚未綁定 OAuth 憑證（點「統一全模型 OAuth」一次解鎖全 6 大模型，或點各卡片「跳轉授權登入」）';
                 summaryEl.className = activeNames.length ? 'text-[11px] text-emerald-300 font-bold' : 'text-[11px] text-amber-300';
             }
 
@@ -2630,24 +2695,133 @@
             }
         }
 
+        function openGuidedAuthWizard(provider, title, desc, portalUrl, placeholderText) {
+            currentGuidedOAuthProvider = provider;
+            const wiz = document.getElementById('oauth-guided-wizard');
+            const titleEl = document.getElementById('wizard-title');
+            const descEl = document.getElementById('wizard-desc');
+            const inp = document.getElementById('wizard-token-input');
+            const linkEl = document.getElementById('wizard-reopen-link');
+
+            if (titleEl) titleEl.innerText = title;
+            if (descEl) descEl.innerHTML = desc;
+            if (inp) {
+                inp.value = '';
+                inp.placeholder = placeholderText || '請在此貼上授權金鑰...';
+            }
+            if (linkEl) linkEl.href = portalUrl;
+            if (wiz) {
+                wiz.classList.remove('hidden');
+                wiz.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            window.open(portalUrl, 'AiModelAuthPopup', 'width=660,height=740');
+        }
+
+        async function completeGuidedOAuthFromClipboard() {
+            try {
+                const clipText = (await navigator.clipboard.readText() || '').trim();
+                if (!clipText) {
+                    showToast('⚠️ 剪貼簿目前為空，請先在彈出視窗複製金鑰！');
+                    document.getElementById('wizard-token-input')?.focus();
+                    return;
+                }
+                const inp = document.getElementById('wizard-token-input');
+                if (inp) inp.value = clipText;
+                completeGuidedOAuthManual();
+            } catch (_) {
+                showToast('⚠️ 瀏覽器阻擋自動讀取剪貼簿，請直接在輸入框按 Ctrl+V 貼上後按「確認綁定」！');
+                document.getElementById('wizard-token-input')?.focus();
+            }
+        }
+
+        function completeGuidedOAuthManual() {
+            const rawVal = (document.getElementById('wizard-token-input')?.value || '').trim();
+            if (!rawVal) {
+                showToast('⚠️ 請先貼上授權取得的 API Key 或 Token！');
+                document.getElementById('wizard-token-input')?.focus();
+                return;
+            }
+            const p = currentGuidedOAuthProvider || 'gemini';
+            if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
+
+            if (p === 'openrouter' || rawVal.startsWith('sk-or-')) {
+                aiConnectionConfig.customKey = rawVal;
+                aiConnectionConfig.customUrl = 'https://openrouter.ai/api/v1/chat/completions';
+                aiConnectionConfig.oauthSessions.openrouter = { loggedIn: true, label: 'OpenRouter 全模型 OAuth', key: rawVal };
+                if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = rawVal;
+                selectProviderFromModal('custom_openai');
+            } else if (p === 'github' || rawVal.startsWith('ghp_') || rawVal.startsWith('github_pat_')) {
+                aiConnectionConfig.customKey = rawVal;
+                aiConnectionConfig.customUrl = 'https://models.inference.ai.azure.com/chat/completions';
+                aiConnectionConfig.customModel = 'gpt-4o';
+                aiConnectionConfig.oauthSessions.github = { loggedIn: true, label: 'GitHub Models', key: rawVal };
+                if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = rawVal;
+                selectProviderFromModal('custom_openai');
+            } else if (p === 'google' || p === 'gemini') {
+                aiConnectionConfig.geminiKey = rawVal;
+                aiConnectionConfig.oauthSessions.google = { loggedIn: true, label: 'Google Gemini', token: rawVal };
+                if (document.getElementById('cfg-key-gemini')) document.getElementById('cfg-key-gemini').value = rawVal;
+                selectProviderFromModal('gemini');
+            } else if (p === 'openai') {
+                aiConnectionConfig.openaiKey = rawVal;
+                if (document.getElementById('cfg-key-openai')) document.getElementById('cfg-key-openai').value = rawVal;
+                selectProviderFromModal('openai');
+            } else if (p === 'perplexity') {
+                aiConnectionConfig.perplexityKey = rawVal;
+                if (document.getElementById('cfg-key-perplexity')) document.getElementById('cfg-key-perplexity').value = rawVal;
+                selectProviderFromModal('perplexity');
+            } else if (p === 'deepseek') {
+                aiConnectionConfig.deepseekKey = rawVal;
+                if (document.getElementById('cfg-key-deepseek')) document.getElementById('cfg-key-deepseek').value = rawVal;
+                selectProviderFromModal('deepseek');
+            } else if (p === 'claude') {
+                aiConnectionConfig.claudeKey = rawVal;
+                if (document.getElementById('cfg-key-claude')) document.getElementById('cfg-key-claude').value = rawVal;
+                selectProviderFromModal('claude');
+            } else if (p === 'grok') {
+                aiConnectionConfig.grokKey = rawVal;
+                if (document.getElementById('cfg-key-grok')) document.getElementById('cfg-key-grok').value = rawVal;
+                selectProviderFromModal('grok');
+            }
+
+            document.getElementById('oauth-guided-wizard')?.classList.add('hidden');
+            renderOAuthStatusUI();
+            onAiProviderChange();
+            saveWorkspaceToLocalStorage();
+            testAiProviderConnection();
+            showToast(`✅ 已成功綁定 ${p.toUpperCase()} 授權並啟動驗證！`);
+        }
+
         async function startOAuthLogin(provider) {
             if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
             const customClientId = (document.getElementById('cfg-google-oauth-client-id')?.value || aiConnectionConfig.googleOAuthClientId || '').trim();
             aiConnectionConfig.googleOAuthClientId = customClientId;
 
             if (provider === 'openrouter') {
-                if (!/^https?:/.test(window.location.protocol)) {
-                    showToast('⚠️ 本機 file:// 檔案模式無法接收 OAuth 跳轉，請部署至 GitHub Pages (https://) 或直接貼上 API Key！');
-                    return;
-                }
-                const verifier = generatePkceVerifier(64);
-                const challenge = await generatePkceChallenge(verifier);
-                localStorage.setItem('cf_or_pkce_verifier', verifier);
+                const isHttp = /^https?:/.test(window.location.protocol) && window.location.origin !== 'null';
+                if (isHttp) {
+                    const verifier = generatePkceVerifier(64);
+                    const challenge = await generatePkceChallenge(verifier);
+                    localStorage.setItem('cf_or_pkce_verifier', verifier);
 
-                const callbackUrl = window.location.origin + window.location.pathname;
-                const orAuthUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}&code_challenge=${encodeURIComponent(challenge)}&code_challenge_method=S256`;
-                window.open(orAuthUrl, 'OpenRouterOAuthPopup', 'width=560,height=680');
-                showToast('🔐 已開啟 OpenRouter OAuth 授權視窗，請在彈窗中點擊「Authorize」完成連動！');
+                    const callbackUrl = window.location.origin + window.location.pathname;
+                    const orAuthUrl = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}&code_challenge=${encodeURIComponent(challenge)}&code_challenge_method=S256`;
+                    openGuidedAuthWizard(
+                        'openrouter',
+                        '🌐 正在進行 OpenRouter 統一全模型 OAuth 2.0 PKCE 跳轉授權',
+                        '1. 請在彈出的 OpenRouter 視窗中用 <strong>Google / GitHub / Email</strong> 登入並點擊 <strong>「Authorize」</strong>，授權後會自動回傳並解鎖全部 6 大模型！<br>2. 若您的瀏覽器阻擋跨視窗回傳，亦可於彈窗取得 <code>sk-or-v1-...</code> 後貼入下方一鍵綁定：',
+                        orAuthUrl,
+                        'sk-or-v1-... (授權完成會自動填入，或手動貼上)'
+                    );
+                } else {
+                    openGuidedAuthWizard(
+                        'openrouter',
+                        '🌐 OpenRouter 統一全模型授權 (本機離線檔案模式)',
+                        '偵測到您目前以本機檔案開啟網頁，請在彈出的 OpenRouter 頁面登入並建立 API Key (<code>sk-or-v1-...</code>)，複製後點擊下方「自動讀取剪貼簿並連結」即可解鎖全 6 大模型！',
+                        'https://openrouter.ai/settings/keys',
+                        'sk-or-v1-...'
+                    );
+                }
                 return;
             }
 
@@ -2655,24 +2829,17 @@
                 if (customClientId && /^https?:/.test(window.location.protocol)) {
                     const redirectUri = window.location.origin + window.location.pathname;
                     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(customClientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent('https://www.googleapis.com/auth/generative-language.retriever openid email')}&state=google_oauth`;
-                    window.open(oauthUrl, 'GoogleOAuthPopup', 'width=520,height=640');
+                    window.open(oauthUrl, 'GoogleOAuthPopup', 'width=540,height=660');
                     showToast('🔐 已開啟 Google OAuth 授權視窗，登入後將自動回傳憑證！');
                     return;
                 }
-                // 無自訂 Client ID 時，引導貼上免費 Google AI Studio API Key
-                selectProviderFromModal('gemini');
-                const keyInput = document.getElementById('cfg-key-gemini');
-                if (keyInput) {
-                    keyInput.type = 'text';
-                    keyInput.focus();
-                }
-                const resBox = document.getElementById('ai-test-result');
-                if (resBox) {
-                    resBox.classList.remove('hidden');
-                    resBox.className = 'p-2.5 rounded-lg bg-sky-950/80 border border-sky-500/50 text-xs text-sky-200';
-                    resBox.innerHTML = '💡 <strong>Google Gemini 連線指引：</strong>請點擊「免費取Key ↗」登入您的 Google 帳號複製 <code>AIzaSy...</code> 金鑰，貼入上方「Google Gemini API Key」欄位並按「儲存並套用」，即可成功連結模型！（或使用左側 <strong>OpenRouter PKCE</strong> 免 Key 一鍵授權）';
-                }
-                showToast('💡 請貼入 Google AI Studio 免費金鑰或使用 OpenRouter PKCE 一鍵授權！');
+                openGuidedAuthWizard(
+                    'google',
+                    '✨ Google Gemini 帳號跳轉授權連線精靈',
+                    '已為您開啟 <strong>Google AI Studio 官方授權頁</strong>！請登入您的 Google 帳號並點擊「Create API key」複製 <code>AIzaSy...</code> 金鑰，然後點擊下方 <strong>「📋 自動讀取剪貼簿並連結」</strong>！',
+                    'https://aistudio.google.com/app/apikey',
+                    'AIzaSy...'
+                );
                 return;
             }
 
@@ -2681,21 +2848,52 @@
                 aiConnectionConfig.customModel = 'gpt-4o';
                 if (document.getElementById('cfg-custom-url')) document.getElementById('cfg-custom-url').value = aiConnectionConfig.customUrl;
                 if (document.getElementById('cfg-custom-model')) document.getElementById('cfg-custom-model').value = aiConnectionConfig.customModel;
-                selectProviderFromModal('custom_openai');
+                openGuidedAuthWizard(
+                    'github',
+                    '🐙 GitHub Models 免費帳號跳轉授權精靈',
+                    '已為您開啟 <strong>GitHub 官方 Token 授權頁</strong>！登入後點擊頁面底部的綠色「Generate token」按鈕並複製 <code>ghp_...</code>，再點擊下方 <strong>「📋 自動讀取剪貼簿並連結」</strong> 即可免費使用 GPT-4o / DeepSeek！',
+                    'https://github.com/settings/tokens/new?description=Centralfield-AI-Models&scopes=read:user',
+                    'ghp_...'
+                );
+                return;
+            }
 
-                window.open('https://github.com/settings/tokens/new?description=Centralfield-AI-Models&scopes=read:user', '_blank', 'noopener,noreferrer');
-                const customKeyInp = document.getElementById('cfg-custom-key');
-                if (customKeyInp) {
-                    customKeyInp.type = 'text';
-                    customKeyInp.focus();
+            const directPortals = {
+                openai: {
+                    title: '💬 OpenAI ChatGPT (GPT-4o) 跳轉授權連線精靈',
+                    desc: '已開啟 <strong>OpenAI Platform 官方授權頁</strong>！登入後建立並複製 <code>sk-proj-...</code> 金鑰，點下方「自動讀取剪貼簿並連結」即可。（或按右側改用 <strong>OpenRouter 統一 OAuth</strong> 免申請直接登入）',
+                    url: 'https://platform.openai.com/api-keys',
+                    ph: 'sk-proj-...'
+                },
+                perplexity: {
+                    title: '🔎 Perplexity AI (Sonar Pro) 跳轉授權連線精靈',
+                    desc: '已開啟 <strong>Perplexity API 官方授權頁</strong>！登入後產生並複製 <code>pplx-...</code> 金鑰，點下方「自動讀取剪貼簿並連結」即可。（或按右側改用 <strong>OpenRouter 統一 OAuth</strong> 直接授權）',
+                    url: 'https://www.perplexity.ai/settings/api',
+                    ph: 'pplx-...'
+                },
+                deepseek: {
+                    title: '🐋 DeepSeek 深度求索 (R1/V3) 跳轉授權連線精靈',
+                    desc: '已開啟 <strong>DeepSeek 官方開放平台授權頁</strong>！登入後建立並複製 <code>sk-...</code> 金鑰，點下方「自動讀取剪貼簿並連結」即可。（或按右側改用 <strong>OpenRouter 統一 OAuth</strong> 一鍵授權）',
+                    url: 'https://platform.deepseek.com/api_keys',
+                    ph: 'sk-...'
+                },
+                claude: {
+                    title: '🧠 Anthropic Claude 3.7 Sonnet 跳轉授權連線精靈',
+                    desc: '已開啟 <strong>Anthropic Console 官方授權頁</strong>！登入後建立並複製 <code>sk-ant-...</code> 金鑰，點下方「自動讀取剪貼簿並連結」即可。（或按右側改用 <strong>OpenRouter 統一 OAuth</strong> 一鍵授權）',
+                    url: 'https://console.anthropic.com/settings/keys',
+                    ph: 'sk-ant-...'
+                },
+                grok: {
+                    title: '⚡ xAI Grok 3 跳轉授權連線精靈',
+                    desc: '已開啟 <strong>xAI Cloud Console 官方授權頁</strong>！登入後建立並複製 <code>xai-...</code> 金鑰，點下方「自動讀取剪貼簿並連結」即可。（或按右側改用 <strong>OpenRouter 統一 OAuth</strong> 一鍵授權）',
+                    url: 'https://console.x.ai/',
+                    ph: 'xai-...'
                 }
-                const resBox = document.getElementById('ai-test-result');
-                if (resBox) {
-                    resBox.classList.remove('hidden');
-                    resBox.className = 'p-2.5 rounded-lg bg-amber-950/80 border border-amber-500/50 text-xs text-amber-200';
-                    resBox.innerHTML = '🔑 <strong>GitHub Models 連線指引：</strong>已自動為您設定 GitHub Models 端點與 <code>gpt-4o</code>！請在剛開啟的 GitHub 頁面點擊「Generate token」，將 <code>ghp_...</code> 貼入下方「OAuth / 自訂 Key」欄位並按「儲存並套用」即可免費使用！';
-                }
-                showToast('🔑 已設定 GitHub Models 端點，請貼入產生的 Token (ghp_...)！');
+            };
+
+            const info = directPortals[provider];
+            if (info) {
+                openGuidedAuthWizard(provider, info.title, info.desc, info.url, info.ph);
             }
         }
 
@@ -2759,7 +2957,7 @@
                             if (!aiConnectionConfig.oauthSessions) aiConnectionConfig.oauthSessions = {};
                             aiConnectionConfig.oauthSessions.openrouter = {
                                 loggedIn: true,
-                                label: 'OpenRouter OAuth',
+                                label: 'OpenRouter 全模型 OAuth',
                                 account: 'Key 已自動交換綁定',
                                 key: data.key
                             };
@@ -2774,7 +2972,7 @@
                             }
                             selectProviderFromModal('custom_openai');
                             renderOAuthStatusUI();
-                            showToast('✅ OpenRouter OAuth 授權成功並已自動寫入 API Key！');
+                            showToast('✅ OpenRouter 統一 OAuth 授權成功！已解鎖全 6 大 AI 模型！');
                         }
                     } else {
                         window.history.replaceState({}, document.title, window.location.pathname);
@@ -2794,15 +2992,16 @@
                 aiConnectionConfig.customUrl = 'https://openrouter.ai/api/v1/chat/completions';
                 aiConnectionConfig.oauthSessions.openrouter = {
                     loggedIn: true,
-                    label: 'OpenRouter OAuth',
+                    label: 'OpenRouter 全模型 OAuth',
                     account: 'Key 已自動綁定',
                     key: msg.key
                 };
                 if (document.getElementById('cfg-custom-key')) document.getElementById('cfg-custom-key').value = msg.key;
+                document.getElementById('oauth-guided-wizard')?.classList.add('hidden');
                 selectProviderFromModal('custom_openai');
                 renderOAuthStatusUI();
                 saveWorkspaceToLocalStorage();
-                showToast('🎉 OpenRouter OAuth 授權成功！已自動寫入真實 API Key 並啟用模型！');
+                showToast('🎉 統一 OAuth 授權成功！已自動解鎖 ChatGPT / Claude / DeepSeek / Perplexity / Grok / Gemini！');
             } else if (msg.provider === 'google' && msg.token) {
                 aiConnectionConfig.oauthSessions.google = {
                     loggedIn: true,
@@ -2810,6 +3009,7 @@
                     account: 'OAuth Token 已驗證',
                     token: msg.token
                 };
+                document.getElementById('oauth-guided-wizard')?.classList.add('hidden');
                 selectProviderFromModal('gemini');
                 renderOAuthStatusUI();
                 saveWorkspaceToLocalStorage();
@@ -2817,7 +3017,6 @@
             }
         });
 
-        // 監聽跨分頁 localStorage 同步（若使用者在同瀏覽器分頁完成授權）
         window.addEventListener('storage', (e) => {
             if (e.key === LOCAL_STORAGE_KEY && e.newValue) {
                 restoreWorkspaceFromLocalStorage();
@@ -2937,11 +3136,47 @@
 
             if (!hasValidCloudAuthForProvider(prov)) {
                 resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200 font-bold';
-                resBox.innerText = `⚠️ 尚未偵測到 ${prov.toUpperCase()} 的有效 API Key 或 OAuth Token！請點擊上方「PKCE 一鍵授權」或「取 Key ↗」取得金鑰貼入後再測試。`;
+                resBox.innerText = `⚠️ 尚未偵測到 ${prov.toUpperCase()} 的有效授權憑證！請點擊上方「統一全模型 OAuth 一鍵跳轉授權」或該模型卡片的「🔐 跳轉授權登入」。`;
                 return;
             }
 
             try {
+                // 優先檢查是否有該平台直連金鑰；若無則自動透過已授權的 OpenRouter OAuth 路由調用
+                const hasDirectKey = (
+                    (prov === 'gemini' && ((aiConnectionConfig.geminiKey || '').trim() || aiConnectionConfig.oauthSessions?.google?.token)) ||
+                    (prov === 'openai' && (aiConnectionConfig.openaiKey || '').trim()) ||
+                    (prov === 'perplexity' && (aiConnectionConfig.perplexityKey || '').trim()) ||
+                    (prov === 'deepseek' && (aiConnectionConfig.deepseekKey || '').trim()) ||
+                    (prov === 'claude' && (aiConnectionConfig.claudeKey || '').trim()) ||
+                    (prov === 'grok' && (aiConnectionConfig.grokKey || '').trim())
+                );
+
+                if (!hasDirectKey && isOpenRouterOAuthActive()) {
+                    const orKey = (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key || '').trim();
+                    const orSlug = getOpenRouterSlugForProvider(prov);
+                    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${orKey}`
+                        },
+                        body: JSON.stringify({
+                            model: orSlug,
+                            max_tokens: 16,
+                            messages: [{ role: 'user', content: 'Reply OK' }]
+                        })
+                    });
+                    if (r.ok) {
+                        resBox.className = 'p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-300 font-bold';
+                        resBox.innerText = `✅ 已透過 OpenRouter 統一 OAuth 成功連結 ${prov.toUpperCase()} (${orSlug})！可直接生成文案。`;
+                    } else {
+                        const errJ = await r.json().catch(() => ({}));
+                        resBox.className = 'p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-xs text-rose-200';
+                        resBox.innerText = `⚠️ OpenRouter OAuth 回傳錯誤 (${r.status})：${errJ?.error?.message || '請重新授權'}`;
+                    }
+                    return;
+                }
+
                 if (prov === 'gemini') {
                     const key = (aiConnectionConfig.geminiKey || '').trim();
                     const oauthTok = aiConnectionConfig.oauthSessions?.google?.token || '';
@@ -2968,14 +3203,6 @@
                     }
                 }
 
-                // 測試 OpenRouter / OpenAI / DeepSeek / Perplexity / Grok / Custom OpenAI 相容端點
-                const endpointMap = {
-                    openai: { url: 'https://api.openai.com/v1/chat/completions', key: aiConnectionConfig.openaiKey, model: 'gpt-4o-mini' },
-                    perplexity: { url: 'https://api.perplexity.ai/chat/completions', key: aiConnectionConfig.perplexityKey, model: 'sonar' },
-                    deepseek: { url: 'https://api.deepseek.com/chat/completions', key: aiConnectionConfig.deepseekKey, model: 'deepseek-chat' },
-                    grok: { url: 'https://api.x.ai/v1/chat/completions', key: aiConnectionConfig.grokKey, model: 'grok-3-latest' },
-                    custom_openai: { url: aiConnectionConfig.customUrl, key: aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key, model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash' }
-                };
                 if (prov === 'claude') {
                     const r = await fetch('https://api.anthropic.com/v1/messages', {
                         method: 'POST',
@@ -2996,6 +3223,14 @@
                     }
                     return;
                 }
+
+                const endpointMap = {
+                    openai: { url: 'https://api.openai.com/v1/chat/completions', key: aiConnectionConfig.openaiKey, model: 'gpt-4o-mini' },
+                    perplexity: { url: 'https://api.perplexity.ai/chat/completions', key: aiConnectionConfig.perplexityKey, model: 'sonar' },
+                    deepseek: { url: 'https://api.deepseek.com/chat/completions', key: aiConnectionConfig.deepseekKey, model: 'deepseek-chat' },
+                    grok: { url: 'https://api.x.ai/v1/chat/completions', key: aiConnectionConfig.grokKey, model: 'grok-3-latest' },
+                    custom_openai: { url: aiConnectionConfig.customUrl, key: aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key, model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash' }
+                };
 
                 const ep = endpointMap[prov];
                 if (ep && ep.url && ep.key) {
@@ -3030,7 +3265,7 @@
             const sel = document.getElementById('ai-provider-select');
             if (!sel) return;
             sel.value = sel.value === 'local_offline'
-                ? (hasValidCloudAuthForProvider('custom_openai') ? 'custom_openai' : 'gemini')
+                ? (isOpenRouterOAuthActive() ? 'custom_openai' : 'gemini')
                 : 'local_offline';
             onAiProviderChange();
         }
@@ -3041,17 +3276,18 @@
             const topBtn = document.getElementById('top-mode-toggle-btn');
             const statusText = document.getElementById('ai-conn-status-text');
             const isAuthed = hasValidCloudAuthForProvider(provider);
+            const viaOr = isOpenRouterOAuthActive();
 
             const providerDescMap = {
                 local_offline: '💻 純本機離線知識庫模式（無需登入或網絡即可秒速生成）',
                 local_ollama: `🏠 本機 Ollama / LM Studio 直連（模型：${aiConnectionConfig.ollamaModel || 'deepseek-r1:14b'}）`,
-                gemini: isAuthed ? '✅ Google Gemini 3 Flash 已連線驗證（支援 Google Search 實時檢索）' : '⚠️ Google Gemini 尚未填入 API Key（請點右側「OAuth 授權 / 綁定 Key」或用「Gemini網頁 ↗」）',
-                perplexity: isAuthed ? '✅ Perplexity AI (Sonar Pro) 已連線驗證' : '⚠️ Perplexity AI 尚未填入 API Key（請點右側綁定 Key）',
-                deepseek: isAuthed ? '✅ DeepSeek R1 滿血推理已連線驗證' : '⚠️ DeepSeek 尚未填入 API Key（請點右側綁定 Key 或用「DeepSeek網頁 ↗」）',
-                openai: isAuthed ? '✅ OpenAI ChatGPT-4o 已連線驗證' : '⚠️ OpenAI 尚未填入 API Key（請點右側綁定 Key 或用「ChatGPT網頁 ↗」）',
-                claude: isAuthed ? '✅ Anthropic Claude 3.7 Sonnet 已連線驗證' : '⚠️ Claude 尚未填入 API Key（請點右側綁定 Key 或用「Claude網頁 ↗」）',
-                grok: isAuthed ? '✅ xAI Grok 3 已連線驗證' : '⚠️ Grok 尚未填入 API Key（請點右側綁定 Key）',
-                custom_openai: isAuthed ? `✅ OpenRouter / 自訂端點已連線驗證（${aiConnectionConfig.customModel || '已授權'}）` : '⚠️ OpenRouter / 自訂端點尚未授權（請點右側「OAuth 授權」一鍵登入）'
+                gemini: isAuthed ? `✅ Google Gemini 已連線驗證${!(aiConnectionConfig.geminiKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ' (支援 Google Search)'}` : '⚠️ Google Gemini 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                perplexity: isAuthed ? `✅ Perplexity Sonar Pro 已連線驗證${!(aiConnectionConfig.perplexityKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ''}` : '⚠️ Perplexity AI 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                deepseek: isAuthed ? `✅ DeepSeek R1 滿血推理已連線驗證${!(aiConnectionConfig.deepseekKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ''}` : '⚠️ DeepSeek 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                openai: isAuthed ? `✅ OpenAI ChatGPT-4o 已連線驗證${!(aiConnectionConfig.openaiKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ''}` : '⚠️ OpenAI 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                claude: isAuthed ? `✅ Anthropic Claude 3.7 Sonnet 已連線驗證${!(aiConnectionConfig.claudeKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ''}` : '⚠️ Claude 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                grok: isAuthed ? `✅ xAI Grok 3 已連線驗證${!(aiConnectionConfig.grokKey || '').trim() && viaOr ? ' (經統一 OAuth)' : ''}` : '⚠️ Grok 尚未授權（請點右側「多模型跳轉授權」一鍵登入）',
+                custom_openai: isAuthed ? `✅ OpenRouter / 自訂端點已連線驗證（${aiConnectionConfig.customModel || '已授權'}）` : '⚠️ OpenRouter / 自訂端點尚未授權（請點右側「多模型跳轉授權」一鍵登入）'
             };
 
             if (statusText) {
@@ -3158,10 +3394,10 @@
                 if (panel) panel.classList.remove('hidden');
                 if (badge) badge.innerText = `⚠️ 尚未取得 ${provider.toUpperCase()} 的有效授權憑證或 API Key`;
                 if (body) {
-                    body.innerText = `瀏覽器因安全機制無法直接讀取其他分頁的網頁登入狀態。\n請選擇以下任一方式連結 AI 模型：\n1. 點擊右側「🔑 立即前往完成 OAuth 授權 / 填入 Key」（推薦使用 OpenRouter PKCE 一鍵授權 或 貼上免費 Google AI Studio Key）。\n2. 若您已在瀏覽器登入 ChatGPT / Gemini / DeepSeek 網頁版，可直接點擊上方「ChatGPT網頁 ↗」或「Gemini網頁 ↗」自動複製指令貼上使用！`;
+                    body.innerText = `請選擇以下任一方式連結 AI 模型：\n1. 點擊右側「🔑 立即前往完成 OAuth 授權 / 填入 Key」➔ 點擊「🌐 統一全模型 OAuth 一鍵跳轉授權」，一次登入即可同時解鎖 ChatGPT / Claude / DeepSeek / Perplexity / Grok / Gemini。\n2. 或點擊該模型卡片上的「🔐 跳轉授權登入」單獨綁定金鑰！`;
                 }
                 if (openConnBtn) openConnBtn.classList.remove('hidden');
-                showToast(`⚠️ 請先為 ${provider.toUpperCase()} 完成 OAuth 授權或填入 API Key！`);
+                showToast(`⚠️ 請先為 ${provider.toUpperCase()} 完成跳轉授權或填入 API Key！`);
                 return;
             }
 
@@ -3179,9 +3415,43 @@
 
             let aiJson = null;
             let lastErrMsg = '';
+            let usedGatewayNote = '';
 
             try {
-                if (provider === 'gemini') {
+                const hasDirectKey = (
+                    (provider === 'gemini' && ((aiConnectionConfig.geminiKey || '').trim() || aiConnectionConfig.oauthSessions?.google?.token)) ||
+                    (provider === 'openai' && (aiConnectionConfig.openaiKey || '').trim()) ||
+                    (provider === 'perplexity' && (aiConnectionConfig.perplexityKey || '').trim()) ||
+                    (provider === 'deepseek' && (aiConnectionConfig.deepseekKey || '').trim()) ||
+                    (provider === 'claude' && (aiConnectionConfig.claudeKey || '').trim()) ||
+                    (provider === 'grok' && (aiConnectionConfig.grokKey || '').trim())
+                );
+
+                // 若該模型無獨立直連 Key，但已完成 OpenRouter 統一 OAuth 授權，自動透過 OpenRouter 路由調用該指定模型
+                if (!hasDirectKey && provider !== 'local_ollama' && isOpenRouterOAuthActive()) {
+                    const orKey = (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key || '').trim();
+                    const orModel = getOpenRouterSlugForProvider(provider);
+                    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${orKey}`
+                        },
+                        body: JSON.stringify({
+                            model: orModel,
+                            messages: [{ role: 'user', content: prompt }]
+                        })
+                    });
+                    if (r.ok) {
+                        const data = await r.json();
+                        const rawTxt = data?.choices?.[0]?.message?.content || '';
+                        aiJson = JSON.parse(rawTxt.replace(/```json/gi, '').replace(/```/g, '').trim());
+                        usedGatewayNote = ` (經統一 OAuth 調用 ${orModel})`;
+                    } else {
+                        const errObj = await r.json().catch(() => ({}));
+                        lastErrMsg = errObj?.error?.message || `OpenRouter HTTP ${r.status}`;
+                    }
+                } else if (provider === 'gemini') {
                     const key = (aiConnectionConfig.geminiKey || '').trim();
                     const oauthTok = aiConnectionConfig.oauthSessions?.google?.token || '';
                     const headers = { 'Content-Type': 'application/json' };
@@ -3278,7 +3548,7 @@
             }
 
             if (aiJson && aiJson.fb) {
-                if (badge) badge.innerText = `✅ AI 引擎 (${provider.toUpperCase()}) 實時檢索並生成完成！`;
+                if (badge) badge.innerText = `✅ AI 引擎 (${provider.toUpperCase()}${usedGatewayNote}) 實時檢索並生成完成！`;
                 if (body) body.innerText = aiJson.insight || `已完成「${topic}」實時腦場行情分析。`;
                 if (document.getElementById('out-fb')) document.getElementById('out-fb').value = aiJson.fb || '';
                 if (document.getElementById('out-ig')) document.getElementById('out-ig').value = aiJson.ig || '';
@@ -3290,7 +3560,7 @@
             } else {
                 if (badge) badge.innerText = `⚠️ ${provider.toUpperCase()} 連線未成功 (${lastErrMsg || '憑證無效'})，已自動以本機資料庫保底生成`;
                 if (body) {
-                    body.innerText = `原因說明：${lastErrMsg || 'API Key 無效或額度不足'}。\n請點擊右側按鈕檢查金鑰、重新執行 OpenRouter PKCE OAuth 授權，或直接點擊上方「ChatGPT網頁 ↗ / Gemini網頁 ↗」使用已登入的網頁帳號！`;
+                    body.innerText = `原因說明：${lastErrMsg || 'API Key 無效或額度不足'}。\n請點擊右側按鈕重新執行「統一全模型 OAuth 授權」或該模型的「🔐 跳轉授權登入」！`;
                 }
                 if (openConnBtn) openConnBtn.classList.remove('hidden');
                 generateAllContent();
@@ -4968,12 +5238,13 @@
             let fetchedSummary = '';
 
             try {
-                if (src.code === 'custom_openai' && (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key)) {
-                    const key = aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key;
-                    const r = await fetch(aiConnectionConfig.customUrl || 'https://openrouter.ai/api/v1/chat/completions', {
+                if (isOpenRouterOAuthActive() && src.code !== 'gemini') {
+                    const key = (aiConnectionConfig.customKey || aiConnectionConfig.oauthSessions?.openrouter?.key || '').trim();
+                    const orModel = getOpenRouterSlugForProvider(src.code);
+                    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-                        body: JSON.stringify({ model: aiConnectionConfig.customModel || 'google/gemini-2.5-flash', messages: [{ role: 'user', content: queryPrompt }] })
+                        body: JSON.stringify({ model: orModel, messages: [{ role: 'user', content: queryPrompt }] })
                     });
                     if (r.ok) {
                         const d = await r.json();
