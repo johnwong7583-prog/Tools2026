@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>中田現貨同型號競爭對手比價系統 v10.0｜AI 全網即時搜價校準與零阻擋同步引擎</title>
+  <title>中田現貨同型號競爭對手比價系統 v21.0｜五重防呆校準引擎・全鏈路零誤抓</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter & Noto Sans TC -->
@@ -111,7 +111,7 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3.5">
       <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
-        <!-- Brand & Title -->
+        <!-- Brand & Status Badges -->
         <div class="flex items-start sm:items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
@@ -119,90 +119,96 @@
           <div>
             <div class="flex flex-wrap items-center gap-2">
               <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">中田現貨同型號競爭對手比價系統</h1>
-              <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">v10.0 AI 全網即時搜價校準版</span>
+              <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">v21.0 五重防呆校準引擎</span>
               <span id="timestampBadge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                <span id="timestampText">查價基準：2026-11-19 (HKT)</span>
+                <span id="timestampText">查價基準：2026-11-21 09:50 (HKT)</span>
               </span>
-              <span id="liveSyncStatusPill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                <span>準備就緒</span>
+              <span id="liveSyncStatusPill" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span>實測基準已就緒</span>
               </span>
               <span id="modifiedCounterBadge" class="hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
                 <span id="modifiedCounterText">已修訂 0 項</span>
               </span>
             </div>
             <p class="text-xs text-slate-500 mt-0.5">
-              支援 <strong>AI Google Search 全網實時核價</strong>（自動查核中田及 8 大對手現貨網價）• 全頁按 <kbd class="px-1 py-0.2 bg-slate-100 border border-slate-300 rounded text-[10px] font-mono">Ctrl+V</kbd> 即時批量寫入剪貼簿報價
+              SpecGuard 跨規格/RGB/跟板價硬性隔離 • 直連 <a href="https://centralfield.com/custom/" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-semibold hover:underline">中田現貨報價總表 (/custom/)↗</a> • 雙擊儲存格改價 • 全局 <kbd class="px-1 bg-slate-100 border border-slate-300 rounded text-[11px]">Ctrl+V</kbd> 自動校準
             </p>
           </div>
         </div>
 
-        <!-- Primary Action Buttons -->
+        <!-- Primary Action Buttons (ALL RETAINED & ORGANIZED) -->
         <div class="no-print flex flex-wrap items-center gap-2">
-          <!-- One-Click Sync & URL Scraper Group -->
+          <!-- 1. One-Click Sync & Zero-CORS Bookmarklet / URL Scraper Group -->
           <div class="inline-flex rounded-xl shadow-xs overflow-hidden">
             <button type="button" data-action="one-click-sync" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.99] transition">
               <svg id="syncBtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
-              <span>全網一鍵同步</span>
+              <span>全網一鍵更新</span>
             </button>
-            <button type="button" data-action="open-sync-modal" data-tab="bookmarklet" title="取得零阻擋瀏覽器抓價書籤與本機自動爬蟲" class="inline-flex items-center gap-1 px-2.5 py-2 text-xs font-semibold bg-emerald-700 text-emerald-50 hover:bg-emerald-800 border-l border-emerald-500/40 transition">
-              <span>⚡ 零阻擋書籤</span>
+            <button type="button" data-action="open-sync-modal" data-tab="sync" title="零阻擋抓價書籤、網址抓價與異動日誌" class="inline-flex items-center gap-1 px-2.5 py-2 text-xs font-semibold bg-emerald-700 text-emerald-50 hover:bg-emerald-800 border-l border-emerald-500/40 transition">
+              <span>⚡ 書籤 / 網址</span>
             </button>
           </div>
 
+          <!-- 2. Full-Page Paste Calibrator -->
           <button type="button" data-action="open-sync-modal" data-tab="pageparse" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-600 text-white hover:bg-amber-700 transition shadow-xs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
             <span>中田/9店全頁貼上校準</span>
           </button>
 
-          <button type="button" id="batchSearchTop10Btn" data-action="batch-search-visible" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-            <span>AI 核價本頁前6項</span>
-          </button>
-            <button type="button" data-action="open-sync-modal" data-tab="bookmarklet" title="取得零阻擋瀏覽器抓價書籤與本機自動爬蟲" class="inline-flex items-center gap-1 px-2.5 py-2 text-xs font-semibold bg-emerald-700 text-emerald-50 hover:bg-emerald-800 border-l border-emerald-500/40 transition">
-              <span>⚡ 零阻擋書籤</span>
-            </button>
-          </div>
-
-          <button type="button" data-action="open-sync-modal" data-tab="pageparse" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-600 text-white hover:bg-amber-700 transition shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-            <span>中田/9店全頁貼上校準</span>
-          </button>
-
+          <!-- 3. Batch Search Top 8 Visible Items Across 9 Stores -->
           <button type="button" id="batchSearchTop10Btn" data-action="batch-search-visible" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition shadow-xs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
             <span>批量搜本頁前8項9店實價</span>
           </button>
 
+          <!-- 4. Batch Price-Match Simulator -->
           <button type="button" data-action="open-batch-match" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
             <span>批次跟價試算</span>
           </button>
 
+          <!-- 4b. One-Click Price Anomaly Health Audit -->
+          <button type="button" data-action="audit-price-anomalies" title="一鍵掃描全庫 9 店所有疑似異常低價或過高組合價項目" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition shadow-2xs">
+            <span>🛡️ 價格異常體檢</span>
+          </button>
+
+          <!-- 5. Add New SKU -->
           <button type="button" data-action="open-sync-modal" data-tab="add" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition">
             <span>+ 新增型號</span>
           </button>
 
+          <!-- 6. Copy Summary -->
           <button type="button" data-action="copy-summary" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-100 text-slate-800 border border-slate-200 hover:bg-slate-200 transition">
             <span>複製摘要</span>
           </button>
 
+          <!-- 6b. Copy Procurement Action Sheet -->
+          <button type="button" data-action="copy-procurement" title="一鍵生成採購部調價建議清單（列出所有對手平過中田之型號及目標跟價）" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100 transition">
+            <span>📋 採購調價單</span>
+          </button>
+
+          <!-- 7. Export HTML -->
           <button type="button" data-action="export-html" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition">
             <span>匯出 HTML</span>
           </button>
 
+          <!-- 8. Export CSV -->
           <button type="button" data-action="export-csv" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition">
             <span>匯出 CSV</span>
           </button>
 
+          <!-- 9. Print / PDF -->
           <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 transition">
             <span>列印 / PDF</span>
           </button>
 
+          <!-- 10. Undo Last Edit -->
           <button type="button" id="undoEditBtn" data-action="undo-last-edit" class="hidden inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-700 border border-sky-200 hover:bg-sky-100 transition">
             <span>↶ 復原上一步</span>
           </button>
 
+          <!-- 11. Reset to Baseline -->
           <button type="button" id="resetDataBtn" data-action="reset-baseline" class="hidden inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition">
             <span>還原基準庫</span>
           </button>
@@ -269,6 +275,19 @@
     <!-- Dynamic KPI Summary Strip -->
     <section id="kpiStrip" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></section>
 
+    <!-- Category Win-Rate & Price Gap Health Matrix -->
+    <section id="categoryHealthSection" class="no-print bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+      <div class="flex items-center justify-between cursor-pointer" data-action="toggle-cat-health">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-800">各品類價格競爭力與勝率健康度矩陣</h3>
+          <span class="text-[11px] text-slate-400 hidden sm:inline">（點擊任意品類卡片可立即篩選該類別「對手平過中田」之項目）</span>
+        </div>
+        <span id="catHealthToggleText" class="text-xs font-medium text-slate-500 hover:text-slate-800">收起矩陣</span>
+      </div>
+      <div id="categoryHealthGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 mt-3 pt-3 border-t border-slate-100"></div>
+    </section>
+
     <!-- Competitor Threat Radar -->
     <section id="threatRadarSection" class="no-print bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
       <div class="flex items-center justify-between cursor-pointer" data-action="toggle-radar">
@@ -321,9 +340,9 @@
             <div class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-900 bg-amber-50/80 px-3 py-1.5 rounded-xl border border-amber-200 select-none">
               <label class="inline-flex items-center gap-1.5 cursor-pointer">
                 <input type="checkbox" id="excludeOutliersCheckbox" checked class="rounded text-amber-600 focus:ring-amber-500 w-3.5 h-3.5">
-                <span>防誤抓異常低價</span>
+                <span>防誤抓雙向異常價</span>
               </label>
-              <select id="outlierThresholdSelect" title="設定低於中田多少百分比視為疑似異常價" class="bg-white border border-amber-300 rounded-lg px-1.5 py-0.5 text-[11px] font-bold text-amber-900 focus:outline-none">
+              <select id="outlierThresholdSelect" title="設定低於中田多少百分比（或高於65%）視為疑似異常價" class="bg-white border border-amber-300 rounded-lg px-1.5 py-0.5 text-[11px] font-bold text-amber-900 focus:outline-none">
                 <option value="20">&gt;20%</option>
                 <option value="30" selected>&gt;30%</option>
                 <option value="40">&gt;40%</option>
@@ -366,7 +385,7 @@
               <span class="w-3.5 h-3.5 rounded bg-emerald-100 border border-emerald-400 inline-block"></span>
               <span>綠底粗體 = 本行最低價</span>
             </span>
-            <span>點「<strong class="text-emerald-700">🔍 搜9店</strong>」即時核對全網售價 • <strong class="text-slate-700">雙擊</strong>價格格可直接改價</span>
+            <span><strong class="text-slate-700">雙擊</strong>價格格即時改價 • 點 <strong class="text-emerald-700">🔍 搜9店</strong> 核實實價</span>
           </div>
         </div>
       </div>
@@ -396,23 +415,23 @@
       </div>
     </section>
 
-    <!-- Methodology & SpecGuard Rules Card -->
+    <!-- Methodology & Official Domains Reference Card -->
     <section class="no-print bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs text-xs text-slate-600 space-y-2">
       <div class="flex items-center justify-between cursor-pointer" data-action="toggle-notes">
         <div class="flex items-center gap-2 font-bold text-slate-800 text-sm">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>v7.0 雙向（中田 + 8大對手）價格搜尋精準度架構與 SpecGuard 規則說明</span>
+          <span>v21.0 五重防呆校準引擎、雙向離群值攔截及零阻擋同步說明</span>
         </div>
         <span id="notesToggleText" class="text-blue-600 font-medium hover:underline">收起說明</span>
       </div>
       <div id="notesBody" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100 leading-relaxed">
         <div class="space-y-1.5">
-          <p><strong class="text-slate-800">1. 中田與對手 Buy-Box 語境加權萃取：</strong>針對 <code>centralfield.com</code>、<code>pegasus.hk</code>、<code>fortress.com.hk</code> 等網店並列「劃線原價（RRP）」、「折扣立減標籤（HK$-xxx）」、「加購散熱器（+$229）」、「跟板價」及「實際網售價」的結構，v7.0 引擎不再盲目取頁面最低數字，而是根據 DOM 特價權重與結構化 JSON 鎖定真實單買現貨價。</p>
-          <p><strong class="text-slate-800">2. 全網 9 店單品即時搜價（<code>MultiStoreSearchEngine</code>）：</strong>點擊任意型號旁的「<strong>🔍 搜9店</strong>」或於詳情視窗點「<strong>一鍵全網即時搜價</strong>」，系統會自動向中田及 8 大對手官網發起搜尋，過濾缺貨卡片並顯示每間店舖抓到的標題、匹配度與實價。</p>
+          <p><strong class="text-slate-800">1. 五重防呆閘門（<code>SpecGuard</code> + <code>PriceIntegrityGuard</code>）：</strong>嚴格隔離 <code>單條 (1x)</code> vs <code>雙條套裝 (2x)</code>、<code>單隻裝</code> vs <code>2隻裝 Mesh</code>、<code>白色/White</code> vs <code>黑色/Black</code>、<code>RGB</code> vs <code>無燈版</code>、<code>BOX</code> vs <code>TRAY</code> 及主機板晶片組（<code>X870</code>/<code>X870E</code>/<code>B850</code>/<code>B860</code>），並自動剔除未選中的多容量按鈕選項。</p>
+          <p><strong class="text-slate-800">2. 寫入前波動紅線與雙向異常攔截：</strong>任何抓取結果若低於基準價超過 <code>32%</code>（疑似訂金／加購散熱器）或高於基準價超過 <code>60%</code>（疑似整機組合），系統將自動取消預設勾選並標示 <code>⚠️</code> 等待人工覆核；主表亦同時攔截過低與過高離群報價。</p>
         </div>
         <div class="space-y-1.5">
-          <p><strong class="text-slate-800">3. SpecGuard 硬性規格否決鎖：</strong>自動隔離 <code>i3-12100</code> vs <code>i3-12100F</code>、<code>RTX 5060</code> vs <code>RTX 5060 Ti</code>、<code>8GB</code> vs <code>16GB</code>、<code>BOX 盒裝</code> vs <code>TRAY 散裝</code>、<code>CL28/C30/C36</code> 時序及 <code>單隻裝</code> vs <code>2隻裝 Mesh</code>，杜絕跨規格誤抓。</p>
-          <p><strong class="text-slate-800">4. 全頁 <code>Ctrl+A</code> 複製貼上批量校準：</strong>若瀏覽器開啟中田分類頁或對手搜尋頁，只需全選複製文字並貼入頂部「<strong>中田/9店全頁貼上校準</strong>」，即可批量核對並更新最新網售價。</p>
+          <p><strong class="text-slate-800">3. 零阻擋書籤 &amp; 全局 <code>Ctrl+V</code> 自動同步：</strong>打開 <code>centralfield.com/custom/</code> 或任意對手網頁（飛馬 <code>shop.pegasus.hk</code>、Jumbo <code>jumbo-computer.com/zh-hk</code>、2000Fun <code>openshop.com.hk</code>、SE <code>secomputer.com.hk</code>、法奧 <code>faroll.com</code>、環球 <code>wcslmall.com</code>、未來科技 <code>futurecomputer.hk</code>、豐澤 <code>fortress.com.hk</code>、Price.com.hk），按 <code>Ctrl+A</code> 複製或點書籤「⚡ 擷取最新報價」，切回本頁按 <strong><code>Ctrl+V</code></strong> 即可自動校準。</p>
+          <p><strong class="text-slate-800">4. 一鍵價格異常體檢 &amp; 單格雙擊改價：</strong>點擊頂部「<strong>🛡️ 價格異常體檢</strong>」可即時篩出全庫所有疑似異常項；表格內任意價格格支援<strong>雙擊直接輸入修改</strong>。</p>
         </div>
       </div>
     </section>
@@ -445,7 +464,7 @@
     </div>
   </div>
 
-  <!-- Modal 1: Product 9-Store Full Inspector, Live Multi-Store Search & Inline Price Calibration -->
+  <!-- Modal 1: Product 9-Store Full Inspector, Live 9-Store Search & Inline Price Calibration -->
   <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" data-close-backdrop="detailModal">
     <div class="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full shadow-2xl overflow-hidden">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-start justify-between gap-4">
@@ -462,24 +481,18 @@
         </button>
       </div>
 
-      <div class="p-5 space-y-4 max-h-[84vh] overflow-y-auto">
-        <!-- Live 9-Store Search Action Bar inside Modal -->
-        <div class="p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="space-y-0.5">
-            <div class="text-xs sm:text-sm font-bold text-emerald-950">AI Google Search 全港 9 店實時搜尋與規格精準核對</div>
-            <p class="text-[11px] text-emerald-800">透過 Google Search 實時檢索中田及 8 大對手官網最新現貨報價，經 SpecGuard 過濾原價與跟板價後自動填入。</p>
-          </div>
-          <button type="button" id="modalRun9StoreSearchBtn" data-action="search-all-stores-modal" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-xs shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-            <span>AI 實時核對全網 9 店價格</span>
-          </button>
-        </div>
-
+      <div class="p-5 space-y-4 max-h-[82vh] overflow-y-auto">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">全港九店官網現貨價明細（可檢視抓價匹配度、直連商品頁或手動修訂）</h4>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">全港九店官網現貨價一覽（支援一鍵實時搜價、點「查官網」核對或直接校準）</h4>
+            <p class="text-[11px] text-slate-400">輸入最新港元價格或點「無貨」留空（—），儲存後即時重算最低價</p>
           </div>
-          <span id="modalOverallDiffBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full"></span>
+          <div class="flex items-center gap-2">
+            <button type="button" id="modalSearchAll9Btn" data-action="search-all-stores-modal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-xs">
+              <span>🔍 一鍵搜全港 9 店實價</span>
+            </button>
+            <span id="modalOverallDiffBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full"></span>
+          </div>
         </div>
 
         <div id="modalStoresList" class="space-y-2"></div>
@@ -510,13 +523,13 @@
     </div>
   </div>
 
-  <!-- Modal 2: Sync / Live URL Diagnostics / Universal Full-Page Parser / Import / Add SKU -->
+  <!-- Modal 2: Sync / Zero-CORS Bookmarklet / Live URL Scraper / Full-Page Parser / Import / Add SKU -->
   <div id="webSyncModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" data-close-backdrop="webSyncModal">
     <div class="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2.5">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-          <h3 class="text-base sm:text-lg font-bold">精準抓價同步中心、全網頁貼上校準與資料匯入</h3>
+          <h3 class="text-base sm:text-lg font-bold">零阻擋實時抓價中心、全網頁貼上校準與資料匯入</h3>
         </div>
         <button type="button" data-action="close-sync-modal" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition font-bold">
           ✕
@@ -525,74 +538,28 @@
 
       <!-- Modal Sub-tabs -->
       <div class="flex border-b border-slate-200 bg-slate-50 px-5 pt-2 gap-2 overflow-x-auto no-scrollbar">
-        <button type="button" id="syncTabBookmarklet" data-action="switch-sync-tab" data-tab="bookmarklet" class="px-3.5 py-2 text-xs sm:text-sm font-bold border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap">
-          ⚡ 1. 零阻擋抓價書籤 &amp; 自動爬蟲 (推薦)
+        <button type="button" id="syncTabSync" data-action="switch-sync-tab" data-tab="sync" class="px-3.5 py-2 text-xs sm:text-sm font-bold border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap">
+          1. 全網同步、零阻擋書籤與網址抓價
         </button>
         <button type="button" id="syncTabPageparse" data-action="switch-sync-tab" data-tab="pageparse" class="px-3.5 py-2 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
           2. 中田 / 9店全頁複製貼上校準
         </button>
-        <button type="button" id="syncTabSync" data-action="switch-sync-tab" data-tab="sync" class="px-3.5 py-2 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-          3. 網址直連抓價與異動日誌
-        </button>
         <button type="button" id="syncTabImport" data-action="switch-sync-tab" data-tab="import" class="px-3.5 py-2 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-          4. 批次匯入 CSV / HTML
+          3. 批次匯入多店表格 / CSV・HTML
         </button>
         <button type="button" id="syncTabAdd" data-action="switch-sync-tab" data-tab="add" class="px-3.5 py-2 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-          5. 新增型號
+          4. 手動新增單一型號
         </button>
       </div>
 
       <!-- Modal Body -->
       <div class="p-5 overflow-y-auto flex-1 space-y-4">
-        <!-- Tab 0: Zero-CORS Bookmarklet & Local Auto-Scraper -->
-        <div id="syncPanelBookmarklet" class="space-y-4">
-          <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
-            <div class="text-sm font-bold text-emerald-950">為什麼會出現舊價？如何 100% 繞過 Cloudflare 抓到真實現價？</div>
-            <p class="text-xs text-emerald-900 leading-relaxed">
-              中田（<code>centralfield.com</code>）、飛馬、豐澤、Jumbo 等網店設有瀏覽器跨域（CORS）與 Cloudflare 防護，外部網頁無法在背景偷偷讀取其價格。使用下方<strong>「零阻擋抓價書籤」</strong>，直接在您已開啟的官網分頁內執行 DOM 擷取，<strong>100% 準確讀取折後成交價</strong>！
-            </p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-3">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="text-xs sm:text-sm font-bold text-slate-900">方法 A：瀏覽器「一鍵抓價書籤」（3 秒同步全站價格）</div>
-              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-bold">支援全部 9 間店舖</span>
-            </div>
-            <ol class="text-xs text-slate-600 space-y-1.5 list-decimal list-inside leading-relaxed">
-              <li>將下方綠色按鈕<strong>拖曳到瀏覽器的書籤列</strong>（或點右側「複製書籤程式碼」手動新增書籤）。</li>
-              <li>在瀏覽器打開 <a href="https://centralfield.com/custom/" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-bold underline">中田現貨報價總表 (/custom/)↗</a> 或飛馬 / Jumbo / 豐澤商品分類頁。</li>
-              <li>點擊書籤列上的 <strong>「⚡ 擷取最新報價」</strong>，系統會自動抓取該頁全部現貨折後價並複製到剪貼簿。</li>
-              <li>切回本系統視窗並按 <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded font-mono font-bold">Ctrl+V</kbd>，系統即自動完成全庫校準！</li>
-            </ol>
-            <div class="flex flex-wrap items-center gap-3 pt-1">
-              <a id="bookmarkletDragLink" href="#" onclick="event.preventDefault(); Utils.showToast('請將此按鈕直接拖曳到瀏覽器頂部的「書籤列」即可使用！');" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs cursor-move">
-                <span>⚡ 擷取最新報價 (拖曳我到書籤列)</span>
-              </a>
-              <button type="button" data-action="copy-bookmarklet" class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 transition">
-                複製書籤程式碼
-              </button>
-            </div>
-          </div>
-
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="text-xs sm:text-sm font-bold text-slate-900">方法 B：本機全自動無人值守爬蟲腳本（Node.js）</div>
-              <button type="button" data-action="copy-node-script" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white hover:bg-slate-900 transition">
-                複製 sync-prices.mjs 腳本
-              </button>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              若希望完全自動化定時抓取，可複製此 Node.js 腳本於本機執行（<code>node sync-prices.mjs</code>），本機環境無瀏覽器 CORS 限制，會直接向 <code>centralfield.com/custom/</code> 與各對手網店抓取最新售價並輸出可一鍵匯入的 JSON 檔案。
-            </p>
-          </div>
-        </div>
-
-        <!-- Tab 1: One-Click Sync, Live URL Scraper & Diagnostics -->
-        <div id="syncPanelSync" class="hidden space-y-4">
+        <!-- Tab 1: One-Click Sync, Zero-CORS Bookmarklet, Live URL Scraper & Diagnostics -->
+        <div id="syncPanelSync" class="space-y-4">
           <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="space-y-1">
-              <div class="text-sm font-bold text-emerald-950">中田 /custom/ 報價總表 + 已綁定 9 店官網併發同步</div>
-              <p class="text-xs text-emerald-800">自動抓取中田現貨報價總表及已綁定商品頁（<span id="boundUrlsCountText" class="font-bold">7</span> 條已綁定）。</p>
+              <div class="text-sm font-bold text-emerald-950">中田 /custom/ 報價總表 + 分類頁 + 已綁定 9 店官網併發同步</div>
+              <p class="text-xs text-emerald-800">自動抓取中田現貨報價總表（<code>centralfield.com/custom/</code>）及已綁定商品頁（<span id="boundUrlsCountText" class="font-bold">8</span> 條已綁定）。</p>
             </div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">
               <button type="button" data-action="sync-from-clipboard" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition">
@@ -604,16 +571,27 @@
             </div>
           </div>
 
+          <!-- Zero-CORS Bookmarklet Box -->
+          <div class="p-3.5 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1 text-xs">
+              <div class="font-bold text-emerald-400">⚡ 零阻擋跨站抓價書籤（100% 繞過瀏覽器沙盒與 Cloudflare 限制）</div>
+              <p class="text-slate-300 leading-relaxed">將右側綠色按鈕拖曳至瀏覽器書籤列；日後打開 <code>centralfield.com/custom/</code> 或任意對手網頁點一下書籤，再回本頁按 <kbd class="px-1 bg-slate-700 rounded">Ctrl+V</kbd> 即自動更新全部實價。</p>
+            </div>
+            <a id="zeroCorsBookmarkletLink" href="#" onclick="event.preventDefault();" class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 cursor-grab shadow-xs">
+              <span>⚡ 擷取最新報價 (拖我到書籤列)</span>
+            </a>
+          </div>
+
           <!-- Live Product URL Scraper Input -->
           <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 space-y-2.5">
             <div class="flex flex-wrap items-center justify-between gap-1">
               <label class="text-xs font-bold text-blue-950">實時官網商品網址抓價（支援純網址，或「網址 + 實測價」格式，每行一條）：</label>
-              <span class="text-[11px] text-blue-700">支援中田 / 飛馬 / 豐澤 / Jumbo / SE / 2000Fun / 法奧</span>
+              <span class="text-[11px] text-blue-700">支援中田 / 飛馬 / 豐澤 / Jumbo / SE / 2000Fun / 法奧 / 環球 / 未來科技</span>
             </div>
-            <textarea id="liveScrapeUrlsInput" rows="3" placeholder="貼上商品網址（可附帶實測價格），例如：&#10;https://centralfield.com/product/12807/intel-core-ultra-5-225-tray-cpu-lga1851&#10;https://centralfield.com/product/19565/amd-ryzen-9-9950x3d2-am5-processor" class="w-full p-2.5 text-xs font-mono bg-white border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            <textarea id="liveScrapeUrlsInput" rows="3" placeholder="貼上商品網址（可附帶實測價格），例如：&#10;https://centralfield.com/product/13263/kingston-fury-beast-rgb-128gb-ddr5-5600mhz-ram&#10;https://centralfield.com/product/17497/amd-ryzen-5-5600-processor" class="w-full p-2.5 text-xs font-mono bg-white border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
             <div class="flex flex-wrap items-center justify-between gap-2">
               <button type="button" data-action="fill-sample-url" class="text-[11px] font-semibold text-blue-700 hover:underline">
-                填入範例：中田 Ultra 5 225 ($1260)、9950X3D2 ($6299)、i3-12100F ($670)、i3-12100 ($875)
+                填入範例：Kingston 128GB RGB ($19200)、Ryzen 5 5600 ($815)、Ultra 5 225 ($1260)
               </button>
               <button type="button" id="runLiveUrlScrapeBtn" data-action="scrape-live-urls" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs">
                 <span>立即抓取 / 校準網址價格</span>
@@ -645,12 +623,12 @@
               <span id="syncLogCountBadge" class="text-[11px] text-slate-500">尚無異動紀錄</span>
             </div>
             <div id="syncChangelogBox" class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 max-h-48 overflow-y-auto space-y-1.5">
-              點擊上方「立即執行全網同步」或使用「⚡ 零阻擋書籤」，系統會在此列出所有價格變動明細。
+              點擊上方「立即執行全網同步」或使用分頁 2「全頁複製貼上校準」，系統會在此列出所有價格變動明細。
             </div>
           </div>
         </div>
 
-        <!-- Tab 2: Universal Full-Page Smart Parser (Centralfield / Fortress / All 9 Stores) -->
+        <!-- Tab 2: Universal Full-Page Smart Parser (Centralfield / Fortress / Price.com.hk / All 9 Stores) -->
         <div id="syncPanelPageparse" class="hidden space-y-4">
           <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-1.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -660,7 +638,7 @@
               </a>
             </div>
             <p class="leading-relaxed">
-              打開 <strong>centralfield.com/custom/</strong>（或任意對手搜尋頁）後，按 <strong>Ctrl+A 全選 → Ctrl+C 複製</strong>並貼入下方。系統專為中田 <code>SKU:</code> 格式與雙價列（如 <code>HK$1,280 HK$980</code>）優化，自動<strong>剔除劃線原價、跟板價、砌機價及訂貨/補貨中項目</strong>，精準取折後現貨成交價！
+              打開 <strong>centralfield.com/custom/</strong>（或任意對手網頁 / Price.com.hk 報價頁）後，按 <strong>Ctrl+A 全選 → Ctrl+C 複製</strong>並貼入下方（或直接在主畫面按 <strong>Ctrl+V</strong>）。系統專為中田 <code>SKU:</code> 格式與雙價列優化，自動剔除劃線原價、跟板價、砌機價及訂貨/補貨中項目！
             </p>
           </div>
 
@@ -670,19 +648,19 @@
               <select id="pageParseStoreSelect" class="text-xs font-bold border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white text-slate-800">
                 <option value="AUTO">自動偵測網頁來源店舖</option>
                 <option value="中田">中田 Centralfield</option>
-                <option value="豐澤">豐澤 Fortress</option>
                 <option value="飛馬">飛馬 Pegasus</option>
                 <option value="Jumbo">Jumbo 珍寶</option>
                 <option value="SE Computer">SE Computer</option>
                 <option value="2000Fun">2000Fun</option>
                 <option value="法奧">法奧 Faroll</option>
                 <option value="環球">環球 Universal</option>
+                <option value="豐澤">豐澤 Fortress</option>
                 <option value="未來科技">未來科技</option>
               </select>
             </div>
             <div class="flex items-center gap-1.5">
               <button type="button" data-action="fill-cf-sample" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition">
-                填入中田整頁複製範例
+                填入中田總表範例
               </button>
               <button type="button" data-action="fill-fortress-sample" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 transition">
                 填入豐澤網頁範例
@@ -690,7 +668,7 @@
             </div>
           </div>
 
-          <textarea id="pageParseRawInput" rows="6" placeholder="在 centralfield.com 或任意對手網頁按 Ctrl+A 全選複製後貼上於此..." class="w-full p-3 text-xs font-mono border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+          <textarea id="pageParseRawInput" rows="6" placeholder="在 centralfield.com/custom/ 或任意對手網頁按 Ctrl+A 全選複製後貼上於此..." class="w-full p-3 text-xs font-mono border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
 
           <div id="pageParsePreview" class="hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2"></div>
 
@@ -830,39 +808,66 @@
 
   <!-- Modal 3: Batch Price-Match Simulator -->
   <div id="batchMatchModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" data-close-backdrop="batchMatchModal">
-    <div class="bg-white rounded-2xl border border-slate-200 max-w-lg w-full shadow-2xl overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-xl w-full shadow-2xl overflow-hidden">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
-          <h3 class="text-base font-bold">批次一鍵跟價模擬器（Price-Match Simulator）</h3>
+          <h3 class="text-base font-bold">智能跟價策略與毛利保護模擬器（Smart Price-Match）</h3>
         </div>
         <button type="button" data-action="close-batch-match" class="p-1 rounded-lg text-slate-400 hover:text-white font-bold">✕</button>
       </div>
       <div class="p-5 space-y-4 text-xs sm:text-sm">
         <p class="text-xs text-slate-600 leading-relaxed">
-          針對<strong>目前篩選範圍</strong>內「對手平過中田」的型號，設定最大價差容忍門檻，模擬將中田售價一鍵調平至選定對手的最低價。
+          針對<strong>目前篩選範圍</strong>內「對手平過中田」的型號，設定<strong>價差容忍門檻</strong>、<strong>搶單定價策略</strong>及<strong>單品最大跌幅（毛利保護紅線）</strong>，即時試算調價後勝率提升效果。
         </p>
 
-        <div class="space-y-2">
-          <label class="block text-xs font-bold text-slate-700">選擇跟價價差門檻：</label>
-          <select id="batchMaxDiffSelect" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium bg-white">
-            <option value="50">僅跟進價差 ≤ HK$50 的微幅落後項目</option>
-            <option value="100" selected>僅跟進價差 ≤ HK$100 的項目</option>
-            <option value="200">僅跟進價差 ≤ HK$200 的項目</option>
-            <option value="500">僅跟進價差 ≤ HK$500 的項目</option>
-            <option value="999999">全數跟進目前篩選範圍所有落後項目</option>
-          </select>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-slate-700">1. 最大價差門檻</label>
+            <select id="batchMaxDiffSelect" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-medium bg-white">
+              <option value="50">價差 ≤ HK$50</option>
+              <option value="100" selected>價差 ≤ HK$100</option>
+              <option value="200">價差 ≤ HK$200</option>
+              <option value="500">價差 ≤ HK$500</option>
+              <option value="999999">不限價差金額</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-slate-700">2. 目標定價策略</label>
+            <select id="batchStrategySelect" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-medium bg-white">
+              <option value="0" selected>與對手最低價持平 ($0)</option>
+              <option value="-1">平過對手 HK$1 (格價網置頂)</option>
+              <option value="-5">平過對手 HK$5 (微幅搶單)</option>
+              <option value="-10">平過對手 HK$10 (強勢搶單)</option>
+            </select>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-rose-700">3. 毛利保護紅線</label>
+            <select id="batchMaxDropPctSelect" class="w-full border border-rose-300 rounded-xl px-2.5 py-2 text-xs font-bold text-rose-900 bg-rose-50/50">
+              <option value="5">單品跌幅 ≤ 5%</option>
+              <option value="8" selected>單品跌幅 ≤ 8%</option>
+              <option value="12">單品跌幅 ≤ 12%</option>
+              <option value="100">不設百分比上限</option>
+            </select>
+          </div>
         </div>
 
         <div id="batchPreviewBox" class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-950 space-y-1.5"></div>
 
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" data-action="close-batch-match" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">
-            取消
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+          <button type="button" data-action="copy-procurement" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 transition">
+            📋 複製本次調價執行清單
           </button>
-          <button type="button" data-action="execute-batch-match" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xs">
-            確認執行模擬調價
-          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" data-action="close-batch-match" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100">
+              取消
+            </button>
+            <button type="button" data-action="execute-batch-match" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xs">
+              確認執行模擬調價
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -874,16 +879,24 @@
 
       /**
        * ============================================================================
-       * 1. CONFIGURATION & VERIFIED BASELINE DATASET
+       * 1. CONFIGURATION & LATEST VERIFIED HKD BASELINE DATASET
        * ============================================================================
        */
       const CONFIG = {
-        STORAGE_KEY: 'cf_price_compare_v11_clean',
+        STORAGE_KEY: 'cf_price_compare_v21_complete',
         LEGACY_KEYS: [
-          'cf_price_compare_v10_verified',
-          'cf_price_compare_v8_verified',
+          'cf_price_compare_v3_clean',
           'cf_price_compare_v6_verified',
-          'cf_price_compare_v3_clean'
+          'cf_price_compare_v8_verified',
+          'cf_price_compare_v10_verified',
+          'cf_price_compare_v11_clean',
+          'cf_price_compare_v12_verified',
+          'cf_price_compare_v13_verified',
+          'cf_price_compare_v16_verified',
+          'cf_price_compare_v17_complete',
+          'cf_price_compare_v18_complete',
+          'cf_price_compare_v19_complete',
+          'cf_price_compare_v20_complete'
         ],
         BASE_STORE: '中田',
         ALL_STORES: ['中田', '飛馬', '法奧', '2000Fun', '環球', 'Jumbo', 'SE Computer', '豐澤', '未來科技'],
@@ -906,39 +919,25 @@
           'Philips', 'AOC', 'LG', 'TP-Link', 'Netgear'
         ],
         CENTRALFIELD_CUSTOM_URL: 'https://centralfield.com/custom/',
-        CENTRALFIELD_CATEGORY_INDEX: 'https://centralfield.com/product_categories.php',
         CENTRALFIELD_CATEGORY_FEEDS: [
           'https://centralfield.com/product-category/cpu/',
-          'https://centralfield.com/product-category/cpu/page/2/',
           'https://centralfield.com/product-category/udimm-ram/',
-          'https://centralfield.com/product-category/udimm-ram/page/2/',
           'https://centralfield.com/product-category/ssd/',
           'https://centralfield.com/product-category/gpu/',
           'https://centralfield.com/product-category/motherboard/',
           'https://centralfield.com/product-category/monitors/',
           'https://centralfield.com/product-category/router/'
         ],
-        STORE_DOMAINS: {
-          '中田': 'https://centralfield.com',
-          '飛馬': 'https://www.pegasus.hk',
-          '法奧': 'https://www.faroll.com',
-          '2000Fun': 'https://www.openshop.com.hk',
-          '環球': 'https://www.universalcomputer.com.hk',
-          'Jumbo': 'https://www.jumbo-computer.com',
-          'SE Computer': 'https://www.secomputer.com.hk',
-          '豐澤': 'https://www.fortress.com.hk',
-          '未來科技': 'https://www.futuretech.com.hk'
-        },
         STORE_SEARCH_URLS: {
           '中田': q => `https://centralfield.com/?s=${encodeURIComponent(q)}&post_type=product`,
-          '飛馬': q => `https://www.pegasus.hk/search?type=product&q=${encodeURIComponent(q)}`,
+          '飛馬': q => `https://shop.pegasus.hk/search?q=${encodeURIComponent(q)}`,
           '法奧': q => `https://www.faroll.com/search?q=${encodeURIComponent(q)}`,
           '2000Fun': q => `https://www.openshop.com.hk/search.php?keywords=${encodeURIComponent(q)}`,
-          '環球': q => `https://www.universalcomputer.com.hk/search?type=product&q=${encodeURIComponent(q)}`,
-          'Jumbo': q => `https://www.jumbo-computer.com/search?type=product&q=${encodeURIComponent(q)}`,
+          '環球': q => `https://www.wcslmall.com/search?type=product&q=${encodeURIComponent(q)}`,
+          'Jumbo': q => `https://www.jumbo-computer.com/zh-hk/search?type=product&q=${encodeURIComponent(q)}`,
           'SE Computer': q => `https://www.secomputer.com.hk/search?type=product&q=${encodeURIComponent(q)}`,
           '豐澤': q => `https://www.fortress.com.hk/zh-hk/search?q=${encodeURIComponent(q)}`,
-          '未來科技': q => `https://www.futuretech.com.hk/search?q=${encodeURIComponent(q)}`
+          '未來科技': q => `https://futurecomputer.hk/search?type=product&q=${encodeURIComponent(q)}`
         }
       };
 
@@ -947,59 +946,59 @@
 Intel Core Ultra 9 285K BOX 盒裝|4,190|4,199|—|—|4,580|—|—|—|—
 AMD Ryzen 7 9850X3D BOX 盒裝|3,490|3,499|—|—|3,999|—|—|—|—
 AMD Ryzen 9 9950X3D2 TRAY 散裝|6,299|6,299|—|—|6,459|6,440|—|—|—
-AMD Ryzen 9 9950X3D2 BOX 盒裝|7,950|—|—|—|—|—|—|—|—
+AMD Ryzen 9 9950X3D2 Dual Edition BOX 盒裝|7,950|—|—|—|—|—|—|—|—
 Intel Core i3-12100 TRAY 散裝|875|1,080|—|—|1,099|875|1,199|—|—
-Intel Core Ultra 5 250KF Plus TRAY 散裝|1,768|—|—|—|—|1,690|—|—|—
-Intel Core i7-14700K TRAY 散裝|2,920|2,860|—|—|2,988|—|3,000|—|—
-Intel Core i5-14400F TRAY 散裝|1,040|989|—|—|1,229|—|1,199|—|—
-Intel Core i5-14400 TRAY 散裝|1,198|—|—|—|1,428|1,160|1,229|—|—
-AMD Ryzen 7 9850X3D TRAY 散裝|3,228|—|—|—|3,380|3,200|3,269|—|—
-Intel Core Ultra 7 265K TRAY 散裝|2,125|2,099|—|—|—|2,150|—|—|—
+Intel Core Ultra 5 250KF Plus TRAY 散裝|1,680|—|—|—|—|1,690|—|—|—
+Intel Core i7-14700K TRAY 散裝|2,840|2,860|—|—|2,988|—|3,000|—|—
+Intel Core i5-14400F TRAY 散裝|999|989|—|—|1,229|—|1,199|—|—
+Intel Core i5-14400 TRAY 散裝|1,158|—|—|—|1,428|1,160|1,229|—|—
+AMD Ryzen 7 9850X3D TRAY 散裝|3,180|—|—|—|3,380|3,200|3,269|—|—
+Intel Core Ultra 7 265K TRAY 散裝|2,098|2,099|—|—|—|2,150|—|—|—
 Intel Core i3-12100F TRAY 散裝|670|699|—|—|889|675|—|—|—
-AMD Ryzen 5 5600 TRAY 散裝|840|—|—|—|988|820|—|—|—
+AMD Ryzen 5 5600 TRAY 散裝|815|—|—|—|988|820|—|—|—
 Intel Core i7-14700F TRAY 散裝|2,340|2,320|—|—|2,358|2,360|—|—|—
-Intel Core Ultra 5 245K TRAY 散裝|1,378|—|—|—|—|1,360|1,399|—|—
-AMD Ryzen 5 5500 TRAY 散裝|640|629|—|—|—|660|—|—|—
+Intel Core Ultra 5 245K TRAY 散裝|1,358|—|—|—|—|1,360|1,399|—|—|—
+AMD Ryzen 5 5500 TRAY 散裝|629|629|—|—|—|660|—|—|—
 Intel Core i5-12400 TRAY 散裝|1,078|1,250|—|—|1,299|1,080|1,149|—|—
-Intel Core Ultra 5 225 TRAY 散裝|1,260|—|—|—|—|1,260|1,299|—|—
+Intel Core Ultra 5 225 TRAY 散裝|1,260|—|—|—|—|1,260|1,299|—|—|—
 AMD Ryzen 5 7600X TRAY 散裝|1,098|—|—|—|1,159|—|—|—|—
-AMD Ryzen 5 8600G BOX 盒裝|1,380|—|—|—|—|—|1,380|—|—
+AMD Ryzen 5 8600G BOX 盒裝|1,378|—|—|—|—|—|1,380|—|—
 AMD Ryzen 5 8600G TRAY 散裝|1,040|—|—|—|1,249|1,069|—|—|—
 AMD Ryzen 5 9600X BOX 盒裝|1,340|1,379|—|—|1,569|—|—|—|—
-AMD Ryzen 5 9600X TRAY 散裝|1,245|1,270|—|1,249|1,329|1,250|1,299|—|—
+AMD Ryzen 5 9600X TRAY 散裝|1,240|1,270|—|1,249|1,329|1,250|1,299|—|—
 AMD Ryzen 7 5700X TRAY 散裝|1,045|1,120|—|—|—|1,050|1,199|—|—
 AMD Ryzen 7 5800X3D BOX 盒裝|2,730|—|—|—|2,999|—|—|—|—
 AMD Ryzen 7 7700 TRAY 散裝|1,260|—|—|—|1,599|1,270|—|—|—
 AMD Ryzen 7 7800X3D BOX 盒裝|2,150|2,399|—|—|—|—|—|—|—
 AMD Ryzen 7 7800X3D TRAY 散裝|1,975|—|—|2,049|2,060|1,990|1,999|—|—
-AMD Ryzen 7 8700F TRAY 散裝|999|1,029|—|—|—|—|—|—|—
+AMD Ryzen 7 8700F TRAY 散裝|1,000|1,029|—|—|—|—|—|—|—
 AMD Ryzen 7 8700G TRAY 散裝|1,680|1,899|—|—|2,088|—|1,699|—|—
 AMD Ryzen 7 9700X BOX 盒裝（轉數快優惠）|1,840|—|—|—|2,499|—|—|—|—
-AMD Ryzen 7 9700X TRAY 散裝|1,640|1,670|—|1,670|1,689|1,650|1,659|—|—
+AMD Ryzen 7 9700X TRAY 散裝|1,638|1,670|—|1,670|1,689|1,650|1,659|—|—
 AMD Ryzen 7 9800X3D BOX 盒裝|3,198|—|—|—|3,540|—|3,199|—|—
 AMD Ryzen 7 9800X3D TRAY 散裝|2,890|2,980|—|2,949|2,950|2,890|2,899|—|—
-AMD Ryzen 9 9900X BOX 盒裝|2,800|—|—|—|3,288|—|—|—|—
-AMD Ryzen 9 9900X BOX 盒裝 (行貨標準版)|3,130|—|—|—|3,288|—|—|—|—
+AMD Ryzen 9 9900X BOX 盒裝|2,450|—|—|—|3,288|—|—|—|—
 AMD Ryzen 9 9950X TRAY 散裝|3,095|3,130|—|—|—|3,130|3,199|—|—
-AMD Ryzen 9 9950X3D BOX 盒裝|5,080|5,149|—|—|5,399|—|—|—|—
+AMD Ryzen 9 9950X3D BOX 盒裝|5,060|5,149|—|—|5,399|—|—|—|—
 Intel Core Ultra 5 225F BOX 盒裝|1,370|1,399|—|—|—|—|—|—|—
-Intel Core Ultra 5 225F TRAY 散裝|990|998|—|—|—|—|999|—|—
+Intel Core Ultra 5 225F TRAY 散裝|985|998|—|—|—|—|999|—|—
 Intel Core Ultra 5 245KF TRAY 散裝|1,329|—|—|—|—|1,330|1,339|—|—
 Intel Core Ultra 7 265K BOX 盒裝|2,190|2,199|—|—|—|—|2,299|—|—
-Intel Core Ultra 7 265KF BOX 盒裝|2,050|2,199|—|—|—|—|—|—|—
-Intel Core Ultra 7 270K Plus BOX 盒裝|2,645|2,699|—|—|—|—|2,650|—|—
+Intel Core Ultra 7 265KF BOX 盒裝|2,090|2,199|—|—|—|—|—|—|—
+Intel Core Ultra 7 270K Plus BOX 盒裝|2,630|2,699|—|—|—|—|2,650|—|—
 Intel Core Ultra 7 270K Plus TRAY 散裝|2,530|2,550|—|—|—|—|2,550|—|—
 Intel Core i5-12400F BOX 盒裝|1,098|—|—|—|—|—|1,099|—|—
 Intel Core i5-12400F TRAY 散裝|845|879|—|—|845|850|—|—|—
 Intel Core i7-12700KF BOX 盒裝|2,180|—|—|—|2,299|—|—|—|—
-Intel Core i9-14900K BOX 盒裝|3,590|3,599|—|—|3,848|—|3,799|—|—
+Intel Core i9-14900K BOX 盒裝|3,600|3,599|—|—|3,848|—|3,799|—|—
         `,
         RAM: `
+Kingston FURY BEAST RGB 128GB 黑色套裝 (2x64GB) D5-5600C36 (KF556C36BBEAK2-128)(EXPO/XMP)|19,200|18,999|—|—|—|—|—|—|—
+Kingston FURY BEAST 128GB 黑色套裝 (2x64GB) D5-5600C36 (KF556C36BBEK2-128)(EXPO/XMP)|19,000|18,999|—|—|—|17,900|—|—|—
 Kingston FURY BEAST 32GB 黑色套裝 (2x16GB) D5-6000C30 (KF560C30BBEK2-32)(XMP/EXPO)|5,500|—|—|—|—|4,750|—|—|—
 Kingston FURY BEAST 32GB 黑色套裝 (2x16GB) D5-6000C36 (KF560C36BBE2K2-32)(XMP/EXPO)|5,200|4,599|—|—|—|4,500|—|—|—
-Kingston FURY BEAST RGB 32GB 黑色套裝 (2x16GB) D5-6000C30 (KF560C30BBEAK2-32)|5,550|—|—|—|—|4,850|—|—|—
-Kingston FURY BEAST RGB 32GB 黑色套裝 (2x16GB) D5-6000C36 (KF560C36BBE2AK2-32)(XMP/EXPO)|5,300|4,699|—|—|—|—|—|—|—
-Kingston FURY BEAST 128GB 黑色套裝 (2x64GB) D5-5600C36 (KF556C36BBEK2-128)(EXPO/XMP)|18,350|18,999|—|—|—|17,900|—|—|—
+Kingston FURY BEAST RGB 32GB 黑色套裝 (2x16GB) D5-6000C30 (KF560C30BBEAK2-32)|5,650|—|—|—|—|4,850|—|—|—
+Kingston FURY BEAST RGB 32GB 黑色套裝 (2x16GB) D5-6000C36 (KF560C36BBE2AK2-32)(XMP/EXPO)|5,280|4,699|—|—|—|—|—|—|—
 Klevv 科賦 BOLT V 32GB 黑色套裝 (2x16GB) D5-6000C28 (KD5AGUA80-60B280H)(XMP/EXPO)|4,380|4,399|4,420|—|—|3,999|4,229|—|—
 Klevv 科賦 BOLT V 32GB 白色套裝 (2x16GB) D5-6000C28 (KD5AGUA80-60B280I)(XMP/EXPO)|4,350|—|—|—|—|3,999|4,229|—|—
 Corsair Vengeance LPX 32GB 黑色套裝 (2x16GB) D4-3200C16 (CMK32GX4M2E3200C16)(Intel XMP)|2,500|2,199|—|—|—|2,576|2,630|—|—
@@ -1011,7 +1010,7 @@ G.Skill Trident Z5 Neo RGB 32GB 白色套裝 (2x16GB) D5-6000C30 (F5-6000J3036F1
 ADATA XPG Lancer RGB 64GB 白色套裝 (2x32GB) D5-6400C32 (AX5U6400C3232G-DCLARWH)(XMP/EXPO)|8,999|8,799|—|—|—|—|—|—|—
 Biwin Black Opal DW100 48GB 黑色套裝 (2x24GB) D5-6000C28 (RM-BD5D48B)(EXPO/XMP)(BXL54860DW1-D28FB)|5,898|5,699|—|—|—|—|—|—|—
 Corsair Vengeance RGB RS 32GB 黑色套裝 (2x16GB) D4-3200C16 (CMG32GX4M2E3200C16)(Intel XMP)|2,580|2,399|—|—|—|2,608|—|—|—
-G.Skill Trident Z5 Neo RGB 32GB 黑色套裝 (2x16GB) D5-6000C36 (F5-6000J3636F16GX2-TZ5NR)(EXPO/XMP)|4,180|4,399|—|—|—|3,999|—|—|—
+G.Skill Trident Z5 Neo RGB 32GB 黑色套裝 (2x16GB) D5-6000C36 (F5-6000J3636F16GX2-TZ5NR)(EXPO/XMP)|4,100|4,399|—|—|—|3,999|—|—|—
 Klevv 科賦 FIT V 32GB 白色套裝 (2x16GB) D5-6000C28 (KD5AGU880-60B280F)(XMP/EXPO)|4,100|4,099|—|3,999|—|3,929|3,979|—|—
 Klevv 科賦 CRAS V RGB 32GB 黑色套裝 (2x16GB) D5-6000C30 (KD5AGUA80-60A300G)(XMP/EXPO)|4,380|—|—|—|—|—|4,219|—|—
 ADATA XPG Lancer Blade 32GB 黑色套裝 (2x16GB) D5-6000C30 (AX5U6000C3016G-DTLABBK)(RM-LBD32B)(XMP/EXPO)|4,150|4,399|—|—|—|3,999|4,480|—|—
@@ -1027,15 +1026,15 @@ ADATA Desktop Value 16GB 單條 (1x16GB) D5-5600C46 (AD5U560016G-S)(RM-AD5C16)|1
 Crucial 美光 UDIMM 16GB 單條 (1x16GB) D5-5600C46 (CT16G56C46U5)(XMP/EXPO)|1,980|2,149|—|—|—|1,900|1,999|—|—
 Crucial 美光 Pro 32GB 黑色套裝 (2x16GB) D5-6000C36 (XMP/EXPO)(CP2K16G60C36U5B)|3,800|4,499|—|—|—|3,960|4,380|—|—
 G.Skill Trident Z5 Neo RGB 64GB 黑色套裝 (2x32GB) D5-6000C36 (F5-6000J3636F32GX2-TZ5NR)(XMP&EXPO)|7,960|—|—|—|—|7,999|—|—|—
-Kingston FURY BEAST 64GB 黑色套裝 (2x32GB) D5-6000C36 (KF560C36BBE2K2-64)(XMP/EXPO)|9,650|—|—|—|—|9,870|—|—|—
+Kingston FURY BEAST 64GB 黑色套裝 (2x32GB) D5-6000C36 (KF560C36BBE2K2-64)(XMP/EXPO)|10,150|—|—|—|—|9,870|—|—|—
 Lexar THOR GEN2 RGB 64GB 黑色套裝 (2x32GB) D5-6000C40 (LD5U32G60C40BV-RGD)(XMP/EXPO)|8,199|8,199|—|—|—|—|8,199|—|—
 TeamGroup Expert 128GB 黑色套裝 (2x64GB) D5-6000C40 (RM-TCEB128)(CTCED5128G6000HC40FDC01)|18,450|19,999|—|—|—|—|—|—|—
         `,
         SSD: `
-WD Black SN7100 2TB Gen 4 M.2 SSD (黑牌)(R:7250MB/s/W:6900MB/s)(WDS200T4X0E)|2,850|2,349|—|—|—|—|2,199|—|—
+WD Black SN7100 2TB Gen 4 M.2 SSD (黑牌)(R:7250MB/s/W:6900MB/s)(WDS200T4X0E)|2,348|2,349|—|—|—|—|2,199|—|—
 Samsung 三星 990EVO PLUS 4TB Gen 5 NVMe 2.0 M.2 SSD (R:7250MB/s/W:6300MB/s)(MZ-V9S4T0BW)|4,999|5,099|—|—|—|—|4,690|—|—
 Samsung 三星 9100PRO 4TB Gen 5 NVMe 2.0 M.2 SSD (R:14800MB/s/W:13400MB/s)(MZ-VAP4T0BW)|6,600|6,299|—|—|—|—|—|—|—
-ADATA Legend 900 1TB Gen 4 M.2 SSD (R:7000MB/s/W:5400MB/s)(SLEG-900-1TCS)(HD-L90041T)|1,379|1,299|—|—|—|—|1,099|—|—
+ADATA Legend 900 1TB Gen 4 M.2 SSD (R:7000MB/s/W:5400MB/s)(SLEG-900-1TCS)(HD-L90041T)|1,299|1,299|—|—|—|—|1,099|—|—
 Crucial 美光 P310 2TB Gen 4 2280 M.2 SSD (R:7100MB/s/W:6000MB/s)(CT2000P310SSD8)|2,098|2,099|—|—|—|2,010|2,218|—|—
 WD Black SN850x 2TB Gen 4 M.2 SSD (黑牌)(R:7300MB/s/W:6600MB/s)(WDS200T2X0E)|2,898|2,649|—|—|—|2,799|2,680|—|—
 ADATA XPG GAMMIX S70 Blade 2TB Gen 4 M.2 SSD (R:7400MB/s/W:6800MB/s)(AGAMMIXS70B-2T-CS)|2,690|2,699|—|—|—|2,850|2,480|—|—
@@ -1045,15 +1044,15 @@ Kingston NV3 1TB Gen 4 M.2 SSD (SNV3S/1000G)|1,300|1,199|—|—|—|1,170|1,260
 ZhiTai 致態 TiPro9000 2TB Gen 5 NVMe 2.0 M.2 SSD (R:14000MB/s/W:12500MB/s)(ZTSS3CB10B34MC)|2,528|—|—|—|—|2,399|—|—|—
 Samsung 三星 9100PRO 1TB Gen 5.0x4 NVMe 2.0 M.2 SSD (R:14700MB/s/W:13300MB/s)(MZ-VAP1T0BW)|1,970|1,899|—|—|—|1,870|1,950|—|—
 WD Black SN8100 4TB Gen 5.0x4 NVMe M.2 SSD (黑牌)(R:14900MB/s/W:14000MB/s)(WDS400T1X0M-00CMT0)|5,999|—|—|—|—|—|5,899|—|—
-Samsung 三星 990PRO 1TB NVMe M.2 2280 PCIe Gen4 SSD (R:7400MB/s/W:6900MB/s)(MZ-V9P1T0BW)|1,760|1,749|—|—|—|1,680|1,799|—|—
+Samsung 三星 990PRO 1TB NVMe M.2 2280 PCIe Gen4 SSD (R:7400MB/s/W:6900MB/s)(MZ-V9P1T0BW)|1,699|1,749|—|—|—|1,680|1,799|—|—
 WD Black SN8100 2TB Gen 5.0x4 NVMe M.2 SSD (黑牌)(R:14900MB/s/W:14000MB/s)(WDS200T1X0M-00CMT0)|3,370|—|—|—|—|—|3,299|—|—
 Samsung 三星 9100PRO 2TB Gen 5.0x4 NVMe 2.0 M.2 SSD (R:14700MB/s/W:13400MB/s)(MZ-VAP2T0BW)|3,150|3,099|—|—|—|3,080|—|—|—
 WD Black SN7100 1TB Gen 4 M.2 SSD (黑牌)(R:7250MB/s/W:6900MB/s)(WDS100T4X0E)|1,420|1,399|—|—|—|1,350|1,399|—|—
 Samsung 三星 990PRO 2TB NVMe M.2 2280 PCIe Gen4 SSD (R:7450MB/s/W:6900MB/s)(MZ-V9P2T0BW)|2,780|2,899|—|—|—|2,830|2,750|—|—
-Crucial 美光 P510 2TB Gen 5.0x4 M.2 SSD (R:10000MB/s/W:8700MB/s)(CT2000P510SSD8)|2,420|2,399|—|—|—|2,440|—|—|—
+Crucial 美光 P510 2TB Gen 5.0x4 M.2 SSD (R:10000MB/s/W:8700MB/s)(CT2000P510SSD8)|2,399|2,399|—|—|—|2,440|—|—|—
 Samsung 三星 990EVO PLUS 1TB Gen 5 NVMe 2.0 M.2 SSD (R:7250MB/s/W:6300MB/s)(MZ-V9S1T0BW)|1,590|1,649|—|—|—|1,570|1,630|—|—
 Samsung 三星 990EVO PLUS 2TB Gen 5 NVMe 2.0 M.2 SSD (R:7250MB/s/W:6300MB/s)(MZ-V9S2T0BW)|2,350|2,699|—|—|—|2,380|2,369|—|—
-Samsung 三星 990PRO 4TB NVMe M.2 2280 PCIe Gen4 SSD (R:7450MB/s/W:6900MB/s)(MZ-V9P4T0BW)|5,300|5,499|—|—|—|—|—|—|—
+Samsung 三星 990PRO 4TB NVMe M.2 2280 PCIe Gen4 SSD (R:7450MB/s/W:6900MB/s)(MZ-V9P4T0BW)|5,400|5,499|—|—|—|—|—|—|—
         `,
         VGA: `
 SAPPHIRE AMD Pulse Radeon RX 9060XT OC 16GB GDDR6 藍寶石顯示卡雙風扇超頻版|5,949|—|—|—|—|4,999|—|—|—
@@ -1224,8 +1223,32 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
       ];
 
       const DEFAULT_PRODUCT_URLS = {
-        'Crucial 美光 P310 2TB Gen 4 2280 M.2 SSD (R:7100MB/s/W:6000MB/s)(CT2000P310SSD8)': {
-          '中田': 'https://centralfield.com/?s=CT2000P310SSD8&post_type=product'
+        'ADATA Legend 900 1TB Gen 4 M.2 SSD (R:7000MB/s/W:5400MB/s)(SLEG-900-1TCS)(HD-L90041T)': {
+          '中田': 'https://centralfield.com/product/5681/adata-legend-900-1tb-gen4-m2-ssd'
+        },
+        'WD Black SN7100 2TB Gen 4 M.2 SSD (黑牌)(R:7250MB/s/W:6900MB/s)(WDS200T4X0E)': {
+          '中田': 'https://centralfield.com/product/18441/wd-black-sn7100-2tb-gen4-m2-ssd-wds200t4x0e'
+        },
+        'WD Black SN7100 1TB Gen 4 M.2 SSD (黑牌)(R:7250MB/s/W:6900MB/s)(WDS100T4X0E)': {
+          '中田': 'https://centralfield.com/product/1787/wd-black-sn7100-1tb-gen4-m2-ssd-wds100t4x0e'
+        },
+        'Kingston FURY BEAST RGB 128GB 黑色套裝 (2x64GB) D5-5600C36 (KF556C36BBEAK2-128)(EXPO/XMP)': {
+          '中田': 'https://centralfield.com/product/13263/kingston-fury-beast-rgb-128gb-ddr5-5600mhz-ram'
+        },
+        'Kingston FURY BEAST 128GB 黑色套裝 (2x64GB) D5-5600C36 (KF556C36BBEK2-128)(EXPO/XMP)': {
+          '中田': 'https://centralfield.com/product/13264/kingston-fury-beast-128gb-ddr5-5600c36-kf556c36bbek2-128'
+        },
+        'Kingston FURY BEAST RGB 32GB 黑色套裝 (2x16GB) D5-6000C30 (KF560C30BBEAK2-32)': {
+          '中田': 'https://centralfield.com/product/5736/kingston-fury-beast-rgb-32gb-ddr5-6000c30-ram'
+        },
+        'G.Skill Trident Z5 Neo RGB 32GB 白色套裝 (2x16GB) D5-6000C30 (F5-6000J3036F16GX2-TZ5NRW)(AMD EXPO)': {
+          '中田': 'https://centralfield.com/product/7076/gskill-trident-z5-neo-rgb-32gb-ddr5-6000-white-expo'
+        },
+        'ADATA XPG Lancer Blade 32GB 白色套裝 (2x16GB) D5-6000C30 (AX5U6000C3016G-DTLABWH)(RM-LBD32W)(XMP/EXPO)': {
+          '中田': 'https://centralfield.com/product/5367/adata-xpg-lancer-blade-32gb-ddr5-6000c30-white'
+        },
+        'AMD Ryzen 5 5600 TRAY 散裝': {
+          '中田': 'https://centralfield.com/product/17497/amd-ryzen-5-5600-processor'
         },
         'Intel Core Ultra 5 225 TRAY 散裝': {
           '中田': 'https://centralfield.com/product/12807/intel-core-ultra-5-225-tray-cpu-lga1851'
@@ -1334,6 +1357,9 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           const packType = this.detectPackType(model);
           if (packType) tags.push(packType);
 
+          const isRgb = /\bRGB\b/i.test(model);
+          if (isRgb) tags.push('RGB');
+
           const capMatch = model.match(/\b(\d+(?:GB|TB))\b/i);
           const capacity = capMatch ? capMatch[1].toUpperCase() : null;
           if (capacity) tags.push(capacity);
@@ -1354,6 +1380,7 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           return {
             mpn,
             packType,
+            isRgb,
             capacity,
             kitCount,
             clTiming,
@@ -1376,14 +1403,13 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
 
         buildSearchQueryForItem(item) {
           if (item.fingerprint?.mpn) return item.fingerprint.mpn;
-          const cleanModel = item.model
+          return item.model
             .replace(/\(.*?\)/g, ' ')
-            .replace(/BOX|TRAY|盒裝|散裝|轉數快優惠|行貨標準版|華碩|微星|技嘉|藍寶石|華擎|同德|映眾|索泰|三星|美光|科賦|飛利浦|樂金|艾德蒙|聯想|顯示卡|主機板|電競顯示器|平面電競顯示器|路由器|固態硬碟/gi, ' ')
+            .replace(/BOX|TRAY|盒裝|散裝|華碩|微星|技嘉|藍寶石|顯示卡|主機板|電競顯示器/gi, ' ')
             .trim()
             .split(/\s+/)
             .slice(0, 4)
             .join(' ');
-          return cleanModel;
         },
 
         highlightText(text, query) {
@@ -1448,7 +1474,7 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
 
       /**
        * ============================================================================
-       * 3. SEMANTIC SKU MATCHER & SPECGUARD HARD VETO GATEKEEPER
+       * 3. SEMANTIC SKU MATCHER & SPEC GUARD (HARD VARIANT ISOLATION)
        * ============================================================================
        */
       const SemanticMatcher = {
@@ -1495,7 +1521,7 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
       };
 
       const SpecGuard = {
-        FORBIDDEN_BUNDLE_KEYWORDS: /跟板價|限砌機|砌機價|加購優惠|加購價|淨散熱器|空盒|陳列品|二手|預訂訂金|deposit\s*only|Powered by ASUS|週年系列限定組合|電競組合|桌上電腦/i,
+        FORBIDDEN_BUNDLE_KEYWORDS: /中田跟板優惠|跟板價|限砌機|砌機價|加購優惠|加購價|淨散熱器|空盒|陳列品|二手|預訂訂金|deposit\s*only|Powered by ASUS|週年系列限定組合|電競組合|桌上電腦/i,
 
         verifyMatch(skuItem, candidateTitle, candidateUrl = '') {
           const rawCandidate = `${candidateTitle || ''} ${decodeURIComponent(candidateUrl || '')}`;
@@ -1519,6 +1545,7 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
           const candNorm = SemanticMatcher.normalizeText(rawCandidate);
           const fp = skuItem.fingerprint || Utils.extractSpecFingerprint(skuItem.model);
 
+          // 1. Direct MPN lock (100% precision)
           if (fp.mpn) {
             const mpnNorm = fp.mpn.toLowerCase();
             if (candNorm.includes(mpnNorm)) {
@@ -1529,6 +1556,16 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
             }
           }
 
+          // 2. Hard Veto: RGB vs Non-RGB isolation (RAM / VGA)
+          if (skuItem.category === 'RAM' || skuItem.category === 'VGA') {
+            const targetHasRgb = /\brgb\b/.test(targetNorm);
+            const candHasRgb = /\brgb\b/.test(candNorm);
+            if (targetHasRgb !== candHasRgb) {
+              return { matched: false, score: 0, reason: targetHasRgb ? '燈效衝突: RGB版 ≠ 無燈版' : '燈效衝突: 無燈版 ≠ RGB版' };
+            }
+          }
+
+          // 3. Hard Veto: CPU BOX vs TRAY
           if (fp.packType === 'BOX' && /\btray\b/.test(candNorm)) {
             return { matched: false, score: 0, reason: '規格衝突: BOX 盒裝 ≠ TRAY 散裝' };
           }
@@ -1536,10 +1573,58 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
             return { matched: false, score: 0, reason: '規格衝突: TRAY 散裝 ≠ BOX 盒裝' };
           }
 
-          // Strict numeric core code check (e.g. Ultra 5 225 vs 225F, 12100 vs 12100F, 9950X3D vs 9950X3D2)
-          const targetCoreCodes = Array.from(targetNorm.matchAll(/\b([a-z]{0,3}\d{3,5}[a-z0-9]{0,5})\b/g)).map(m => m[1]);
+          // 4. Hard Veto: Capacity & CL Timing isolation
+          if (fp.capacity) {
+            const candCaps = Array.from(candNorm.matchAll(/\b(\d+(?:gb|tb))\b/g)).map(m => m[1].toUpperCase());
+            if (candCaps.length > 0 && !candCaps.includes(fp.capacity)) {
+              return { matched: false, score: 0, reason: `容量衝突: 需 ${fp.capacity}` };
+            }
+          }
+          if (fp.clTiming) {
+            const candCls = Array.from(candNorm.matchAll(/\bc(28|30|32|36|40|46|48|52)\b/g)).map(m => `C${m[1]}`);
+            if (candCls.length > 0 && !candCls.includes(fp.clTiming)) {
+              return { matched: false, score: 0, reason: `時序衝突: 需 ${fp.clTiming}` };
+            }
+          }
+
+          // 4b. Hard Veto: Kit Stick Count (1x vs 2x) & Mesh Pack Count (單隻裝 vs 2隻裝)
+          if (fp.kitCount) {
+            if (/^1X/i.test(fp.kitCount) && /(?:2x\d+gb|套裝|kit)/i.test(candNorm)) {
+              return { matched: false, score: 0, reason: '套裝衝突: 單條裝 ≠ 雙條套裝' };
+            }
+            if (/^2X/i.test(fp.kitCount) && /(?:1x\d+gb|單條)/i.test(candNorm)) {
+              return { matched: false, score: 0, reason: '套裝衝突: 雙條套裝 ≠ 單條裝' };
+            }
+            if (/2隻裝/.test(fp.kitCount) && /(?:1隻裝|單隻裝|single)/i.test(candNorm)) {
+              return { matched: false, score: 0, reason: '數量衝突: 2隻裝 ≠ 單隻裝' };
+            }
+          }
+
+          // 4c. Hard Veto: Color Variant Isolation (白色/White vs 黑色/Black)
+          const targetWhite = /白色|\bwhite\b/i.test(skuItem.model);
+          const targetBlack = /黑色|\bblack\b/i.test(skuItem.model);
+          const candWhite = /白色|\bwhite\b/i.test(candidateTitle || '');
+          const candBlack = /黑色|\bblack\b/i.test(candidateTitle || '');
+          if (targetWhite && candBlack && !candWhite) {
+            return { matched: false, score: 0, reason: '顏色衝突: 白色版 ≠ 黑色版' };
+          }
+          if (targetBlack && candWhite && !candBlack) {
+            return { matched: false, score: 0, reason: '顏色衝突: 黑色版 ≠ 白色版' };
+          }
+
+          // 4d. Hard Veto: Motherboard Chipset Isolation (X870 vs X870E, B850 vs B860, Z890, B760, B650)
+          if (skuItem.category === 'MB') {
+            const targetChip = targetNorm.match(/\b(x870e|x870|b850|b860|z890|b760|b650)\b/i)?.[1]?.toUpperCase();
+            const candChip = candNorm.match(/\b(x870e|x870|b850|b860|z890|b760|b650)\b/i)?.[1]?.toUpperCase();
+            if (targetChip && candChip && targetChip !== candChip) {
+              return { matched: false, score: 0, reason: `晶片組衝突: 需 ${targetChip} (抓到 ${candChip})` };
+            }
+          }
+
+          // 5. Hard Veto: Exact Numeric Suffixes (e.g., 12100 vs 12100F, 5060 vs 5060Ti, 9950X3D vs 9950X3D2)
+          const targetCoreCodes = Array.from(targetNorm.matchAll(/\b([a-z]{0,3}\d{4,5}[a-z0-9]{0,5})\b/g)).map(m => m[1]);
           for (const code of targetCoreCodes) {
-            if (/^(2560|1440|3840|2160|5120|2880|1920|1080|6000|5600|6400|3200|2400|1000|240|360|500|160|180|255|280|300|320|330|540|720)$/.test(code)) continue;
+            if (/^(2560|1440|3840|2160|5120|2880|1920|1080|6000|5600|6400|3200|2400|1000)$/.test(code)) continue;
             const esc = code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const exactCodeRx = new RegExp(`(?:^|[^a-z0-9])${esc}(?:$|[^a-z0-9])`, 'i');
             if (!exactCodeRx.test(candNorm)) {
@@ -1547,229 +1632,73 @@ ASUS XG-C100C V2 10GBase-T PCIe 3.0 10G 有線網絡卡|680|669|—|675|699|650|
             }
           }
 
-          if (fp.capacity) {
-            const candCaps = Array.from(candNorm.matchAll(/\b(\d+(?:gb|tb))\b/g)).map(m => m[1].toUpperCase());
-            if (candCaps.length > 0 && !candCaps.includes(fp.capacity)) {
-              return { matched: false, score: 0, reason: `容量衝突 (${fp.capacity} ≠ ${candCaps.join('/')})` };
-            }
-          }
-
-          if (/d5|ddr5/.test(targetNorm) && /\b(d4|ddr4)\b/.test(candNorm)) {
-            return { matched: false, score: 0, reason: '記憶體代數衝突 (DDR5 ≠ DDR4)' };
-          }
-          if (/d4|ddr4/.test(targetNorm) && /\b(d5|ddr5)\b/.test(candNorm)) {
-            return { matched: false, score: 0, reason: '記憶體代數衝突 (DDR4 ≠ DDR5)' };
-          }
-          if (fp.clTiming) {
-            const candCls = Array.from(candNorm.matchAll(/\bc(28|30|32|36|40|46|48|52)\b/g)).map(m => `C${m[1]}`);
-            if (candCls.length > 0 && !candCls.includes(fp.clTiming)) {
-              return { matched: false, score: 0, reason: `時序衝突 (${fp.clTiming} ≠ ${candCls.join('/')})` };
-            }
-          }
-
-          if (/2隻裝|2-pack/i.test(skuItem.model) && !/2隻裝|2-pack|雙隻|2入/i.test(rawCandidate)) {
-            return { matched: false, score: 0, reason: 'Mesh 套裝數量不符 (需2隻裝)' };
-          }
-
-          const stopWords = new Set(['https', 'http', 'www', 'com', 'hk', 'product', 'processor', 'centralfield', 'pegasus', 'fortress', 'jumbo', 'computer', 'html', 'php', 'oc', 'gaming', 'edition', 'version', 'plus', 'pro', 'dual', 'prime', 'white', 'black', 'rgb']);
-          const targetTokens = targetNorm
-            .replace(/[^a-z0-9]+/g, ' ')
-            .split(/\s+/)
-            .filter(t => t.length >= 2 && !stopWords.has(t));
-
-          if (targetTokens.length === 0) return { matched: false, score: 0, reason: '特徵不足' };
-
-          let matchedWeight = 0;
-          let totalWeight = 0;
+          const stopWords = new Set(['https', 'http', 'www', 'com', 'hk', 'product', 'processor', 'centralfield', 'pegasus', 'fortress', 'jumbo', 'computer', 'html', 'php', 'lga1700', 'lga1851', 'am5', 'am4', 'cpu', 'ram', 'ssd', 'ddr5', 'ddr4', 'black', 'white']);
+          const targetTokens = targetNorm.replace(/[^a-z0-9]+/g, ' ').split(/\s+/).filter(t => t.length >= 2 && !stopWords.has(t));
+          let matchedW = 0;
+          let totalW = 0;
           for (const tok of targetTokens) {
-            const w = /\d/.test(tok) ? 10 : 3;
-            totalWeight += w;
+            const w = /\d/.test(tok) ? 8 : 2;
+            totalW += w;
             const esc = tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const rx = new RegExp(`(?:^|[^a-z0-9])${esc}(?:$|[^a-z0-9])`, 'i');
-            if (rx.test(candNorm)) matchedWeight += w;
+            if (new RegExp(`(?:^|[^a-z0-9])${esc}(?:$|[^a-z0-9])`, 'i').test(candNorm)) {
+              matchedW += w;
+            }
           }
-
-          const score = Math.min(96, Math.round((matchedWeight / totalWeight) * 100));
+          const score = totalW > 0 ? Math.min(95, Math.round((matchedW / totalW) * 100)) : 0;
           return {
-            matched: score >= 72,
+            matched: score >= 70 && matchedW >= 8,
             score,
-            reason: score >= 72 ? `核心規格吻合 (${score}%)` : `匹配度不足 (${score}%)`
+            reason: `語義指紋匹配 ${score}%`
           };
         }
       };
 
-      const BookmarkletBridge = {
-        getBookmarkletCode() {
-          const code = `(function(){
-            const host=location.hostname.toLowerCase();
-            let store='中田';
-            if(host.includes('pegasus'))store='飛馬';
-            else if(host.includes('fortress'))store='豐澤';
-            else if(host.includes('jumbo'))store='Jumbo';
-            else if(host.includes('secomputer'))store='SE Computer';
-            else if(host.includes('2000fun')||host.includes('openshop'))store='2000Fun';
-            else if(host.includes('faroll'))store='法奧';
-            else if(host.includes('universal'))store='環球';
-            else if(host.includes('futuretech'))store='未來科技';
-            const clone=document.body.cloneNode(true);
-            clone.querySelectorAll('del,s,strike,[class*="line-through"],.old-price,.rrp,script,style').forEach(e=>e.remove());
-            const items=[];
-            const anchors=Array.from(clone.querySelectorAll('a[href*="/product"],a[href*="/products/"]'));
-            const seen=new Set();
-            anchors.forEach(a=>{
-              const href=a.href;
-              if(!href||seen.has(href))return;
-              let card=a;
-              for(let i=0;i<5&&card.parentElement;i++){
-                card=card.parentElement;
-                if(card.querySelectorAll('a[href*="/product"],a[href*="/products/"]').length>2)break;
-                const txt=(card.innerText||card.textContent||'').replace(/\\s+/g,' ');
-                if(/訂貨|補貨中|缺貨|限砌機/.test(txt))break;
-                const clean=txt.replace(/跟板價[^\\d]*[\\d,]+/g,'').replace(/建議價[^\\d]*[\\d,]+/g,'').replace(/(?:HK)?\\$\\s*-\\s*[\\d,]+/g,'');
-                const ms=Array.from(clean.matchAll(/(?:HK\\$|\\$)\\s*([1-9]\\d{1,4}(?:,\\d{3})*)/g)).map(m=>parseInt(m[1].replace(/,/g,''),10)).filter(n=>n>=120&&n<100000);
-                if(ms.length>0){
-                  const price=(ms.length>=2&&ms[1]<ms[0]&&ms[1]>=ms[0]*0.45)?ms[1]:ms[0];
-                  const title=(a.innerText||a.textContent||txt).trim().slice(0,120);
-                  if(title.length>=6){seen.add(href);items.push({title,url:href,price});}
-                  break;
-                }
-              }
-            });
-            if(items.length===0){
-              const rawText=(clone.innerText||clone.textContent||'');
-              const ta=document.createElement('textarea');ta.value=rawText;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-              alert('已複製「'+store+'」全頁文字，請切回比價系統按 Ctrl+V 自動校準！');
-              return;
-            }
-            const payload='CF_SYNC_PAYLOAD:'+JSON.stringify({store,ts:Date.now(),items});
-            const ta=document.createElement('textarea');ta.value=payload;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-            const div=document.createElement('div');
-            div.style.cssText='position:fixed;top:16px;right:16px;z-index:999999;background:#065f46;color:#fff;padding:14px 18px;border-radius:12px;font-family:sans-serif;font-size:14px;font-weight:bold;box-shadow:0 10px 25px rgba(0,0,0,0.3);';
-            div.textContent='✅ 已從「'+store+'」擷取 '+items.length+' 項現貨實價！請切回比價系統按 Ctrl+V 立即同步';
-            document.body.appendChild(div);
-            setTimeout(()=>div.remove(),5000);
-          })();`.replace(/\s*\n\s*/g, '');
-          return `javascript:${encodeURIComponent(code)}`;
-        },
-
-        getNodeScraperScript() {
-          return `// 儲存為 sync-prices.mjs 並執行：node sync-prices.mjs
-import fs from 'node:fs';
-
-const URLS = [
-  'https://centralfield.com/custom/',
-  'https://centralfield.com/product-category/cpu/',
-  'https://centralfield.com/product-category/udimm-ram/',
-  'https://centralfield.com/product-category/ssd/',
-  'https://centralfield.com/product-category/gpu/'
-];
-
-async function run() {
-  const output = [];
-  for (const url of URLS) {
-    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    const html = await res.text();
-    const cleanText = html.replace(/<del[\\s\\S]*?<\\/del>/gi, '').replace(/<[^>]+>/g, '\\n');
-    output.push('=== SOURCE: ' + url + ' ===\\n' + cleanText);
-  }
-  fs.writeFileSync('cf-latest-dump.txt', output.join('\\n'), 'utf8');
-  console.log('已匯出 cf-latest-dump.txt，全選內容貼入比價系統「全頁貼上校準」即可更新！');
-}
-run();`;
-        },
-
-        ingestPayload(rawText) {
-          const idx = rawText.indexOf('CF_SYNC_PAYLOAD:');
-          if (idx === -1) return null;
-          try {
-            const jsonStr = rawText.slice(idx + 'CF_SYNC_PAYLOAD:'.length).trim();
-            const data = JSON.parse(jsonStr);
-            if (!data || !Array.isArray(data.items)) return null;
-            const store = CONFIG.ALL_STORES.includes(data.store) ? data.store : '中田';
-            const nowStr = Utils.getNowHKT();
-            let updatedCount = 0;
-            let matchedCount = 0;
-            const logs = [];
-            DataStore.pushUndoSnapshot();
-
-            for (const entry of data.items) {
-              const price = Utils.parsePriceToken(entry.price);
-              if (!price) continue;
-              const matchObj = ScraperEngine.findBestProductForUrl(entry.url || '', entry.title || '');
-              if (!matchObj?.product || matchObj.score < 72) continue;
-              matchedCount++;
-              const target = matchObj.product;
-              if (entry.url && entry.url.startsWith('http')) {
-                if (!target.storeUrls) target.storeUrls = {};
-                target.storeUrls[store] = entry.url;
-              }
-              const oldVal = target.prices[store];
-              if (oldVal !== price) {
-                target.prices[store] = price;
-                target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
-                state.lastSyncChangedIds.add(target.id);
-                updatedCount++;
-                logs.push({ id: target.id, model: target.model, store, oldVal, newVal: price, time: nowStr });
-              }
-            }
-
-            if (logs.length > 0) {
-              state.lastSyncLogs = [...logs, ...state.lastSyncLogs].slice(0, 60);
-            }
-            state.lastUpdated = nowStr;
-            state.syncConnectionState = 'connected';
-            DataStore.saveToStorage();
-            UI.renderAll();
-            UI.renderSyncLogs();
-            return { store, matchedCount, updatedCount };
-          } catch (_) {
-            return null;
+      const PriceIntegrityGuard = {
+        /**
+         * Pre-write volatility sanity gate: prevents accidental deposits, add-on coolers,
+         * or full-PC bundle prices from silently overwriting verified SKU prices.
+         */
+        validate(skuItem, store, newPrice) {
+          if (!skuItem || typeof newPrice !== 'number' || newPrice <= 0) {
+            return { safe: false, warning: '無效價格數值' };
           }
+          const baseRef = skuItem.prices[CONFIG.BASE_STORE] || skuItem.originalPrices?.[store] || null;
+          if (!baseRef || baseRef <= 0) {
+            return { safe: true, warning: '' };
+          }
+          const dropPct = ((baseRef - newPrice) / baseRef) * 100;
+          const surgePct = ((newPrice - baseRef) / baseRef) * 100;
+
+          if (dropPct > 32) {
+            return {
+              safe: false,
+              warning: `⚠️ 跌幅達 ${dropPct.toFixed(0)}%（疑似訂金/加購/單條裝，已自動取消勾選）`
+            };
+          }
+          if (surgePct > 60) {
+            return {
+              safe: false,
+              warning: `⚠️ 溢價達 +${surgePct.toFixed(0)}%（疑似砌機組合價，已自動取消勾選）`
+            };
+          }
+          return { safe: true, warning: '' };
         }
       };
 
       /**
        * ============================================================================
-       * 4. STORE-SPECIFIC HTML & PRICE ADAPTERS (CENTRALFIELD / FORTRESS / ETC.)
+       * 4. STORE ADAPTERS & SCRAPER ENGINE
        * ============================================================================
        */
       const StoreAdapters = {
         PROFILES: {
-          '中田': {
-            cutoffRegex: /熱門相關商品|顧客評價|相關產品|加購優惠|搭配購買|Related Products/i,
-            oosRegex: /缺貨|暫無存貨|已售罄|Out of stock/i,
-            cardSelectors: ['.product', '.product-item', 'article', '[class*="product-card"]', 'li']
-          },
-          '豐澤': {
-            cutoffRegex: /你可能喜歡|相關產品|顧客評價|瀏覽紀錄|Recommended/i,
-            oosRegex: /缺貨|售罄|暫無存貨|Out of stock/i,
-            cardSelectors: ['.product-item', '[class*="product-card"]', 'article', 'li']
-          },
-          '飛馬': {
-            cutoffRegex: /相關商品|推薦配置|顧客評論|Related/i,
-            oosRegex: /缺貨|售罄|預訂|Out of stock/i,
-            cardSelectors: ['[class*="product"]', 'article', 'li']
-          },
-          'Jumbo': {
-            cutoffRegex: /相關產品|瀏覽過此商品|Related/i,
-            oosRegex: /缺貨|訂貨|最快一天到貨|Out of stock/i,
-            cardSelectors: ['.product-layout', '.product-thumb', '.product-item', 'li']
-          },
-          'SE Computer': {
-            cutoffRegex: /相關商品|推薦產品|Related/i,
-            oosRegex: /缺貨|售罄|Out of stock/i,
-            cardSelectors: ['.product-item', '.product-card', 'article', 'li']
-          },
-          '2000Fun': {
-            cutoffRegex: /相關商品|熱賣推薦|Related/i,
-            oosRegex: /缺貨|售罄|Out of stock/i,
-            cardSelectors: ['.product-item', '.goods-item', 'li']
-          },
-          '法奧': {
-            cutoffRegex: /相關產品|推薦組合|Related/i,
-            oosRegex: /缺貨|預訂|Out of stock/i,
-            cardSelectors: ['[class*="product"]', 'article', 'li']
-          }
+          '中田': { cutoffRegex: /熱門相關商品|顧客評價|相關產品|加購優惠|搭配購買|Related Products/i, oosRegex: /缺貨|暫無存貨|已售罄|Out of stock/i },
+          '豐澤': { cutoffRegex: /你可能喜歡|相關產品|顧客評價|瀏覽紀錄|Recommended/i, oosRegex: /缺貨|售罄|暫無存貨|Out of stock/i },
+          '飛馬': { cutoffRegex: /相關商品|推薦配置|顧客評論|Related/i, oosRegex: /缺貨|售罄|預訂|Out of stock/i },
+          'Jumbo': { cutoffRegex: /相關產品|瀏覽過此商品|Related/i, oosRegex: /缺貨|訂貨|最快一天到貨|Out of stock/i },
+          'SE Computer': { cutoffRegex: /相關商品|推薦產品|Related/i, oosRegex: /缺貨|售罄|Out of stock/i },
+          '2000Fun': { cutoffRegex: /相關商品|熱賣推薦|Related/i, oosRegex: /缺貨|售罄|Out of stock/i },
+          '法奧': { cutoffRegex: /相關產品|推薦組合|Related/i, oosRegex: /缺貨|預訂|Out of stock/i }
         },
 
         sanitizeNoise(text) {
@@ -1799,49 +1728,28 @@ run();`;
           return first;
         },
 
-        /**
-         * Context-weighted price selector: avoids add-on prices ($199 cooler) or installment noise
-         * by scoring DOM location, sale tags, and proximity to expected SKU price range.
-         */
-        selectBestCandidatePrice(weightedCandidates, expectedPriceHint = null) {
-          const valid = weightedCandidates.filter(c => typeof c.price === 'number' && c.price >= 120 && c.price < 100000);
-          if (valid.length === 0) return null;
-
-          // Group by price and sum weights
-          const scoreMap = new Map();
-          for (const c of valid) {
-            let bonus = c.weight;
-            // If we have an expected baseline price, penalize suspiciously tiny numbers (< 45% of baseline, e.g., cooler add-on)
-            if (expectedPriceHint && expectedPriceHint > 400) {
-              const ratio = c.price / expectedPriceHint;
-              if (ratio < 0.45) bonus -= 80;
-              else if (ratio >= 0.70 && ratio <= 1.35) bonus += 25;
+        selectBestCandidatePrice(weightedCandidates, expectedPriceHint) {
+          if (!weightedCandidates || weightedCandidates.length === 0) return null;
+          const sorted = [...weightedCandidates].sort((a, b) => {
+            let scoreA = a.weight;
+            let scoreB = b.weight;
+            if (expectedPriceHint && expectedPriceHint > 0) {
+              const ratioA = Math.abs(a.price - expectedPriceHint) / expectedPriceHint;
+              const ratioB = Math.abs(b.price - expectedPriceHint) / expectedPriceHint;
+              if (ratioA <= 0.35) scoreA += 25;
+              if (ratioB <= 0.35) scoreB += 25;
             }
-            const prev = scoreMap.get(c.price) ?? -999;
-            if (bonus > prev) scoreMap.set(c.price, bonus);
-          }
-
-          let bestPrice = null;
-          let bestScore = -Infinity;
-          for (const [price, score] of scoreMap.entries()) {
-            if (score > bestScore || (score === bestScore && price < bestPrice)) {
-              bestScore = score;
-              bestPrice = price;
-            }
-          }
-          return bestPrice;
+            return scoreB - scoreA;
+          });
+          return sorted[0].price;
         },
 
         extractFromNextJsScripts(html, url) {
           const idMatch = String(url || '').match(/\/product\/(\d+)/i);
           const slugMatch = String(url || '').match(/\/product\/\d+\/([a-z0-9-]+)/i);
           const anchors = [];
-          if (idMatch) {
-            anchors.push(`"id":${idMatch[1]}`, `"id":"${idMatch[1]}"`, `"product_id":${idMatch[1]}`);
-          }
-          if (slugMatch) {
-            anchors.push(`"${slugMatch[1]}"`);
-          }
+          if (idMatch) anchors.push(`"id":${idMatch[1]}`, `"id":"${idMatch[1]}"`, `"product_id":${idMatch[1]}`);
+          if (slugMatch) anchors.push(`"${slugMatch[1]}"`);
           if (anchors.length === 0) return null;
 
           for (const anchor of anchors) {
@@ -1854,7 +1762,7 @@ run();`;
               const saleMatch = windowSlice.match(/"(?:sale_price|special_price|final_price|discount_price|price)"\s*:\s*"?([1-9]\d{2,4}(?:\.\d+)?)"?/i);
               if (saleMatch) {
                 const p = Utils.parsePriceToken(saleMatch[1]);
-                if (p && p >= 120 && p < 100000) return p;
+                if (p && p >= 100 && p < 100000) return p;
               }
             }
           }
@@ -1864,7 +1772,6 @@ run();`;
         extractFromHtml(html, url, store, expectedPriceHint = null) {
           const profile = this.PROFILES[store] || this.PROFILES['中田'];
           const doc = new DOMParser().parseFromString(html, 'text/html');
-
           const h1Text = (doc.querySelector('h1')?.textContent || '').trim();
           const title = (
             h1Text ||
@@ -1876,7 +1783,6 @@ run();`;
           const weightedCandidates = [];
           let isOutOfStock = false;
 
-          // 1. JSON-LD Product Schema (High authority: +60)
           const ldScripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
           for (const scr of ldScripts) {
             try {
@@ -1888,42 +1794,31 @@ run();`;
                   if (offers) {
                     if (String(offers.availability || '').includes('OutOfStock')) isOutOfStock = true;
                     const p = Utils.parsePriceToken(offers.price ?? offers.lowPrice);
-                    if (p) weightedCandidates.push({ price: p, weight: 60, source: 'JSON-LD Schema' });
+                    if (p && p >= 120 && p < 100000) {
+                      weightedCandidates.push({ price: p, weight: 80, source: 'JSON-LD Schema' });
+                    }
                   }
                 }
               }
             } catch (_) {}
           }
 
-          // 2. Meta Price Tag (+55)
           const metaPrice = Utils.parsePriceToken(
             doc.querySelector('meta[property="product:price:amount"]')?.getAttribute('content') ||
             doc.querySelector('[itemprop="price"]')?.getAttribute('content') ||
             doc.querySelector('[itemprop="price"]')?.textContent
           );
-          if (metaPrice) weightedCandidates.push({ price: metaPrice, weight: 55, source: 'Meta Tag' });
-
-          // 3. Next.js / Product ID anchored JSON (+65)
-          const nextJsPrice = this.extractFromNextJsScripts(html, url);
-          if (nextJsPrice) weightedCandidates.push({ price: nextJsPrice, weight: 65, source: 'Next.js 結構化售價' });
-
-          // Remove header, nav, footer, strikethrough RRP, scripts, styles
-          doc.querySelectorAll('header, nav, footer, del, s, strike, [class*="line-through"], .old-price, .rrp, .compare-price, .price-item--regular, script, style').forEach(el => el.remove());
-
-          // 4. Dedicated Buy-Box Price Selectors (+50)
-          for (const sel of (profile.priceSelectors || [])) {
-            const els = Array.from(doc.querySelectorAll(sel)).slice(0, 5);
-            for (const el of els) {
-              const txt = this.sanitizeNoise(el.textContent || '');
-              const m = txt.match(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/i);
-              if (m) {
-                const p = Utils.parsePriceToken(m[1]);
-                if (p) weightedCandidates.push({ price: p, weight: 50, source: `${store} Buy-Box` });
-              }
-            }
+          if (metaPrice && metaPrice >= 120 && metaPrice < 100000) {
+            weightedCandidates.push({ price: metaPrice, weight: 75, source: 'Meta Tag' });
           }
 
-          // 5. Fallback scoped main text scan (+30 for first price after H1)
+          const nextJsPrice = this.extractFromNextJsScripts(html, url);
+          if (nextJsPrice) {
+            weightedCandidates.push({ price: nextJsPrice, weight: 90, source: 'Next.js 結構化售價' });
+          }
+
+          doc.querySelectorAll('header, nav, footer, del, s, strike, [class*="line-through"], .old-price, .rrp, .compare-price, script, style').forEach(el => el.remove());
+
           let mainText = (doc.body?.textContent || '').replace(/\s+/g, ' ');
           if (h1Text && h1Text.length >= 6) {
             const h1Pos = mainText.indexOf(h1Text.slice(0, 24));
@@ -1938,238 +1833,22 @@ run();`;
 
           const cleanedBuyBox = this.sanitizeNoise(mainText);
           const buyBoxMatches = Array.from(cleanedBuyBox.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi));
-          const buyBoxNums = buyBoxMatches
+          const extractedMainNums = buyBoxMatches
             .map(m => Utils.parsePriceToken(m[1]))
             .filter(p => p && p >= 120 && p < 100000);
 
-          if (buyBoxNums.length > 0) {
-            const domPrice = this.extractSellingPriceFromPair(buyBoxNums.slice(0, 2));
-            if (domPrice) {
-              weightedCandidates.push({ price: domPrice, weight: 40, source: `${store} Buy-Box 實時價` });
-            }
+          const pairedSellingPrice = this.extractSellingPriceFromPair(extractedMainNums.slice(0, 2));
+          if (pairedSellingPrice) {
+            weightedCandidates.push({ price: pairedSellingPrice, weight: 65, source: `${store} Buy-Box 實時價` });
           }
 
           const finalPrice = isOutOfStock ? null : this.selectBestCandidatePrice(weightedCandidates, expectedPriceHint);
-          const bestWinner = weightedCandidates.find(c => c.price === finalPrice);
+          const bestSource = weightedCandidates.find(c => c.price === finalPrice)?.source || 'Buy-Box 實時價';
 
-          return {
-            title,
-            price: finalPrice,
-            isOutOfStock,
-            sourceMethod: bestWinner ? bestWinner.source : '未識別'
-          };
+          return { title, price: finalPrice, isOutOfStock, sourceMethod: bestSource };
         }
       };
 
-      const MultiStoreSearchEngine = {
-        /**
-         * Uses Gemini API with Google Search Grounding to fetch real-time verified HKD retail prices
-         * across Centralfield and all 8 HK competitors, completely bypassing browser CORS blocks.
-         */
-        async searchWithGeminiGrounding(skuItem) {
-          const apiKey = "";
-          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-          const mpn = skuItem.fingerprint?.mpn || '';
-          const systemInstruction = `你是香港電腦硬件零售價格核查員。請使用 Google Search 查詢指定電腦硬件型號在香港以下 9 間店舖的最新官網現貨價格（港幣 HKD）：
-中田 (centralfield.com)、飛馬 (pegasus.hk)、法奧 (faroll.com)、2000Fun (openshop.com.hk)、環球 (universalcomputer.com.hk)、Jumbo (jumbo-computer.com)、SE Computer (secomputer.com.hk)、豐澤 (fortress.com.hk)、未來科技 (futuretech.com.hk)。
-嚴格規則：
-1. 只採納完全同型號、同容量、同包裝（BOX盒裝 與 TRAY散裝 嚴格區分）的單買現貨價。
-2. 剔除劃線建議價 RRP、跟板價、砌機價、信用卡限定價及缺貨商品。
-3. 若該店在搜尋結果中無明確現貨價格，該店數值必須回傳 null，嚴禁猜測或估算。
-4. 只輸出純 JSON 物件，格式為：
-{"prices":{"中田":number|null,"飛馬":number|null,"法奧":number|null,"2000Fun":number|null,"環球":number|null,"Jumbo":number|null,"SE Computer":number|null,"豐澤":number|null,"未來科技":number|null},"urls":{"中田":string|null,"飛馬":string|null,"法奧":string|null,"2000Fun":string|null,"環球":string|null,"Jumbo":string|null,"SE Computer":string|null,"豐澤":string|null,"未來科技":string|null},"notes":"簡短核實摘要"}`;
-
-          const userQuery = `請查詢此硬件型號在香港 9 間網店的最新現貨單買售價（HKD）：
-型號：${skuItem.model}
-${mpn ? `原廠料號 MPN：${mpn}` : ''}
-目前系統記錄參考價：中田 HK$${skuItem.prices['中田'] || '未知'}`;
-
-          const payload = {
-            contents: [{ parts: [{ text: userQuery }] }],
-            tools: [{ google_search: {} }],
-            systemInstruction: { parts: [{ text: systemInstruction }] }
-          };
-
-          for (let attempt = 0; attempt < 3; attempt++) {
-            try {
-              const resp = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-              if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-              const result = await resp.json();
-              const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-              const jsonMatch = text.match(/\{[\s\S]*\}/);
-              if (!jsonMatch) return null;
-              const parsed = JSON.parse(jsonMatch[0]);
-              if (!parsed || !parsed.prices) return null;
-
-              const groundingChunks = result?.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-              const sourceUrls = groundingChunks.map(c => c.web?.uri).filter(Boolean);
-
-              return {
-                prices: parsed.prices,
-                urls: parsed.urls || {},
-                notes: parsed.notes || '',
-                sourceUrls
-              };
-            } catch (_) {
-              await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt)));
-            }
-          }
-          return null;
-        },
-
-        async searchStoresForProduct(skuItem, targetStores = CONFIG.ALL_STORES, onStoreProgress = null) {
-          // 1. Primary Engine: Gemini Google Search Grounding (Real-time web search without CORS blocks)
-          const aiRes = await this.searchWithGeminiGrounding(skuItem);
-          if (aiRes && aiRes.prices) {
-            const results = [];
-            for (const store of targetStores) {
-              const rawPrice = Utils.parsePriceToken(aiRes.prices[store]);
-              const baseRef = skuItem.prices[CONFIG.BASE_STORE];
-              const isSane = rawPrice !== null && (!baseRef || baseRef < 300 || (rawPrice >= baseRef * 0.5 && rawPrice <= baseRef * 1.85));
-              const validPrice = isSane ? rawPrice : null;
-              const storeUrl = (aiRes.urls && typeof aiRes.urls[store] === 'string' && aiRes.urls[store].startsWith('http'))
-                ? aiRes.urls[store]
-                : (aiRes.sourceUrls.find(u => u.toLowerCase().includes((CONFIG.STORE_DOMAINS[store] || '').replace('https://www.', '').replace('https://', ''))) || null);
-
-              const resObj = {
-                store,
-                status: validPrice !== null ? 'found' : 'not_found',
-                price: validPrice,
-                oldPrice: skuItem.prices[store],
-                matchedTitle: skuItem.model,
-                confidence: 96,
-                reason: validPrice !== null ? `AI Google Search 實時核實 (${aiRes.notes || '官網現貨'})` : 'Google Search 未檢索到該店最新現貨價',
-                productUrl: storeUrl
-              };
-              results.push(resObj);
-              if (onStoreProgress) onStoreProgress(resObj);
-            }
-            return results;
-          }
-
-          // 2. Fallback Engine: Direct DOM Proxy Crawler
-          const query = Utils.buildSearchQueryForItem(skuItem);
-          const results = [];
-          const queue = [...targetStores];
-          const workers = Array.from({ length: 3 }, async () => {
-            while (queue.length > 0) {
-              const store = queue.shift();
-              const boundUrl = skuItem.storeUrls?.[store];
-              const profile = StoreAdapters.PROFILES[store] || StoreAdapters.PROFILES['中田'];
-              const domainBase = CONFIG.STORE_DOMAINS[store] || '';
-
-              if (boundUrl) {
-                const html = await ScraperEngine.fetchHtmlWithFallback(boundUrl);
-                if (html) {
-                  const extracted = StoreAdapters.extractFromHtml(html, boundUrl, store, skuItem.prices[CONFIG.BASE_STORE]);
-                  const resObj = {
-                    store,
-                    status: extracted.isOutOfStock ? 'oos' : (extracted.price ? 'found' : 'not_found'),
-                    price: extracted.isOutOfStock ? null : extracted.price,
-                    oldPrice: skuItem.prices[store],
-                    matchedTitle: extracted.title || skuItem.model,
-                    confidence: 100,
-                    reason: `直連商品頁 (${extracted.sourceMethod})`,
-                    productUrl: boundUrl
-                  };
-                  results.push(resObj);
-                  if (onStoreProgress) onStoreProgress(resObj);
-                  continue;
-                }
-              }
-
-              const searchUrl = CONFIG.STORE_SEARCH_URLS[store]?.(query);
-              const searchHtml = searchUrl ? await ScraperEngine.fetchHtmlWithFallback(searchUrl) : null;
-              if (!searchHtml) {
-                const resObj = {
-                  store,
-                  status: 'blocked',
-                  price: null,
-                  oldPrice: skuItem.prices[store],
-                  reason: '瀏覽器沙盒阻擋直連（可用「⚡ 零阻擋書籤」一鍵擷取）',
-                  searchUrl
-                };
-                results.push(resObj);
-                if (onStoreProgress) onStoreProgress(resObj);
-                continue;
-              }
-
-              const doc = new DOMParser().parseFromString(searchHtml, 'text/html');
-              doc.querySelectorAll('header, nav, footer, del, s, strike, [class*="line-through"], script, style').forEach(el => el.remove());
-
-              const cardNodes = new Set();
-              for (const sel of (profile.cardSelectors || ['article', 'li'])) {
-                doc.querySelectorAll(sel).forEach(el => {
-                  const txt = (el.textContent || '').trim();
-                  if (txt.length >= 12 && txt.length <= 550 && /(?:HK\$|\$)\s*[1-9]\d{2,4}/.test(txt)) {
-                    cardNodes.add(el);
-                  }
-                });
-              }
-
-              let bestCardMatch = null;
-              for (const card of cardNodes) {
-                const cardText = (card.textContent || '').replace(/\s+/g, ' ').trim();
-                if (profile.oosRegex.test(cardText)) continue;
-                const anchor = card.querySelector('a[href]');
-                const rawHref = anchor?.getAttribute('href') || '';
-                const fullCardUrl = rawHref
-                  ? (rawHref.startsWith('http') ? rawHref : `${domainBase}${rawHref.startsWith('/') ? '' : '/'}${rawHref}`)
-                  : searchUrl;
-
-                const check = SpecGuard.verifyMatch(skuItem, cardText, fullCardUrl);
-                if (!check.matched) continue;
-
-                const cleanedCard = StoreAdapters.sanitizeNoise(cardText);
-                const priceMatches = Array.from(cleanedCard.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi));
-                const validPrices = priceMatches.map(m => Utils.parsePriceToken(m[1])).filter(p => p && p >= 120 && p < 100000);
-                if (validPrices.length === 0) continue;
-
-                const cardPrice = StoreAdapters.extractSellingPriceFromPair(validPrices.slice(0, 2));
-                const baseRef = skuItem.prices[CONFIG.BASE_STORE];
-                if (!cardPrice || (baseRef && baseRef > 300 && (cardPrice < baseRef * 0.5 || cardPrice > baseRef * 1.85))) continue;
-
-                if (!bestCardMatch || check.score > bestCardMatch.confidence) {
-                  bestCardMatch = {
-                    store,
-                    status: 'found',
-                    price: cardPrice,
-                    oldPrice: skuItem.prices[store],
-                    matchedTitle: (anchor?.textContent || cardText).trim().slice(0, 90),
-                    confidence: check.score,
-                    reason: check.reason,
-                    productUrl: fullCardUrl
-                  };
-                }
-              }
-
-              const finalObj = bestCardMatch || {
-                store,
-                status: 'not_found',
-                price: null,
-                oldPrice: skuItem.prices[store],
-                reason: '官網搜尋無完全同規格現貨',
-                searchUrl
-              };
-              results.push(finalObj);
-              if (onStoreProgress) onStoreProgress(finalObj);
-            }
-          });
-          await Promise.all(workers);
-          results.sort((a, b) => CONFIG.ALL_STORES.indexOf(a.store) - CONFIG.ALL_STORES.indexOf(b.store));
-          return results;
-        }
-      };
-
-      /**
-       * ============================================================================
-       * 5. LIVE URL SCRAPER, CENTRALFIELD CATEGORY CRAWLER & PAGE PARSER
-       * ============================================================================
-       */
       const ScraperEngine = {
         detectStoreFromUrl(url) {
           const u = String(url || '').toLowerCase();
@@ -2180,8 +1859,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           if (u.includes('secomputer.com.hk')) return 'SE Computer';
           if (u.includes('2000fun.com') || u.includes('openshop.com.hk')) return '2000Fun';
           if (u.includes('faroll.com')) return '法奧';
-          if (u.includes('universal')) return '環球';
-          if (u.includes('futuretech')) return '未來科技';
+          if (u.includes('wcslmall.com') || u.includes('universal')) return '環球';
+          if (u.includes('futurecomputer.hk') || u.includes('futuretech')) return '未來科技';
           return null;
         },
 
@@ -2195,15 +1874,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               }
             },
             {
-              url: `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-              parse: async resp => await resp.text()
-            },
-            {
               url: `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-              parse: async resp => await resp.text()
-            },
-            {
-              url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
               parse: async resp => await resp.text()
             }
           ];
@@ -2222,6 +1893,28 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             }
           }
           return null;
+        },
+
+        findBestProductForUrl(url, pageTitle) {
+          for (const p of state.products) {
+            if (p.storeUrls && Object.values(p.storeUrls).includes(url)) {
+              return { product: p, score: 100, reason: '已綁定官網連結' };
+            }
+          }
+
+          let best = null;
+          let bestScore = 0;
+          let bestReason = '';
+
+          for (const p of state.products) {
+            const check = SpecGuard.verifyMatch(p, pageTitle, url);
+            if (check.matched && check.score > bestScore) {
+              bestScore = check.score;
+              best = p;
+              bestReason = check.reason;
+            }
+          }
+          return best ? { product: best, score: bestScore, reason: bestReason } : null;
         },
 
         parseCentralfieldCustomBlocks(rawText) {
@@ -2245,7 +1938,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             if (!sellingPrice) return;
 
             const matchObj = this.findBestProductForUrl('', `${currentTitle} ${currentSku}`);
-            if (matchObj?.product && matchObj.score >= 72) {
+            if (matchObj?.product && matchObj.score >= 70) {
               results.push({
                 product: matchObj.product,
                 price: sellingPrice,
@@ -2277,28 +1970,6 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           return results;
         },
 
-        findBestProductForUrl(url, pageTitle) {
-          for (const p of state.products) {
-            if (p.storeUrls && Object.values(p.storeUrls).includes(url)) {
-              return { product: p, score: 100, reason: '已綁定官網連結' };
-            }
-          }
-
-          let best = null;
-          let bestScore = 0;
-          let bestReason = '';
-
-          for (const p of state.products) {
-            const check = SpecGuard.verifyMatch(p, pageTitle, url);
-            if (check.matched && check.score > bestScore) {
-              bestScore = check.score;
-              best = p;
-              bestReason = check.reason;
-            }
-          }
-          return best ? { product: best, score: bestScore, reason: bestReason } : null;
-        },
-
         async scrapeUrls(urlEntries) {
           let updatedCount = 0;
           let fetchedCount = 0;
@@ -2307,98 +1978,92 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           const logs = [];
           const diagnostics = [];
 
-          const queue = [...urlEntries];
-          const concurrency = Math.min(4, Math.max(1, queue.length));
+          for (const entry of urlEntries) {
+            const cleanUrl = entry.url.trim();
+            if (!cleanUrl) continue;
+            const store = entry.store || this.detectStoreFromUrl(cleanUrl);
+            if (!store) {
+              diagnostics.push({ url: cleanUrl, status: 'error', msg: '無法識別網址所屬店舖' });
+              continue;
+            }
 
-          const workers = Array.from({ length: concurrency }, async () => {
-            while (queue.length > 0) {
-              const entry = queue.shift();
-              const cleanUrl = entry.url.trim();
-              if (!cleanUrl) continue;
-              const store = entry.store || this.detectStoreFromUrl(cleanUrl);
-              if (!store) {
-                diagnostics.push({ url: cleanUrl, status: 'error', msg: '無法識別網址所屬店舖' });
-                continue;
-              }
-
-              if (typeof entry.manualPrice === 'number' && entry.manualPrice > 0) {
-                const matchObj = entry.productId
-                  ? { product: state.products.find(p => p.id === entry.productId), score: 100, reason: '手動指定' }
-                  : this.findBestProductForUrl(cleanUrl, '');
-                if (matchObj?.product) {
-                  const target = matchObj.product;
-                  if (!target.storeUrls) target.storeUrls = {};
-                  target.storeUrls[store] = cleanUrl;
-                  fetchedCount++;
-                  const oldVal = target.prices[store];
-                  if (oldVal !== entry.manualPrice) {
-                    target.prices[store] = entry.manualPrice;
-                    target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
-                    changedIds.add(target.id);
-                    updatedCount++;
-                    logs.push({ id: target.id, model: target.model, store, oldVal, newVal: entry.manualPrice, time: nowStr });
-                  }
-                  diagnostics.push({
-                    url: cleanUrl,
-                    store,
-                    status: 'ok',
-                    model: target.model,
-                    reason: matchObj.reason,
-                    priceText: `HK$${Utils.formatHKD(entry.manualPrice)} (手動校準)`
-                  });
-                } else {
-                  diagnostics.push({ url: cleanUrl, store, status: 'warn', msg: '未能在比價庫找到對應型號' });
-                }
-                continue;
-              }
-
-              const html = await this.fetchHtmlWithFallback(cleanUrl);
-              if (!html) {
-                diagnostics.push({ url: cleanUrl, store, status: 'error', msg: 'CORS/防火牆阻擋，建議改用「全頁複製貼上校準」' });
-                continue;
-              }
-              fetchedCount++;
-
-              const preTarget = entry.productId ? state.products.find(p => p.id === entry.productId) : null;
-              const extracted = StoreAdapters.extractFromHtml(html, cleanUrl, store, preTarget?.prices[CONFIG.BASE_STORE]);
-              const matchObj = preTarget
-                ? { product: preTarget, score: 100, reason: '指定型號' }
-                : this.findBestProductForUrl(cleanUrl, extracted.title);
-
-              if (!matchObj?.product) {
-                diagnostics.push({ url: cleanUrl, store, status: 'warn', msg: `已讀取網頁 (${extracted.title.slice(0, 26)})，SpecGuard 未匹配到庫存型號` });
-                continue;
-              }
-
-              const target = matchObj.product;
-              if (!target.storeUrls) target.storeUrls = {};
-              target.storeUrls[store] = cleanUrl;
-
-              if (extracted.price !== null || extracted.isOutOfStock) {
+            if (typeof entry.manualPrice === 'number' && entry.manualPrice > 0) {
+              const matchObj = entry.productId
+                ? { product: state.products.find(p => p.id === entry.productId), score: 100, reason: '手動指定' }
+                : this.findBestProductForUrl(cleanUrl, '');
+              if (matchObj?.product) {
+                const target = matchObj.product;
+                if (!target.storeUrls) target.storeUrls = {};
+                target.storeUrls[store] = cleanUrl;
+                fetchedCount++;
                 const oldVal = target.prices[store];
-                const newVal = extracted.isOutOfStock ? null : extracted.price;
-                if (oldVal !== newVal) {
-                  target.prices[store] = newVal;
+                if (oldVal !== entry.manualPrice) {
+                  target.prices[store] = entry.manualPrice;
                   target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
                   changedIds.add(target.id);
                   updatedCount++;
-                  logs.push({ id: target.id, model: target.model, store, oldVal, newVal, time: nowStr });
+                  logs.push({ id: target.id, model: target.model, store, oldVal, newVal: entry.manualPrice, time: nowStr });
                 }
                 diagnostics.push({
                   url: cleanUrl,
                   store,
                   status: 'ok',
                   model: target.model,
-                  reason: `${matchObj.reason} • ${extracted.sourceMethod}`,
-                  priceText: extracted.isOutOfStock ? '顯示缺貨 (—)' : `HK$${Utils.formatHKD(newVal)}`
+                  reason: matchObj.reason,
+                  priceText: `HK$${Utils.formatHKD(entry.manualPrice)} (手動校準)`
                 });
               } else {
-                diagnostics.push({ url: cleanUrl, store, status: 'warn', model: target.model, msg: '頁面未偵測到有效價格標籤' });
+                diagnostics.push({ url: cleanUrl, store, status: 'warn', msg: '未能在比價庫找到對應型號' });
               }
+              continue;
             }
-          });
 
-          await Promise.all(workers);
+            const html = await this.fetchHtmlWithFallback(cleanUrl);
+            if (!html) {
+              diagnostics.push({ url: cleanUrl, store, status: 'error', msg: '瀏覽器沙盒/Cloudflare 阻擋，請改用「⚡ 零阻擋書籤」或「Ctrl+V 貼上校準」' });
+              continue;
+            }
+            fetchedCount++;
+
+            const matchObj = entry.productId
+              ? { product: state.products.find(p => p.id === entry.productId), score: 100, reason: '指定型號' }
+              : this.findBestProductForUrl(cleanUrl, '');
+
+            const expectedHint = matchObj?.product?.prices?.[CONFIG.BASE_STORE] || null;
+            const extracted = StoreAdapters.extractFromHtml(html, cleanUrl, store, expectedHint);
+            const finalMatch = matchObj || this.findBestProductForUrl(cleanUrl, extracted.title);
+
+            if (!finalMatch?.product) {
+              diagnostics.push({ url: cleanUrl, store, status: 'warn', msg: `已讀取網頁 (${extracted.title.slice(0, 26)})，但規格指紋未匹配` });
+              continue;
+            }
+
+            const target = finalMatch.product;
+            if (!target.storeUrls) target.storeUrls = {};
+            target.storeUrls[store] = cleanUrl;
+
+            if (extracted.price !== null || extracted.isOutOfStock) {
+              const oldVal = target.prices[store];
+              const newVal = extracted.isOutOfStock ? null : extracted.price;
+              if (oldVal !== newVal) {
+                target.prices[store] = newVal;
+                target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
+                changedIds.add(target.id);
+                updatedCount++;
+                logs.push({ id: target.id, model: target.model, store, oldVal, newVal, time: nowStr });
+              }
+              diagnostics.push({
+                url: cleanUrl,
+                store,
+                status: 'ok',
+                model: target.model,
+                reason: `${finalMatch.reason} • ${extracted.sourceMethod}`,
+                priceText: extracted.isOutOfStock ? '顯示缺貨 (—)' : `HK$${Utils.formatHKD(newVal)}`
+              });
+            } else {
+              diagnostics.push({ url: cleanUrl, store, status: 'warn', model: target.model, msg: '頁面未偵測到有效價格標籤' });
+            }
+          }
 
           if (logs.length > 0) {
             state.lastSyncLogs = [...logs, ...state.lastSyncLogs].slice(0, 60);
@@ -2411,12 +2076,13 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           return { fetchedCount, updatedCount, logs, diagnostics };
         },
 
-        async crawlCentralfieldCategories() {
-          let categoryUpdated = 0;
+        async crawlCentralfieldMaster() {
+          let updatedCount = 0;
           let reachablePages = 0;
           const nowStr = Utils.getNowHKT();
           const logs = [];
 
+          // Step 1: Crawl Centralfield's master /custom/ live quote sheet
           const customHtml = await this.fetchHtmlWithFallback(CONFIG.CENTRALFIELD_CUSTOM_URL);
           if (customHtml) {
             reachablePages++;
@@ -2431,14 +2097,14 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 target.prices['中田'] = m.price;
                 target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
                 state.lastSyncChangedIds.add(target.id);
-                categoryUpdated++;
+                updatedCount++;
                 logs.push({ id: target.id, model: target.model, store: '中田', oldVal, newVal: m.price, time: nowStr });
               }
             }
           }
 
-          const feedUrls = new Set(CONFIG.CENTRALFIELD_CATEGORY_FEEDS);
-          const queue = Array.from(feedUrls);
+          // Step 2: Crawl category feeds & bind direct /product/... URLs
+          const queue = [...CONFIG.CENTRALFIELD_CATEGORY_FEEDS];
           const workers = Array.from({ length: 3 }, async () => {
             while (queue.length > 0) {
               const catUrl = queue.shift();
@@ -2479,7 +2145,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   const matches = Array.from(cardText.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi));
                   const validPrices = matches
                     .map(m => Utils.parsePriceToken(m[1]))
-                    .filter(p => p && p >= 150 && p < 100000);
+                    .filter(p => p && p >= 120 && p < 100000);
 
                   if (validPrices.length > 0) {
                     cardPrice = StoreAdapters.extractSellingPriceFromPair(validPrices.slice(0, 2));
@@ -2493,7 +2159,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 if (!cardPrice) continue;
 
                 const matchObj = this.findBestProductForUrl(fullProductUrl, cardTitle);
-                if (!matchObj || !matchObj.product || matchObj.score < 76) continue;
+                if (!matchObj || !matchObj.product || matchObj.score < 74) continue;
 
                 const target = matchObj.product;
                 if (!target.storeUrls) target.storeUrls = {};
@@ -2504,7 +2170,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   target.prices['中田'] = cardPrice;
                   target.isModified = CONFIG.ALL_STORES.some(s => target.prices[s] !== target.originalPrices[s]);
                   state.lastSyncChangedIds.add(target.id);
-                  categoryUpdated++;
+                  updatedCount++;
                   logs.push({ id: target.id, model: target.model, store: '中田', oldVal, newVal: cardPrice, time: nowStr });
                 }
               }
@@ -2515,7 +2181,110 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           if (logs.length > 0) {
             state.lastSyncLogs = [...logs, ...state.lastSyncLogs].slice(0, 60);
           }
-          return { categoryUpdated, reachablePages };
+          return { updatedCount, reachablePages };
+        }
+      };
+
+      const MultiStoreSearchEngine = {
+        async searchStoresForProduct(skuItem, targetStores) {
+          const searchKw = Utils.buildSearchQueryForItem(skuItem);
+          const results = [];
+          const queue = [...targetStores];
+          const workers = Array.from({ length: 4 }, async () => {
+            while (queue.length > 0) {
+              const store = queue.shift();
+              const boundUrl = skuItem.storeUrls?.[store] || '';
+              const searchUrl = CONFIG.STORE_SEARCH_URLS[store] ? CONFIG.STORE_SEARCH_URLS[store](searchKw) : '';
+              const targetUrl = boundUrl || searchUrl;
+
+              if (!targetUrl) {
+                results.push({ store, status: 'skipped', reason: '無搜尋網址配置' });
+                continue;
+              }
+
+              const html = await ScraperEngine.fetchHtmlWithFallback(targetUrl);
+              if (!html) {
+                results.push({ store, status: 'blocked', reason: '沙盒/Cloudflare 限制直連' });
+                continue;
+              }
+
+              if (boundUrl) {
+                const extracted = StoreAdapters.extractFromHtml(html, boundUrl, store, skuItem.prices[CONFIG.BASE_STORE]);
+                if (extracted.price && !extracted.isOutOfStock) {
+                  results.push({
+                    store,
+                    status: 'found',
+                    price: extracted.price,
+                    reason: `綁定商品頁 • ${extracted.sourceMethod}`,
+                    productUrl: boundUrl
+                  });
+                } else {
+                  results.push({ store, status: 'not_found', reason: extracted.isOutOfStock ? '官網顯示缺貨' : '未偵測到有效售價' });
+                }
+                continue;
+              }
+
+              // Parse search result cards with SpecGuard strict isolation
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              doc.querySelectorAll('header, nav, footer, del, s, strike, [class*="line-through"], script, style').forEach(el => el.remove());
+
+              const anchors = Array.from(doc.querySelectorAll('a[href]')).filter(a => {
+                const h = a.getAttribute('href') || '';
+                return /\/products?\/|goods\.php|item/i.test(h);
+              });
+
+              let bestMatch = null;
+              for (const anchor of anchors.slice(0, 35)) {
+                const rawHref = anchor.getAttribute('href') || '';
+                let cardEl = anchor;
+                let cardText = (anchor.textContent || '').trim();
+
+                for (let depth = 0; depth < 4 && cardEl.parentElement; depth++) {
+                  cardEl = cardEl.parentElement;
+                  const txt = (cardEl.textContent || '').replace(/\s+/g, ' ').trim();
+                  if (txt.length > 20 && txt.length < 450 && /(?:HK\$|\$)\s*[1-9]\d{2,4}/.test(txt)) {
+                    cardText = txt;
+                    break;
+                  }
+                }
+
+                const check = SpecGuard.verifyMatch(skuItem, cardText, rawHref);
+                if (!check.matched) continue;
+
+                const cleaned = StoreAdapters.sanitizeNoise(cardText);
+                const nums = Array.from(cleaned.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi))
+                  .map(m => Utils.parsePriceToken(m[1]))
+                  .filter(p => p && p >= 120 && p < 100000);
+
+                const sellingPrice = StoreAdapters.extractSellingPriceFromPair(nums.slice(0, 2));
+                if (!sellingPrice) continue;
+
+                const baseRef = skuItem.prices[CONFIG.BASE_STORE];
+                if (baseRef && baseRef > 300 && (sellingPrice < baseRef * 0.5 || sellingPrice > baseRef * 1.85)) {
+                  continue;
+                }
+
+                if (!bestMatch || check.score > bestMatch.score) {
+                  bestMatch = {
+                    store,
+                    status: 'found',
+                    price: sellingPrice,
+                    score: check.score,
+                    reason: check.reason
+                  };
+                }
+              }
+
+              if (bestMatch) {
+                results.push(bestMatch);
+              } else {
+                results.push({ store, status: 'not_found', reason: '搜尋結果無同規格現貨' });
+              }
+            }
+          });
+
+          await Promise.all(workers);
+          return results;
         }
       };
 
@@ -2523,19 +2292,129 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
         detectStoreFromText(rawText, selectedStore) {
           if (selectedStore && selectedStore !== 'AUTO') return selectedStore;
           const t = String(rawText || '').toLowerCase();
-          if (t.includes('centralfield') || t.includes('中田電腦') || t.includes('轉數快優惠') || /sku:\s*cpu/i.test(t)) return '中田';
+          if (t.includes('centralfield') || t.includes('中田電腦') || t.includes('轉數快優惠') || /sku:\s*[a-z0-9-]+/i.test(t)) return '中田';
           if (t.includes('fortress') || t.includes('豐澤') || t.includes('易賞錢')) return '豐澤';
           if (t.includes('pegasus') || t.includes('飛馬電腦')) return '飛馬';
           if (t.includes('jumbo') || t.includes('珍寶電腦')) return 'Jumbo';
           if (t.includes('se computer') || t.includes('secomputer')) return 'SE Computer';
           if (t.includes('2000fun') || t.includes('openshop')) return '2000Fun';
           if (t.includes('faroll') || t.includes('法奧')) return '法奧';
+          if (t.includes('wcslmall') || t.includes('環球')) return '環球';
+          if (t.includes('futurecomputer') || t.includes('未來科技')) return '未來科技';
           return '中田';
         },
 
+        parseSingleProductPage(rawText, detectedStore, capturedUrl = '') {
+          // Cut off related/recommended products & footer so they never pollute the main product price
+          let mainSection = String(rawText || '');
+          const cutoffIdx = mainSection.search(/熱門相關商品|顧客評價|相關產品|你可能喜歡|瀏覽過此商品|You may also like|追蹤我們/i);
+          if (cutoffIdx > 60) {
+            mainSection = mainSection.slice(0, cutoffIdx);
+          }
+
+          // Extract explicit H1/URL hints if captured via bookmarklet, plus top lines
+          const h1Match = mainSection.match(/^H1:\s*(.+)$/m);
+          const skuMatch = mainSection.match(/SKU[：:]\s*([A-Z0-9-]+)/i);
+          const lines = mainSection.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+          // Find the longest descriptive title line near the top (before SKU or Buy-Box)
+          let candidateTitle = h1Match ? h1Match[1].trim() : '';
+          if (!candidateTitle) {
+            const topLines = lines.slice(0, 35).filter(l =>
+              l.length >= 14 &&
+              !l.startsWith('首頁') &&
+              !l.startsWith('URL:') &&
+              !/^(SKU|官方網址|用家心得|送貨|門市|數量|加入購物車|立即購買)/.test(l)
+            );
+            topLines.sort((a, b) => b.length - a.length);
+            candidateTitle = topLines[0] || '';
+          }
+
+          const titleWithSku = `${candidateTitle} ${skuMatch ? skuMatch[1] : ''}`.trim();
+          const matchObj = ScraperEngine.findBestProductForUrl(capturedUrl, titleWithSku);
+          if (!matchObj || !matchObj.product || matchObj.score < 70) return null;
+
+          if (/缺貨|售罄|暫無存貨|Out of stock/i.test(mainSection.slice(0, 1800)) && !/現貨|加入購物車|立即購買/.test(mainSection)) {
+            return null;
+          }
+
+          // Remove variant selector option lines (e.g. "1TB HK$1,430 標配版", "4TB HK$4,699 標配版") unless marked "已選擇"
+          const filteredLines = lines.filter(line => {
+            if (/^\d+(?:GB|TB)\s+(?:HK\$|\$)\s*[\d,]+/i.test(line) && !/已選擇/.test(line)) {
+              return false;
+            }
+            return true;
+          });
+
+          // Look specifically for the standalone Buy-Box price near "如有疑問" / "請選擇付款方式" / "加入購物車" / "立即購買"
+          let buyBoxPrice = null;
+          for (let i = 0; i < filteredLines.length; i++) {
+            const line = filteredLines[i];
+            if (/如有疑問|請選擇付款方式|加入購物車|立即購買|轉數快FPS/.test(line)) {
+              const prevBlock = StoreAdapters.sanitizeNoise(filteredLines.slice(Math.max(0, i - 5), i + 1).join(' '));
+              const m = Array.from(prevBlock.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi))
+                .map(x => Utils.parsePriceToken(x[1]))
+                .filter(p => p && p >= 120 && p < 100000);
+              if (m.length > 0) {
+                buyBoxPrice = StoreAdapters.extractSellingPriceFromPair(m.slice(-2));
+                break;
+              }
+            }
+          }
+
+          if (!buyBoxPrice) {
+            const cleanedAll = StoreAdapters.sanitizeNoise(filteredLines.join(' '));
+            const allNums = Array.from(cleanedAll.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi))
+              .map(x => Utils.parsePriceToken(x[1]))
+              .filter(p => p && p >= 120 && p < 100000);
+            buyBoxPrice = StoreAdapters.extractSellingPriceFromPair(allNums.slice(0, 2));
+          }
+
+          if (!buyBoxPrice) return null;
+
+          const guard = PriceIntegrityGuard.validate(matchObj.product, detectedStore, buyBoxPrice);
+          return [{
+            productId: matchObj.product.id,
+            store: detectedStore,
+            model: matchObj.product.model,
+            oldPrice: matchObj.product.prices[detectedStore],
+            newPrice: buyBoxPrice,
+            reason: `${matchObj.reason} • 單品詳情頁精準萃取`,
+            productUrl: capturedUrl || '',
+            checked: guard.safe,
+            warning: guard.warning
+          }];
+        },
+
         parsePreview(rawText, selectedStore = 'AUTO') {
+          const urlMatch = String(rawText || '').match(/^URL:\s*(https?:\/\/[^\s]+)/m);
+          const capturedUrl = urlMatch ? urlMatch[1].trim() : '';
+
+          // Mode 0: Price.com.hk Multi-Merchant Simultaneous Parser (extracts all 9 stores at once)
+          if (selectedStore === 'AUTO' && (/price\.com\.hk|香港格價網|安心訂購/i.test(rawText) || /price\.com\.hk/i.test(capturedUrl))) {
+            const priceComCandidates = this.parsePriceComHkPage(rawText, capturedUrl);
+            if (priceComCandidates && priceComCandidates.length > 0) {
+              state.pageParseCandidates = priceComCandidates;
+              return { store: `Price.com.hk 多店同抓 (${priceComCandidates.length} 間商戶)`, candidates: priceComCandidates };
+            }
+          }
+
           const detectedStore = this.detectStoreFromText(rawText, selectedStore);
 
+          // Mode A: Single Product Detail Page (e.g. centralfield.com/product/18441/..., shop.pegasus.hk/products/...)
+          const isSingleProductPage =
+            /\/products?\//i.test(capturedUrl) ||
+            (/加入購物車|立即購買/.test(rawText) && !/SKU:\s*[A-Z0-9-]+[\s\S]*SKU:\s*[A-Z0-9-]+/i.test(rawText));
+
+          if (isSingleProductPage) {
+            const singleCandidates = this.parseSingleProductPage(rawText, detectedStore, capturedUrl);
+            if (singleCandidates && singleCandidates.length > 0) {
+              state.pageParseCandidates = singleCandidates;
+              return { store: detectedStore, candidates: singleCandidates };
+            }
+          }
+
+          // Mode B: Centralfield /custom/ Multi-SKU Master Quote Sheet
           if (detectedStore === '中田' && /SKU:\s*[A-Z0-9-]+/i.test(rawText)) {
             const skuMatches = ScraperEngine.parseCentralfieldCustomBlocks(rawText);
             if (skuMatches.length > 0) {
@@ -2544,6 +2423,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               for (const m of skuMatches) {
                 if (seen.has(m.product.id)) continue;
                 seen.add(m.product.id);
+                const guard = PriceIntegrityGuard.validate(m.product, '中田', m.price);
                 candidates.push({
                   productId: m.product.id,
                   store: '中田',
@@ -2551,7 +2431,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   oldPrice: m.product.prices['中田'],
                   newPrice: m.price,
                   reason: m.reason,
-                  checked: true
+                  checked: guard.safe,
+                  warning: guard.warning
                 });
               }
               state.pageParseCandidates = candidates;
@@ -2559,17 +2440,23 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             }
           }
 
+          // Mode C: General Multi-Item Category / Search / Price.com.hk List
           const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
           const blocks = [];
           let currentBlock = [];
+          const hasCartButtons = lines.some(l => /^(加入購物車|立即購買|比較)$/.test(l));
+
           for (const line of lines) {
             if (line === '---' || line === '===') {
+              if (currentBlock.length) blocks.push(currentBlock.join(' '));
+              currentBlock = [];
+            } else if (hasCartButtons && /^(加入購物車|比較)$/.test(line)) {
               if (currentBlock.length) blocks.push(currentBlock.join(' '));
               currentBlock = [];
             } else {
               currentBlock.push(line);
               const joined = currentBlock.join(' ');
-              if (/(?:HK\$|\$)\s*[1-9]\d{2,4}/.test(line) && joined.length > 18) {
+              if (!hasCartButtons && /(?:HK\$|\$)\s*[1-9]\d{2,4}/.test(line) && joined.length > 18) {
                 blocks.push(joined);
                 currentBlock = [];
               }
@@ -2581,19 +2468,20 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           const seenProductIds = new Set();
 
           for (const block of blocks) {
-            if (/缺貨|售罄|暫無存貨|訂貨|補貨中|限砌機|Out of stock/i.test(block)) continue;
+            if (/缺貨|售罄|暫無存貨|訂貨|補貨中|中田跟板優惠|限砌機|Out of stock/i.test(block)) continue;
             const cleaned = StoreAdapters.sanitizeNoise(block);
             const priceMatches = Array.from(cleaned.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi));
             const prices = priceMatches.map(m => Utils.parsePriceToken(m[1])).filter(p => p && p >= 150 && p < 100000);
             if (prices.length === 0) continue;
-            const parsedPrice = StoreAdapters.extractSellingPriceFromPair(prices.slice(0, 2));
+            const parsedPrice = StoreAdapters.extractSellingPriceFromPair(prices.slice(-2));
             if (!parsedPrice) continue;
 
             const matchObj = ScraperEngine.findBestProductForUrl('', block);
-            if (!matchObj || !matchObj.product || matchObj.score < 72) continue;
+            if (!matchObj || !matchObj.product || matchObj.score < 70) continue;
             if (seenProductIds.has(matchObj.product.id)) continue;
             seenProductIds.add(matchObj.product.id);
 
+            const guard = PriceIntegrityGuard.validate(matchObj.product, detectedStore, parsedPrice);
             candidates.push({
               productId: matchObj.product.id,
               store: detectedStore,
@@ -2601,12 +2489,76 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               oldPrice: matchObj.product.prices[detectedStore],
               newPrice: parsedPrice,
               reason: matchObj.reason,
-              checked: true
+              checked: guard.safe,
+              warning: guard.warning
             });
           }
 
           state.pageParseCandidates = candidates;
           return { store: detectedStore, candidates };
+        },
+
+        parsePriceComHkPage(rawText, capturedUrl = '') {
+          const h1Match = String(rawText || '').match(/^H1:\s*(.+)$/m);
+          const lines = String(rawText || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+          let productTitle = h1Match ? h1Match[1].trim() : '';
+          if (!productTitle) {
+            const titleCand = lines.slice(0, 25).filter(l => l.length >= 12 && !/price\.com|格價|登入|註冊|搜尋|分類/.test(l));
+            titleCand.sort((a, b) => b.length - a.length);
+            productTitle = titleCand[0] || '';
+          }
+
+          const matchObj = ScraperEngine.findBestProductForUrl(capturedUrl, productTitle);
+          if (!matchObj || !matchObj.product || matchObj.score < 68) return null;
+
+          const storeAliases = [
+            { store: '中田', rx: /centralfield|中田電腦/i },
+            { store: '飛馬', rx: /pegasus|飛馬電腦/i },
+            { store: 'Jumbo', rx: /jumbo|珍寶電腦/i },
+            { store: 'SE Computer', rx: /se\s*computer/i },
+            { store: '2000Fun', rx: /2000fun|openshop/i },
+            { store: '法奧', rx: /faroll|法奧/i },
+            { store: '環球', rx: /universal|環球電腦|wcslmall/i },
+            { store: '豐澤', rx: /fortress|豐澤/i },
+            { store: '未來科技', rx: /future\s*computer|future\s*tech|未來科技/i }
+          ];
+
+          const candidates = [];
+          const seenStores = new Set();
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            for (const alias of storeAliases) {
+              if (seenStores.has(alias.store)) continue;
+              if (alias.rx.test(line)) {
+                const windowSlice = lines.slice(i, Math.min(lines.length, i + 6)).join(' ');
+                if (/缺貨|售罄|訂貨|無貨/.test(windowSlice)) continue;
+                const cleaned = StoreAdapters.sanitizeNoise(windowSlice);
+                const priceMatches = Array.from(cleaned.matchAll(/(?:HK\$|\$)\s*([1-9]\d{1,4}(?:,\d{3})*)/gi))
+                  .map(m => Utils.parsePriceToken(m[1]))
+                  .filter(p => p && p >= 120 && p < 100000);
+                if (priceMatches.length > 0) {
+                  const quotePrice = StoreAdapters.extractSellingPriceFromPair(priceMatches.slice(0, 2));
+                  const baseRef = matchObj.product.prices[CONFIG.BASE_STORE];
+                  if (quotePrice && (!baseRef || (quotePrice >= baseRef * 0.5 && quotePrice <= baseRef * 1.85))) {
+                    seenStores.add(alias.store);
+                    const guard = PriceIntegrityGuard.validate(matchObj.product, alias.store, quotePrice);
+                    candidates.push({
+                      productId: matchObj.product.id,
+                      store: alias.store,
+                      model: matchObj.product.model,
+                      oldPrice: matchObj.product.prices[alias.store],
+                      newPrice: quotePrice,
+                      reason: `Price.com.hk 商戶報價 • ${matchObj.reason}`,
+                      checked: guard.safe,
+                      warning: guard.warning
+                    });
+                  }
+                }
+              }
+            }
+          }
+          return candidates;
         },
 
         applyParsedPreview() {
@@ -2623,6 +2575,10 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           for (const cand of selected) {
             const target = state.products.find(p => p.id === cand.productId);
             if (!target) continue;
+            if (cand.productUrl) {
+              if (!target.storeUrls) target.storeUrls = {};
+              target.storeUrls[cand.store] = cand.productUrl;
+            }
             const oldVal = target.prices[cand.store];
             if (oldVal !== cand.newPrice) {
               target.prices[cand.store] = cand.newPrice;
@@ -2646,7 +2602,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
       /**
        * ============================================================================
-       * 6. APPLICATION STATE & PERSISTENCE DATASTORE
+       * 5. APPLICATION STATE & PERSISTENCE DATASTORE
        * ============================================================================
        */
       const state = {
@@ -2669,7 +2625,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
         basketIds: new Set(),
         currentPage: 1,
         pageSize: 100,
-        lastUpdated: '2026-11-19 08:26 (HKT)',
+        lastUpdated: '2026-11-21 09:50 (HKT)',
         selectedDetailId: null,
         modifiedCount: 0,
         lastSyncChangedIds: new Set(),
@@ -2677,6 +2633,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
         remoteFeedUrl: '',
         pageParseCandidates: [],
         undoStack: [],
+        modalLiveSearchResults: {},
         syncConnectionState: 'idle'
       };
 
@@ -2722,10 +2679,9 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
         },
 
         init() {
-          // Purge stale cache keys from earlier versions so old erroneous prices never reappear
-          (CONFIG.LEGACY_KEYS || []).forEach(k => {
-            try { localStorage.removeItem(k); } catch (_) {}
-          });
+          try {
+            CONFIG.LEGACY_KEYS.forEach(k => localStorage.removeItem(k));
+          } catch (_) {}
 
           const baseline = this.buildBaseline();
           const baselineByModel = new Map(baseline.map(b => [b.model, b]));
@@ -2735,7 +2691,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             if (raw) {
               const parsed = JSON.parse(raw);
               if (Array.isArray(parsed.products) && parsed.products.length > 0) {
-                const hydrated = parsed.products.map(p => {
+                state.products = parsed.products.map(p => {
                   const baseMatch = baselineByModel.get(p.model);
                   const mergedPrices = { ...p.prices };
                   const mergedOrig = { ...(p.originalPrices || p.prices) };
@@ -2744,16 +2700,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   if (baseMatch) {
                     for (const store of CONFIG.ALL_STORES) {
                       const latestBaseVal = baseMatch.originalPrices[store];
-                      // Always sync baseline store ("中田") or stale unedited entries to latest verified baseline
-                      if (store === CONFIG.BASE_STORE && latestBaseVal !== null) {
-                        if (mergedPrices[store] === mergedOrig[store] || mergedOrig[store] !== latestBaseVal) {
-                          mergedPrices[store] = latestBaseVal;
-                        }
-                        mergedOrig[store] = latestBaseVal;
-                      } else if (mergedOrig[store] !== latestBaseVal) {
-                        if (mergedPrices[store] === mergedOrig[store]) {
-                          mergedPrices[store] = latestBaseVal;
-                        }
+                      if (mergedOrig[store] !== latestBaseVal) {
+                        mergedPrices[store] = latestBaseVal;
                         mergedOrig[store] = latestBaseVal;
                       }
                     }
@@ -2765,18 +2713,9 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                     originalPrices: mergedOrig,
                     storeUrls: mergedUrls,
                     isModified: CONFIG.ALL_STORES.some(s => mergedPrices[s] !== mergedOrig[s]),
-                    fingerprint: p.fingerprint || Utils.extractSpecFingerprint(p.model)
+                    fingerprint: Utils.extractSpecFingerprint(p.model)
                   };
                 });
-
-                // Ensure newly added baseline SKUs (such as 9950X3D2 BOX) are present
-                const existingModels = new Set(hydrated.map(x => x.model));
-                for (const b of baseline) {
-                  if (!existingModels.has(b.model)) {
-                    hydrated.unshift(b);
-                  }
-                }
-                state.products = hydrated;
 
                 if (Array.isArray(parsed.activeCompetitors) && parsed.activeCompetitors.length === 5) {
                   state.activeCompetitors = parsed.activeCompetitors;
@@ -2837,7 +2776,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
         resetToBaseline() {
           localStorage.removeItem(CONFIG.STORAGE_KEY);
           state.products = this.buildBaseline();
-          state.lastUpdated = '2026-11-19 08:25 (HKT)';
+          state.lastUpdated = '2026-11-19 23:48 (HKT)';
           state.verifiedOutlierKeys.clear();
           state.lastSyncChangedIds.clear();
           state.lastSyncLogs = [];
@@ -2846,14 +2785,14 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           UI.renderAll();
         },
 
-        async runOneClickSync(customUrl, isSilent = false) {
+        async runOneClickSync(customUrl) {
           const btnIcon = document.getElementById('syncBtnIcon');
           if (btnIcon) btnIcon.classList.add('animate-spin');
           state.lastSyncChangedIds.clear();
           state.syncConnectionState = 'syncing';
           UI.updateTopBadges();
 
-          const { categoryUpdated, reachablePages } = await ScraperEngine.crawlCentralfieldCategories();
+          const { updatedCount: catUpdated, reachablePages } = await ScraperEngine.crawlCentralfieldMaster();
 
           const boundEntries = [];
           for (const p of state.products) {
@@ -2895,7 +2834,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
           if (btnIcon) btnIcon.classList.remove('animate-spin');
           const totalReachable = reachablePages + liveUrlRes.fetchedCount;
-          const totalChanged = categoryUpdated + liveUrlRes.updatedCount + remoteUpdated;
+          const totalChanged = catUpdated + liveUrlRes.updatedCount + remoteUpdated;
           state.syncConnectionState = totalReachable > 0 ? 'connected' : 'sandbox_blocked';
 
           if (totalReachable > 0) {
@@ -2911,8 +2850,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             if (totalReachable === 0) {
               banner.className = 'no-print bg-amber-50 border-b border-amber-200 px-4 py-2.5';
               banner.classList.remove('hidden');
-              summary.innerHTML = `⚠️ <strong>目前預覽視窗安全沙盒限制外部直連</strong>：請使用「<button type="button" data-action="open-sync-modal" data-tab="bookmarklet" class="underline font-bold text-emerald-800">⚡ 零阻擋抓價書籤</button>」或開啟 <a href="https://centralfield.com/custom/" target="_blank" rel="noopener noreferrer" class="underline font-bold text-amber-900">centralfield.com/custom/↗</a> 按 Ctrl+A 複製後切回本頁按 <strong>Ctrl+V</strong>，3 秒更新全站實價！`;
-            } else if (!isSilent || totalChanged > 0) {
+              summary.innerHTML = `⚠️ <strong>目前預覽沙盒限制外部代理直連</strong>：請點右側「<button type="button" data-action="open-sync-modal" data-tab="pageparse" class="underline font-bold text-amber-900">中田/9店全頁貼上校準</button>」，開啟 <a href="https://centralfield.com/custom/" target="_blank" rel="noopener noreferrer" class="underline font-bold text-emerald-800">centralfield.com/custom/↗</a> 按 Ctrl+A 複製，切回本頁直接按 <strong>Ctrl+V</strong> 即可自動更新！`;
+            } else {
               banner.className = 'no-print bg-emerald-50 border-b border-emerald-200 px-4 py-2.5';
               banner.classList.remove('hidden');
               summary.textContent = totalChanged > 0
@@ -2920,20 +2859,18 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 : `同步完成（${state.lastUpdated}）：已核對 ${totalReachable} 個官網頁面及全庫 ${state.products.length} 項現貨，全數價差已校準。`;
             }
           }
-          if (!isSilent) {
-            if (totalReachable === 0) {
-              Utils.showToast('預覽沙盒阻擋外部直連，已開啟「⚡ 零阻擋抓價書籤」同步指引', 'error');
-              UI.openSyncModal('bookmarklet');
-            } else {
-              Utils.showToast(totalChanged > 0 ? `全網同步完成！共校準 ${totalChanged} 項最新價格` : '全網同步完成！所有價格已校準至最新狀態');
-            }
+
+          if (totalReachable === 0) {
+            Utils.showToast('預覽沙盒阻擋外部直連，請在官網按 Ctrl+A 複製後回本頁按 Ctrl+V 同步', 'error');
+          } else {
+            Utils.showToast(totalChanged > 0 ? `全網同步完成！共校準 ${totalChanged} 項最新價格` : '全網同步完成！所有價格已校準至最新狀態');
           }
         }
       };
 
       /**
        * ============================================================================
-       * 7. CORE COMPARISON & PRICING ENGINE
+       * 6. CORE COMPARISON & PRICING ENGINE
        * ============================================================================
        */
       const PricingEngine = {
@@ -2945,6 +2882,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           let minPrice = Infinity;
           let hasActiveCompetitorStock = false;
           const outlierStores = new Set();
+          const outlierReasons = new Map();
 
           for (const store of activeStoreNames) {
             const p = item.prices[store];
@@ -2955,8 +2893,14 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 const isManuallyVerified = state.verifiedOutlierKeys.has(overrideKey);
                 if (!isManuallyVerified && basePrice && basePrice > 0) {
                   const dropPct = ((basePrice - p) / basePrice) * 100;
+                  const surgePct = ((p - basePrice) / basePrice) * 100;
                   if (dropPct > state.outlierThresholdPct) {
                     outlierStores.add(store);
+                    outlierReasons.set(store, `低於中田 ${dropPct.toFixed(0)}%（疑似訂金/加購/單條裝）`);
+                    if (state.excludeOutliers) continue;
+                  } else if (surgePct > 65) {
+                    outlierStores.add(store);
+                    outlierReasons.set(store, `高於中田 +${surgePct.toFixed(0)}%（疑似整機組合/誤標價）`);
                     if (state.excludeOutliers) continue;
                   }
                 }
@@ -2989,7 +2933,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             diffPct,
             isBaseLowest,
             hasActiveCompetitorStock,
-            outlierStores
+            outlierStores,
+            outlierReasons
           };
         },
 
@@ -3068,7 +3013,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
       /**
        * ============================================================================
-       * 8. EXPORTER
+       * 7. EXPORTER
        * ============================================================================
        */
       const Exporter = {
@@ -3175,19 +3120,51 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           if (Utils.copyToClipboard(lines.join('\n'))) {
             Utils.showToast(`已複製 ${selected.length} 件零件試算報價表！`);
           }
+        },
+
+        copyProcurementSheet() {
+          const items = PricingEngine.getFilteredAndSorted().filter(i => i.diff > 0);
+          if (items.length === 0) {
+            Utils.showToast('目前篩選範圍內中田全數最低或同價，無需調價！');
+            return;
+          }
+          const strategyOffset = parseInt(document.getElementById('batchStrategySelect')?.value || '0', 10);
+          const lines = [
+            `【中田採購部 — 競爭對手低價跟進建議單】${state.lastUpdated}`,
+            `篩選範圍共 ${items.length} 項需關注 SKU（策略：${strategyOffset === 0 ? '與最低對手持平' : `平過對手 HK$${Math.abs(strategyOffset)}`}）：`,
+            `------------------------------------------------------------`
+          ];
+          items.forEach((item, idx) => {
+            const targetPrice = Math.max(1, item.minPrice + strategyOffset);
+            const drop = item.basePrice - targetPrice;
+            const mpnStr = item.fingerprint?.mpn ? ` [${item.fingerprint.mpn}]` : '';
+            lines.push(`${idx + 1}. [${item.category}] ${item.model}${mpnStr}`);
+            lines.push(`   中田現價: HK$${Utils.formatHKD(item.basePrice)} → 建議調至: HK$${Utils.formatHKD(targetPrice)}（減 HK$${Utils.formatHKD(drop)}｜最低對手: ${item.lowestStores.join('/')} HK$${Utils.formatHKD(item.minPrice)}）`);
+          });
+          if (Utils.copyToClipboard(lines.join('\n'))) {
+            Utils.showToast(`已複製 ${items.length} 項採購部調價建議單至剪貼簿！`);
+          }
         }
       };
 
       /**
        * ============================================================================
-       * 9. UI RENDERER & EVENT DELEGATION
+       * 8. UI RENDERER & EVENT DELEGATION
        * ============================================================================
        */
       const UI = {
+        initBookmarklet() {
+          const link = document.getElementById('zeroCorsBookmarkletLink');
+          if (!link) return;
+          const code = `(function(){var clone=document.body.cloneNode(true);clone.querySelectorAll('del,s,strike,script,style,[aria-checked="false"],[aria-selected="false"]').forEach(function(e){e.remove();});var h1=(document.querySelector('h1')||{}).innerText||'';var t=clone.innerText||'';var u=location.href;var payload='[CF_LIVE_CAPTURE]\\nURL: '+u+'\\nH1: '+h1.trim()+'\\n'+t;var ta=document.createElement('textarea');ta.value=payload;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);var d=document.createElement('div');d.textContent='✅ 已擷取本頁最新實價！請切回比價系統按 Ctrl+V 自動同步';d.style.cssText='position:fixed;top:16px;right:16px;z-index:999999;background:#065f46;color:#fff;padding:12px 18px;border-radius:12px;font-family:sans-serif;font-size:14px;font-weight:bold;box-shadow:0 10px 25px rgba(0,0,0,0.3);';document.body.appendChild(d);setTimeout(function(){d.remove();},4000);})();`;
+          link.href = 'javascript:' + encodeURIComponent(code);
+        },
+
         renderAll() {
           this.updateTopBadges();
           const scopeItems = PricingEngine.getBaseScope();
           this.renderCompetitorSlots(scopeItems);
+          this.renderCategoryHealth();
           this.renderThreatRadar(scopeItems);
           this.renderCategoryTabs();
           this.renderBrandChips(scopeItems);
@@ -3248,12 +3225,12 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               syncPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span><span>正在核對官網...</span>';
             } else if (state.syncConnectionState === 'connected') {
               syncPill.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
-              syncPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>官網實價已同步</span>';
+              syncPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>官網直連正常</span>';
             } else if (state.syncConnectionState === 'sandbox_blocked') {
               syncPill.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-300 cursor-pointer';
               syncPill.setAttribute('data-action', 'open-sync-modal');
-              syncPill.setAttribute('data-tab', 'bookmarklet');
-              syncPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>沙盒隔離(點此用零阻擋書籤)</span>';
+              syncPill.setAttribute('data-tab', 'pageparse');
+              syncPill.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>沙盒隔離(點此貼上總表校準)</span>';
             }
           }
 
@@ -3306,6 +3283,44 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   ${optionsHtml}
                 </select>
               </div>
+            `;
+          }).join('');
+        },
+
+        renderCategoryHealth() {
+          const grid = document.getElementById('categoryHealthGrid');
+          if (!grid) return;
+          const allEvaluated = state.products.map(p => PricingEngine.evaluate(p)).filter(i => i.basePrice !== null && (!state.requireCompetitorStock || i.hasActiveCompetitorStock));
+          const cats = ['CPU', 'RAM', 'MB', 'VGA', 'MON', 'NET', 'SSD'];
+
+          grid.innerHTML = cats.map(cat => {
+            const catItems = allEvaluated.filter(i => i.category === cat);
+            const total = catItems.length;
+            const wins = catItems.filter(i => i.isBaseLowest).length;
+            const undercuts = catItems.filter(i => i.diff > 0);
+            const winPct = total > 0 ? Math.round((wins / total) * 100) : 100;
+            const avgGap = undercuts.length > 0
+              ? Math.round(undercuts.reduce((s, i) => s + i.diff, 0) / undercuts.length)
+              : 0;
+            const isSelected = state.selectedCategory === cat && state.quickFilter === 'UNDERCUT';
+            const barColor = winPct >= 75 ? 'bg-emerald-500' : (winPct >= 50 ? 'bg-amber-500' : 'bg-rose-500');
+
+            return `
+              <button type="button" data-action="drilldown-cat-undercut" data-cat="${cat}" class="text-left p-2.5 rounded-xl border transition ${
+                isSelected ? 'bg-emerald-50 border-emerald-400 ring-2 ring-emerald-200' : 'bg-slate-50/70 border-slate-200 hover:bg-slate-100/80'
+              }">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-800">
+                  <span>${cat}</span>
+                  <span class="tabular-nums ${winPct >= 75 ? 'text-emerald-700' : (winPct >= 50 ? 'text-amber-700' : 'text-rose-600')}">${winPct}% 勝率</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden my-1.5">
+                  <div class="h-full ${barColor} rounded-full" style="width: ${winPct}%"></div>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-slate-500 tabular-nums">
+                  <span>落後 ${undercuts.length}/${total} 項</span>
+                  <span>${avgGap > 0 ? `均差 $${Utils.formatHKD(avgGap)}` : '全數佔優'}</span>
+                </div>
+              </button>
             `;
           }).join('');
         },
@@ -3549,7 +3564,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
           thead.innerHTML = `
             <tr>
-              <th class="sticky-header-col bg-slate-100 px-3.5 py-3 font-bold text-slate-800 min-w-[290px] sm:min-w-[370px] max-w-[450px] border-r border-slate-200">
+              <th class="sticky-header-col bg-slate-100 px-3.5 py-3 font-bold text-slate-800 min-w-[280px] sm:min-w-[360px] max-w-[440px] border-r border-slate-200">
                 <div class="flex items-center gap-2">
                   <input type="checkbox" id="selectAllPageCheckbox" ${allPageSelected ? 'checked' : ''} title="全選本頁加入比價試算籃" class="rounded text-emerald-600 focus:ring-emerald-500 w-3.5 h-3.5 cursor-pointer" />
                   <span>中田型號 / 規格（雙擊價格可直接改價）</span>
@@ -3591,17 +3606,28 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
               const compCells = displayedComps.map(store => {
                 const price = item.prices[store];
+                const origPrice = item.originalPrices ? item.originalPrices[store] : price;
                 const isOutlier = item.outlierStores && item.outlierStores.has(store);
+                const outlierReason = item.outlierReasons?.get(store) || `疑似異常價差`;
                 const isManuallyVerified = state.verifiedOutlierKeys.has(`${item.id}::${store}`);
                 const isLowest = price !== null && price === item.minPrice && !(isOutlier && state.excludeOutliers);
+                const priceDelta = (price !== null && origPrice !== null && price !== origPrice) ? (price - origPrice) : 0;
+                const deltaHtml = priceDelta !== 0
+                  ? `<div class="text-[10px] font-semibold ${priceDelta < 0 ? 'text-emerald-700' : 'text-rose-600'}">${priceDelta < 0 ? '↓$' + Utils.formatHKD(Math.abs(priceDelta)) : '↑$' + Utils.formatHKD(priceDelta)}</div>`
+                  : '';
 
                 return `
-                  <td data-edit-id="${item.id}" data-edit-store="${store}" class="price-cell-editable px-3 py-2.5 text-right tabular-nums whitespace-nowrap ${
+                  <td data-edit-id="${item.id}" data-edit-store="${store}" class="price-cell-editable px-3 py-2 text-right tabular-nums whitespace-nowrap ${
                     isOutlier && state.excludeOutliers
                       ? 'cell-outlier'
                       : (isLowest ? 'cell-lowest' : (price === null ? 'text-slate-300' : 'text-slate-700'))
-                  } ${isManuallyVerified ? 'cell-verified-override' : ''}" title="雙擊可直接修改 ${store} 售價">
-                    ${Utils.formatHKD(price)}${isOutlier ? ' ⚠️' : (isManuallyVerified ? ' ✓' : '')}
+                  } ${isManuallyVerified ? 'cell-verified-override' : ''}" title="${
+                    isOutlier
+                      ? `${outlierReason}，點擊此列可於詳情視窗手動核實放行`
+                      : (isManuallyVerified ? '已人工核實放行之實測價（雙擊可修改）' : `雙擊可直接修改 ${store} 售價`)
+                  }">
+                    <div>${Utils.formatHKD(price)}${isOutlier ? ' ⚠️' : (isManuallyVerified ? ' ✓' : '')}</div>
+                    ${deltaHtml}
                   </td>
                 `;
               }).join('');
@@ -3626,7 +3652,12 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 : '';
               const baseUrl = item.storeUrls?.[CONFIG.BASE_STORE] || CONFIG.STORE_SEARCH_URLS['中田'](Utils.buildSearchQueryForItem(item));
               const baseUrlBadge = `<a href="${Utils.escapeHtml(baseUrl)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="${item.storeUrls?.[CONFIG.BASE_STORE] ? '開啟已綁定的中田官網商品頁' : '前往中田官網搜尋此型號'}" class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 mr-1">中田官網↗</a>`;
-              const liveSearchRowBtn = `<button type="button" data-action="quick-search-row" data-id="${item.id}" title="即時搜尋中田及 8 大對手官網最新售價" class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition">🔍 搜9店</button>`;
+              const live9Btn = `<button type="button" data-action="quick-search-row" data-id="${item.id}" title="開啟9店詳情並即時搜尋全港9店實價" class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">🔍 搜9店</button>`;
+              const origBase = item.originalPrices?.[CONFIG.BASE_STORE] ?? item.basePrice;
+              const baseDelta = (item.basePrice !== null && origBase !== null && item.basePrice !== origBase) ? (item.basePrice - origBase) : 0;
+              const baseDeltaHtml = baseDelta !== 0
+                ? `<div class="text-[10px] font-semibold ${baseDelta < 0 ? 'text-emerald-700' : 'text-rose-600'}">${baseDelta < 0 ? '↓$' + Utils.formatHKD(Math.abs(baseDelta)) : '↑$' + Utils.formatHKD(baseDelta)}</div>`
+                : '';
 
               let diffBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 tabular-nums">0</span>`;
               if (item.diff > 0) {
@@ -3640,7 +3671,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
               return `
                 <tr data-row-id="${item.id}" class="hover:bg-slate-50/90 cursor-pointer transition group">
-                  <td class="sticky-col bg-white group-hover:bg-slate-50 px-3.5 py-2.5 border-r border-slate-200 max-w-[450px]">
+                  <td class="sticky-col bg-white group-hover:bg-slate-50 px-3.5 py-2.5 border-r border-slate-200 max-w-[440px]">
                     <div class="flex items-start gap-2">
                       <input type="checkbox" data-basket-id="${item.id}" ${isChecked ? 'checked' : ''} class="basket-cb mt-1 rounded text-emerald-600 focus:ring-emerald-500 w-3.5 h-3.5 cursor-pointer shrink-0" />
                       <button type="button" data-action="toggle-star" data-id="${item.id}" title="加入/取消星標重點追蹤" class="mt-0.5 text-sm leading-none shrink-0 ${isStarred ? 'text-amber-500' : 'text-slate-300 hover:text-amber-400'}">
@@ -3648,7 +3679,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                       </button>
                       <div class="min-w-0 flex-1">
                         <div class="mb-0.5 flex flex-wrap items-center gap-0.5">
-                          ${catBadge}${mpnBadge}${packBadge}${fpsBadge}${syncBadge}${modBadge}${baseUrlBadge}${liveSearchRowBtn}
+                          ${catBadge}${mpnBadge}${packBadge}${fpsBadge}${syncBadge}${modBadge}${baseUrlBadge}${live9Btn}
                         </div>
                         <div class="font-medium text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 group-hover:text-emerald-700 transition" title="${Utils.escapeHtml(item.model)}">
                           ${Utils.highlightText(item.model, state.searchQuery)}
@@ -3656,10 +3687,11 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                       </div>
                     </div>
                   </td>
-                  <td data-edit-id="${item.id}" data-edit-store="中田" title="雙擊可直接修改中田售價" class="price-cell-editable px-3 py-2.5 text-right tabular-nums whitespace-nowrap border-r border-slate-200 ${
+                  <td data-edit-id="${item.id}" data-edit-store="中田" title="雙擊可直接修改中田售價" class="price-cell-editable px-3 py-2 text-right tabular-nums whitespace-nowrap border-r border-slate-200 ${
                     baseIsLowest ? 'cell-lowest' : 'bg-slate-50/60 font-semibold text-slate-900'
                   }">
-                    ${Utils.formatHKD(item.basePrice)}
+                    <div>${Utils.formatHKD(item.basePrice)}</div>
+                    ${baseDeltaHtml}
                   </td>
                   ${compCells}
                   <td class="px-3 py-2.5 text-left text-xs font-medium text-slate-700 whitespace-nowrap border-l border-slate-200">
@@ -3766,7 +3798,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           }
         },
 
-        openDetailModal(productId, autoRunSearch = false) {
+        openDetailModal(productId, autoSearch = false) {
           const item = state.products.find(p => p.id === productId);
           if (!item) return;
           state.selectedDetailId = productId;
@@ -3808,7 +3840,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             const fpDiv = document.createElement('div');
             fpDiv.id = 'modalFingerprintBar';
             fpDiv.className = 'flex flex-wrap items-center gap-1.5 p-2.5 rounded-xl bg-slate-100 border border-slate-200 text-[11px]';
-            fpDiv.innerHTML = `<span class="font-bold text-slate-700 mr-1">🔍 SpecGuard 規格鎖定指紋 (${Utils.escapeHtml(item.fingerprint?.confidence || '精準比對')})：</span>` +
+            fpDiv.innerHTML = `<span class="font-bold text-slate-700 mr-1">🔍 規格防錯配指紋 (${Utils.escapeHtml(item.fingerprint?.confidence || '精準比對')})：</span>` +
               fpTags.map(t => `<span class="px-2 py-0.5 rounded bg-white border border-slate-300 font-mono font-semibold text-slate-800">${Utils.escapeHtml(t)}</span>`).join('');
             document.getElementById('modalStoresList').before(fpDiv);
           }
@@ -3830,11 +3862,11 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               (((item.prices[CONFIG.BASE_STORE] - p) / item.prices[CONFIG.BASE_STORE]) * 100 > state.outlierThresholdPct);
 
             return `
-              <div data-modal-store-card="${store}" class="p-2.5 rounded-xl border space-y-2 ${
+              <div class="p-2.5 rounded-xl border space-y-2 ${
                 isGlobalLowest ? 'bg-emerald-50/80 border-emerald-300' : 'bg-white border-slate-200'
               }">
                 <div class="flex items-center justify-between gap-2.5">
-                  <div class="flex items-center gap-1.5 min-w-[175px]">
+                  <div class="flex items-center gap-1.5 min-w-[165px]">
                     <span class="font-bold text-xs sm:text-sm ${isBase ? 'text-slate-900' : 'text-slate-700'}">${store}</span>
                     ${isBase ? '<span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-white">基準</span>' : ''}
                     ${!isBase && !isIn5Slots ? '<span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-100 text-slate-500">未在5槽</span>' : ''}
@@ -3866,9 +3898,9 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                     ${!isBase ? `<button type="button" data-action="clear-store-price" data-store="${store}" class="px-1.5 py-1 rounded text-[11px] text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition">無貨</button>` : ''}
                   </div>
                 </div>
-                <div data-store-search-status="${store}" class="hidden text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200/80"></div>
+                <div id="modalLiveBadge-${store.replace(/\s+/g, '_')}" class="hidden text-[11px] px-2 py-1 rounded bg-slate-50 border border-slate-200 text-slate-600"></div>
                 <div class="flex items-center gap-1.5">
-                  <input type="url" data-store-url-input="${store}" value="${Utils.escapeHtml(boundUrl || '')}" placeholder="貼上 ${store} 該型號商品網址（全網同步時將自動抓價）" class="flex-1 px-2.5 py-1 text-[11px] font-mono bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                  <input type="url" data-store-url-input="${store}" value="${Utils.escapeHtml(boundUrl || '')}" placeholder="貼上 ${store} 該型號商品網址（一鍵同步時將自動抓價）" class="flex-1 px-2.5 py-1 text-[11px] font-mono bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500" />
                   <button type="button" data-action="scrape-single-store-url" data-store="${store}" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition shrink-0">
                     即時抓價
                   </button>
@@ -3916,7 +3948,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           }
 
           document.getElementById('detailModal').classList.remove('hidden');
-          if (autoRunSearch) {
+          if (autoSearch) {
             this.runModalAllStoresSearch();
           }
         },
@@ -3926,58 +3958,42 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           const item = state.products.find(p => p.id === state.selectedDetailId);
           if (!item) return;
 
-          const btn = document.getElementById('modalRun9StoreSearchBtn');
+          const btn = document.getElementById('modalSearchAll9Btn');
           if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<span>正在併發搜尋中田及 8 大對手官網...</span>';
+            btn.innerHTML = '<span>⏳ 正在併發搜尋全港 9 店實價...</span>';
           }
 
-          // Mark all 9 store status bars as searching
-          CONFIG.ALL_STORES.forEach(store => {
-            const statusEl = document.querySelector(`#modalStoresList [data-store-search-status="${store}"]`);
-            if (statusEl) {
-              statusEl.classList.remove('hidden');
-              statusEl.className = 'text-[11px] px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-200';
-              statusEl.textContent = `⏳ 正在連線搜尋 ${store} 官網現貨報價...`;
-            }
-          });
-
+          const results = await MultiStoreSearchEngine.searchStoresForProduct(item, CONFIG.ALL_STORES);
           let foundCount = 0;
-          await MultiStoreSearchEngine.searchStoresForProduct(item, CONFIG.ALL_STORES, res => {
-            const statusEl = document.querySelector(`#modalStoresList [data-store-search-status="${res.store}"]`);
-            const priceInp = document.querySelector(`#modalStoresList input[data-store-input="${res.store}"]`);
-            const urlInp = document.querySelector(`#modalStoresList input[data-store-url-input="${res.store}"]`);
 
+          for (const res of results) {
+            const badgeEl = document.getElementById(`modalLiveBadge-${res.store.replace(/\s+/g, '_')}`);
+            const pInp = document.querySelector(`#modalStoresList input[data-store-input="${res.store}"]`);
             if (res.status === 'found' && res.price) {
               foundCount++;
-              if (priceInp) priceInp.value = res.price;
-              if (urlInp && res.productUrl) urlInp.value = res.productUrl;
-              if (statusEl) {
-                statusEl.className = 'text-[11px] px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 flex flex-wrap items-center justify-between gap-1';
-                statusEl.innerHTML = `
-                  <span>✅ <strong>${Utils.escapeHtml(res.reason)}</strong>：${Utils.escapeHtml((res.matchedTitle || '').slice(0, 48))}</span>
-                  <span class="font-mono font-bold text-emerald-700">HK$${Utils.formatHKD(res.price)}</span>
-                `;
+              if (pInp) pInp.value = res.price;
+              if (badgeEl) {
+                badgeEl.className = 'text-[11px] px-2 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium';
+                badgeEl.textContent = `✓ 實時抓取：HK$${Utils.formatHKD(res.price)}（${res.reason}）`;
+                badgeEl.classList.remove('hidden');
               }
-            } else if (res.status === 'oos') {
-              if (priceInp && res.store !== CONFIG.BASE_STORE) priceInp.value = '';
-              if (statusEl) {
-                statusEl.className = 'text-[11px] px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200';
-                statusEl.textContent = '⚠️ 官網商品頁顯示目前缺貨 / 暫無存貨';
-              }
-            } else {
-              if (statusEl) {
-                statusEl.className = 'text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 border border-slate-200';
-                statusEl.textContent = `ℹ️ ${res.reason || '未檢索到完全同規格報價'}`;
-              }
+            } else if (badgeEl) {
+              badgeEl.className = 'text-[11px] px-2 py-1 rounded bg-amber-50 border border-amber-200 text-amber-800';
+              badgeEl.textContent = `⚠️ ${res.reason}（可點上方「查官網🔍」並用書籤/Ctrl+V 同步）`;
+              badgeEl.classList.remove('hidden');
             }
-          });
+          }
 
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<span>🔍 重新搜全網 9 店實價</span>';
+            btn.innerHTML = '<span>🔍 一鍵搜全港 9 店實價</span>';
           }
-          Utils.showToast(`全網 9 店搜價完成！共在 ${foundCount} 間店舖核實到同規格報價（請按「儲存全店價格修訂」生效）`);
+          Utils.showToast(
+            foundCount > 0
+              ? `已完成全港 9 店核價，共抓到 ${foundCount} 間店舖最新實價（請按儲存生效）`
+              : '瀏覽器沙盒限制跨站直連，請點各店「查官網🔍」複製頁面後按 Ctrl+V 同步'
+          );
         },
 
         closeDetailModal() {
@@ -4028,7 +4044,6 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
           if (changed) {
             item.isModified = CONFIG.ALL_STORES.some(s => item.prices[s] !== item.originalPrices[s]);
-            state.lastSyncChangedIds.add(item.id);
             Utils.showToast(`已更新「${item.model.slice(0, 22)}...」最新售價！`);
           }
           DataStore.saveToStorage();
@@ -4036,10 +4051,8 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
           this.renderAll();
         },
 
-        openSyncModal(tab = 'bookmarklet') {
+        openSyncModal(tab = 'sync') {
           document.getElementById('webSyncModal').classList.remove('hidden');
-          const dragLink = document.getElementById('bookmarkletDragLink');
-          if (dragLink) dragLink.href = BookmarkletBridge.getBookmarkletCode();
           const urlInp = document.getElementById('remoteFeedUrlInput');
           if (urlInp) urlInp.value = state.remoteFeedUrl || '';
           const boundCount = state.products.reduce((acc, p) => acc + (p.storeUrls ? Object.keys(p.storeUrls).length : 0), 0);
@@ -4055,7 +4068,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
         switchSyncTab(tab) {
           const normalizedTab = tab === 'fortress' ? 'pageparse' : tab;
-          ['bookmarklet', 'sync', 'pageparse', 'import', 'add'].forEach(t => {
+          ['sync', 'pageparse', 'import', 'add'].forEach(t => {
             const btn = document.getElementById(`syncTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
             const panel = document.getElementById(`syncPanel${t.charAt(0).toUpperCase() + t.slice(1)}`);
             if (!btn || !panel) return;
@@ -4126,42 +4139,101 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
 
         previewBatchMatch() {
           const maxDiff = parseInt(document.getElementById('batchMaxDiffSelect')?.value || '100', 10);
+          const strategyOffset = parseInt(document.getElementById('batchStrategySelect')?.value || '0', 10);
+          const maxDropPct = parseFloat(document.getElementById('batchMaxDropPctSelect')?.value || '8');
+
           const currentItems = PricingEngine.getFilteredAndSorted();
-          const eligible = currentItems.filter(i => i.diff > 0 && i.diff <= maxDiff);
-          const totalDrop = eligible.reduce((acc, i) => acc + i.diff, 0);
+          const currentWins = currentItems.filter(i => i.isBaseLowest).length;
+
+          const eligible = currentItems.filter(i => {
+            if (i.diff <= 0 || i.diff > maxDiff || !i.minPrice || !i.basePrice) return false;
+            const targetPrice = Math.max(1, i.minPrice + strategyOffset);
+            const drop = i.basePrice - targetPrice;
+            if (drop <= 0) return false;
+            const dropPct = (drop / i.basePrice) * 100;
+            return dropPct <= maxDropPct;
+          });
+
+          const totalDrop = eligible.reduce((acc, i) => {
+            const targetPrice = Math.max(1, i.minPrice + strategyOffset);
+            return acc + Math.max(0, i.basePrice - targetPrice);
+          }, 0);
+
+          const oldWinPct = currentItems.length > 0 ? Math.round((currentWins / currentItems.length) * 100) : 0;
+          const newWinPct = currentItems.length > 0 ? Math.round(((currentWins + eligible.length) / currentItems.length) * 100) : 0;
 
           const box = document.getElementById('batchPreviewBox');
           if (!box) return;
           box.innerHTML = `
-            <div>符合跟價門檻（價差 ≤ HK$${Utils.formatHKD(maxDiff)}）之型號：<strong>${eligible.length} 項</strong></div>
-            <div>預估單件總讓利金額：<strong>HK$${Utils.formatHKD(totalDrop)}</strong></div>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span>符合策略與毛利保護紅線之型號：<strong>${eligible.length} 項</strong></span>
+              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 font-bold">預估勝率提升：${oldWinPct}% → ${newWinPct}%</span>
+            </div>
+            <div>預估單件總讓利金額：<strong>HK$${Utils.formatHKD(totalDrop)}</strong>（單品最大減幅限制 ≤ ${maxDropPct}%）</div>
             <div class="text-[11px] text-blue-800">執行後可隨時點擊頂部「↶ 復原上一步」或「還原基準庫」恢復原始售價。</div>
           `;
         },
 
         executeBatchMatch() {
           const maxDiff = parseInt(document.getElementById('batchMaxDiffSelect')?.value || '100', 10);
+          const strategyOffset = parseInt(document.getElementById('batchStrategySelect')?.value || '0', 10);
+          const maxDropPct = parseFloat(document.getElementById('batchMaxDropPctSelect')?.value || '8');
+
           const currentItems = PricingEngine.getFilteredAndSorted();
-          const eligible = currentItems.filter(i => i.diff > 0 && i.diff <= maxDiff);
+          const eligible = currentItems.filter(i => {
+            if (i.diff <= 0 || i.diff > maxDiff || !i.minPrice || !i.basePrice) return false;
+            const targetPrice = Math.max(1, i.minPrice + strategyOffset);
+            const drop = i.basePrice - targetPrice;
+            if (drop <= 0) return false;
+            return ((drop / i.basePrice) * 100) <= maxDropPct;
+          });
+
           if (eligible.length === 0) {
-            Utils.showToast('目前範圍內沒有符合此門檻的落後項目', 'error');
+            Utils.showToast('目前範圍內沒有同時符合價差門檻與毛利保護紅線的項目', 'error');
             return;
           }
           DataStore.pushUndoSnapshot();
           for (const ev of eligible) {
             const target = state.products.find(p => p.id === ev.id);
             if (target && ev.minPrice !== null) {
-              target.prices[CONFIG.BASE_STORE] = ev.minPrice;
+              target.prices[CONFIG.BASE_STORE] = Math.max(1, ev.minPrice + strategyOffset);
               target.isModified = true;
+              state.lastSyncChangedIds.add(target.id);
             }
           }
           DataStore.saveToStorage();
           this.closeBatchMatchModal();
           this.renderAll();
-          Utils.showToast(`已完成 ${eligible.length} 項模擬跟價，最低價勝率已即時更新！`);
+          Utils.showToast(`已完成 ${eligible.length} 項智能跟價（${strategyOffset === 0 ? '持平' : '平$' + Math.abs(strategyOffset)}），勝率已即時更新！`);
         },
 
         bindEvents() {
+          // Global Ctrl+V Paste Auto-Sync Handler (when not typing inside an input/textarea)
+          window.addEventListener('paste', e => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+            const pastedText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+            if (!pastedText || pastedText.length < 25) return;
+
+            let detectedStore = 'AUTO';
+            const urlLineMatch = pastedText.match(/^URL:\s*(https?:\/\/[^\s]+)/m);
+            if (urlLineMatch) {
+              const s = ScraperEngine.detectStoreFromUrl(urlLineMatch[1]);
+              if (s) detectedStore = s;
+            }
+
+            const { store, candidates } = UniversalPageParser.parsePreview(pastedText, detectedStore);
+            if (candidates.length > 0) {
+              e.preventDefault();
+              UniversalPageParser.applyParsedPreview();
+              const banner = document.getElementById('syncStatusBanner');
+              const summary = document.getElementById('syncBannerSummary');
+              if (banner && summary) {
+                banner.classList.remove('hidden');
+                summary.textContent = `貼上同步完成（${state.lastUpdated}）：從「${store}」頁面自動匹配並更新 ${candidates.length} 項最新價格！`;
+              }
+            }
+          });
+
           // Double-click inline cell editor
           document.addEventListener('dblclick', e => {
             const cell = e.target.closest('td[data-edit-id]');
@@ -4231,75 +4303,11 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               const action = actionEl.dataset.action;
 
               switch (action) {
-                case 'copy-bookmarklet':
-                  if (Utils.copyToClipboard(BookmarkletBridge.getBookmarkletCode())) {
-                    Utils.showToast('已複製「零阻擋抓價書籤」網址程式碼！請於瀏覽器新增書籤並貼入網址欄');
-                  }
-                  break;
-                case 'copy-node-script':
-                  if (Utils.copyToClipboard(BookmarkletBridge.getNodeScraperScript())) {
-                    Utils.showToast('已複製本機 Node.js 自動爬蟲腳本 (sync-prices.mjs)！');
-                  }
-                  break;
-                case 'batch-search-visible': {
-                  if (state.selectedCategory === 'BUILDS') return;
-                  const visibleItems = PricingEngine.getFilteredAndSorted().slice(0, 6);
-                  if (visibleItems.length === 0) {
-                    Utils.showToast('目前清單無可搜尋項目', 'error');
-                    return;
-                  }
-                  const btn = document.getElementById('batchSearchTop10Btn');
-                  if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = `AI 正在實時核對前 ${visibleItems.length} 項全網售價...`;
-                  }
-                  DataStore.pushUndoSnapshot();
-                  let totalUpdated = 0;
-                  let verifiedItems = 0;
-                  (async () => {
-                    for (const item of visibleItems) {
-                      const target = state.products.find(p => p.id === item.id);
-                      if (!target) continue;
-                      const results = await MultiStoreSearchEngine.searchStoresForProduct(target, CONFIG.ALL_STORES);
-                      let itemHit = false;
-                      for (const r of results) {
-                        if (r.status === 'found' && r.price) {
-                          itemHit = true;
-                          if (target.prices[r.store] !== r.price) {
-                            target.prices[r.store] = r.price;
-                            target.isModified = true;
-                            state.lastSyncChangedIds.add(target.id);
-                            totalUpdated++;
-                          }
-                        }
-                        if (r.productUrl) {
-                          if (!target.storeUrls) target.storeUrls = {};
-                          target.storeUrls[r.store] = r.productUrl;
-                        }
-                      }
-                      if (itemHit) verifiedItems++;
-                    }
-                    if (btn) {
-                      btn.disabled = false;
-                      btn.textContent = 'AI 核價本頁前6項';
-                    }
-                    state.lastUpdated = Utils.getNowHKT();
-                    state.syncConnectionState = 'connected';
-                    DataStore.saveToStorage();
-                    this.renderAll();
-                    Utils.showToast(
-                      totalUpdated > 0
-                        ? `AI 實時核價完成！已驗證 ${verifiedItems} 項型號，更新 ${totalUpdated} 個最新報價`
-                        : `AI 實時核價完成！已驗證 ${verifiedItems} 項型號，價格均與官網一致`
-                    );
-                  })();
-                  break;
-                }
                 case 'one-click-sync':
-                  DataStore.runOneClickSync(null, false);
+                  DataStore.runOneClickSync(null);
                   break;
                 case 'open-sync-modal':
-                  this.openSyncModal(actionEl.dataset.tab || 'bookmarklet');
+                  this.openSyncModal(actionEl.dataset.tab || 'sync');
                   break;
                 case 'close-sync-modal':
                   this.closeSyncModal();
@@ -4310,17 +4318,59 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 case 'undo-last-edit':
                   DataStore.undoLastEdit();
                   break;
+                case 'quick-search-row':
+                  this.openDetailModal(actionEl.dataset.id, true);
+                  break;
+                case 'search-all-stores-modal':
+                  this.runModalAllStoresSearch();
+                  break;
+                case 'batch-search-visible': {
+                  if (state.selectedCategory === 'BUILDS') return;
+                  const visibleItems = PricingEngine.getFilteredAndSorted().slice(0, 8);
+                  if (visibleItems.length === 0) {
+                    Utils.showToast('目前清單無可搜尋項目', 'error');
+                    return;
+                  }
+                  const btn = document.getElementById('batchSearchTop10Btn');
+                  if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<span>⏳ 正在核對前 ${visibleItems.length} 項9店實價...</span>`;
+                  }
+                  DataStore.pushUndoSnapshot();
+                  let totalUpdated = 0;
+                  (async () => {
+                    for (const item of visibleItems) {
+                      const target = state.products.find(p => p.id === item.id);
+                      if (!target) continue;
+                      const results = await MultiStoreSearchEngine.searchStoresForProduct(target, CONFIG.ALL_STORES);
+                      for (const r of results) {
+                        if (r.status === 'found' && r.price && target.prices[r.store] !== r.price) {
+                          target.prices[r.store] = r.price;
+                          target.isModified = true;
+                          state.lastSyncChangedIds.add(target.id);
+                          totalUpdated++;
+                        }
+                      }
+                    }
+                    if (btn) {
+                      btn.disabled = false;
+                      btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg><span>批量搜本頁前8項9店實價</span>`;
+                    }
+                    DataStore.saveToStorage();
+                    this.renderAll();
+                    Utils.showToast(
+                      totalUpdated > 0
+                        ? `批量搜價完成！共更新 ${totalUpdated} 個最新官網報價`
+                        : '預覽沙盒限制直接跨站搜價，建議用「⚡ 書籤 / 網址」或 Ctrl+A 複製貼上校準'
+                    );
+                  })();
+                  break;
+                }
                 case 'sync-from-clipboard':
                   if (navigator.clipboard && navigator.clipboard.readText) {
                     navigator.clipboard.readText().then(txt => {
                       if (!txt.trim()) {
                         Utils.showToast('剪貼簿目前為空', 'error');
-                        return;
-                      }
-                      const bRes = BookmarkletBridge.ingestPayload(txt);
-                      if (bRes) {
-                        this.closeSyncModal();
-                        Utils.showToast(`⚡ 書籤同步成功！已從「${bRes.store}」核對 ${bRes.matchedCount} 項，更新 ${bRes.updatedCount} 項最新實價`);
                         return;
                       }
                       document.getElementById('pageParseRawInput').value = txt;
@@ -4332,7 +4382,7 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                         Utils.showToast('已將剪貼簿文字填入校準器，請檢查格式');
                       }
                     }).catch(() => {
-                      Utils.showToast('請直接在頁面任意處按 Ctrl+V 即可自動貼上同步！', 'error');
+                      Utils.showToast('瀏覽器權限限制無法自動讀取剪貼簿，請直接按 Ctrl+V 貼上', 'error');
                     });
                   }
                   break;
@@ -4340,17 +4390,16 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   const url = document.getElementById('remoteFeedUrlInput')?.value.trim() || '';
                   state.remoteFeedUrl = url;
                   DataStore.saveToStorage();
-                  DataStore.runOneClickSync(url, false);
+                  DataStore.runOneClickSync(url);
                   break;
                 }
                 case 'fill-sample-url': {
                   const box = document.getElementById('liveScrapeUrlsInput');
                   if (box) {
                     box.value = [
-                      'https://centralfield.com/product/12807/intel-core-ultra-5-225-tray-cpu-lga1851',
-                      'https://centralfield.com/product/19565/amd-ryzen-9-9950x3d2-am5-processor',
-                      'https://centralfield.com/product/952/intel-core-i3-12100f-processor-2',
-                      'https://centralfield.com/product/955/intel-core-i3-12100-tray-lga1700-cpu'
+                      'https://centralfield.com/product/13263/kingston-fury-beast-rgb-128gb-ddr5-5600mhz-ram',
+                      'https://centralfield.com/product/17497/amd-ryzen-5-5600-processor',
+                      'https://centralfield.com/product/12807/intel-core-ultra-5-225-tray-cpu-lga1851'
                     ].join('\n');
                   }
                   break;
@@ -4393,7 +4442,6 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 case 'scrape-single-store-url': {
                   if (!state.selectedDetailId) return;
                   const store = actionEl.dataset.store;
-                  const item = state.products.find(p => p.id === state.selectedDetailId);
                   const uInp = document.querySelector(`#modalStoresList input[data-store-url-input="${store}"]`);
                   const pInp = document.querySelector(`#modalStoresList input[data-store-input="${store}"]`);
                   const url = uInp?.value.trim() || '';
@@ -4407,10 +4455,10 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                     actionEl.disabled = false;
                     actionEl.textContent = '即時抓價';
                     if (!html) {
-                      Utils.showToast('未能讀取該商品頁面，請手動輸入價格', 'error');
+                      Utils.showToast('未能讀取該商品頁面，請手動輸入或用書籤貼上', 'error');
                       return;
                     }
-                    const res = StoreAdapters.extractFromHtml(html, url, store, item?.prices[CONFIG.BASE_STORE]);
+                    const res = StoreAdapters.extractFromHtml(html, url, store);
                     if (res.isOutOfStock) {
                       if (pInp) pInp.value = '';
                       Utils.showToast(`${store} 官網顯示目前缺貨，已清空為無貨（—）`);
@@ -4434,6 +4482,24 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 case 'open-batch-match':
                   this.openBatchMatchModal();
                   break;
+                case 'audit-price-anomalies': {
+                  state.selectedCategory = 'ALL';
+                  state.selectedBrand = 'ALL';
+                  state.focusStoreFilter = null;
+                  state.showAll9Stores = true;
+                  const show9Cb = document.getElementById('showAll9Checkbox');
+                  if (show9Cb) show9Cb.checked = true;
+                  state.quickFilter = 'OUTLIER_REVIEW';
+                  state.currentPage = 1;
+                  this.renderAll();
+                  const flaggedCount = PricingEngine.getFilteredAndSorted().length;
+                  Utils.showToast(
+                    flaggedCount > 0
+                      ? `體檢完成：全庫 9 店共發現 ${flaggedCount} 項疑似異常價差（⚠️），點擊該列可人工核實放行`
+                      : '體檢完成：全庫 9 店所有價格均在合理區間內，無異常離群報價！'
+                  );
+                  break;
+                }
                 case 'close-batch-match':
                   this.closeBatchMatchModal();
                   break;
@@ -4442,6 +4508,9 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   break;
                 case 'copy-summary':
                   Exporter.copySummaryText();
+                  break;
+                case 'copy-procurement':
+                  Exporter.copyProcurementSheet();
                   break;
                 case 'export-html':
                   Exporter.exportHTML();
@@ -4467,6 +4536,27 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                   const txt = document.getElementById('radarToggleText');
                   grid?.classList.toggle('hidden');
                   if (txt) txt.textContent = grid?.classList.contains('hidden') ? '展開分佈' : '收起分佈';
+                  break;
+                }
+                case 'toggle-cat-health': {
+                  const grid = document.getElementById('categoryHealthGrid');
+                  const txt = document.getElementById('catHealthToggleText');
+                  grid?.classList.toggle('hidden');
+                  if (txt) txt.textContent = grid?.classList.contains('hidden') ? '展開矩陣' : '收起矩陣';
+                  break;
+                }
+                case 'drilldown-cat-undercut': {
+                  const cat = actionEl.dataset.cat;
+                  if (state.selectedCategory === cat && state.quickFilter === 'UNDERCUT') {
+                    state.selectedCategory = 'ALL';
+                    state.quickFilter = 'ALL';
+                  } else {
+                    state.selectedCategory = cat;
+                    state.quickFilter = 'UNDERCUT';
+                  }
+                  state.selectedBrand = 'ALL';
+                  state.currentPage = 1;
+                  this.renderAll();
                   break;
                 }
                 case 'focus-store': {
@@ -4562,25 +4652,15 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                 case 'fill-cf-sample':
                   document.getElementById('pageParseStoreSelect').value = '中田';
                   document.getElementById('pageParseRawInput').value = [
-                    'AMD Ryzen 9 9950X3D2 Dual Edition Tray版雙3D V-Cache 16核32線程AM5處理器內顯3年保(100-000001978)',
-                    'SKU: CPUAMDR99950X3DV2-T-X',
-                    '現貨庫存量低免費送貨',
-                    'HK$6,450 HK$6,299 跟板價HK$6,280',
+                    'Kingston FURY BEAST RGB 128GB 黑色套裝(2x64GB) D5-5600C36 (KF556C36BBEAK2-128)(EXPO/XMP)',
+                    'SKU: RAMKTNKF556C36BBEAK2-128',
+                    '現貨免費送貨',
+                    'HK$19,200',
                     '加入',
-                    'Intel 英特爾Core i3-12100F Tray版4核8線程LGA1700處理器無內顯3年保(CP-3T1210F)',
-                    'SKU: CPUINTI3-12100FT-H',
+                    'AMD Ryzen 5 5600 Tray版6核12線程AM4處理器無內顯3年保(100-000000927)',
+                    'SKU: CPUAMDR55600-T-S',
                     '現貨',
-                    'HK$850 HK$670',
-                    '加入',
-                    'Intel 英特爾Core i3-12100 Tray版4核8線程LGA1700處理器內顯3年保',
-                    'SKU: CPUINTI3-12100-T-H',
-                    '現貨',
-                    'HK$1,280 HK$875',
-                    '加入',
-                    'AMD Ryzen 7 9850X3D 盒裝版3D V-Cache 8核16線程AM5處理器內顯3年保(100-100001973WOF)',
-                    'SKU: CPUAMDR79850X3D-C',
-                    '現貨庫存量低免費送貨',
-                    'HK$3,670 HK$3,490',
+                    'HK$815',
                     '加入'
                   ].join('\n');
                   break;
@@ -4614,11 +4694,14 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
                     previewEl.innerHTML = `
                       <div class="font-bold text-slate-800 mb-1.5">已識別目標店舖：<span class="text-emerald-700">${Utils.escapeHtml(store)}</span>（共配對 ${candidates.length} 項）</div>
                       ` + candidates.map((c, idx) => `
-                        <label class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">
-                          <div class="flex items-center gap-2 min-w-0">
-                            <input type="checkbox" data-pageparse-idx="${idx}" checked class="pageparse-cand-cb rounded text-emerald-600" />
-                            <span class="truncate text-slate-800 font-medium">${Utils.escapeHtml(c.model)}</span>
-                            <span class="text-[10px] text-slate-400 shrink-0">(${Utils.escapeHtml(c.reason)})</span>
+                        <label class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border ${c.checked ? 'border-slate-200' : 'border-amber-300 bg-amber-50/40'} cursor-pointer">
+                          <div class="flex flex-col min-w-0">
+                            <div class="flex items-center gap-2 min-w-0">
+                              <input type="checkbox" data-pageparse-idx="${idx}" ${c.checked ? 'checked' : ''} class="pageparse-cand-cb rounded text-emerald-600" />
+                              <span class="truncate text-slate-800 font-medium">${Utils.escapeHtml(c.model)}</span>
+                              <span class="text-[10px] text-slate-400 shrink-0">(${Utils.escapeHtml(c.reason)})</span>
+                            </div>
+                            ${c.warning ? `<span class="text-[11px] font-bold text-amber-800 pl-5 mt-0.5">${Utils.escapeHtml(c.warning)}</span>` : ''}
                           </div>
                           <span class="shrink-0 font-mono font-bold text-emerald-700">${c.oldPrice ? 'HK$' + Utils.formatHKD(c.oldPrice) : '—'} → HK$${Utils.formatHKD(c.newPrice)}</span>
                         </label>
@@ -4816,14 +4899,20 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             }
           });
 
-          // Direct control listeners
+          // Direct control listeners (with 140ms search debounce for silky-smooth typing)
+          let searchDebounceTimer = null;
           document.getElementById('searchInput')?.addEventListener('input', e => {
-            state.searchQuery = e.target.value;
-            state.currentPage = 1;
+            const val = e.target.value;
             const clearBtn = document.getElementById('clearSearchBtn');
-            if (state.searchQuery.trim()) clearBtn?.classList.remove('hidden');
+            if (val.trim()) clearBtn?.classList.remove('hidden');
             else clearBtn?.classList.add('hidden');
-            this.renderAll();
+
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+              state.searchQuery = val;
+              state.currentPage = 1;
+              this.renderAll();
+            }, 140);
           });
 
           document.getElementById('strictStockCheckbox')?.addEventListener('change', e => {
@@ -4875,6 +4964,14 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
             this.previewBatchMatch();
           });
 
+          document.getElementById('batchStrategySelect')?.addEventListener('change', () => {
+            this.previewBatchMatch();
+          });
+
+          document.getElementById('batchMaxDropPctSelect')?.addEventListener('change', () => {
+            this.previewBatchMatch();
+          });
+
           document.getElementById('importFileInput')?.addEventListener('change', e => {
             const file = e.target.files?.[0];
             if (!file) return;
@@ -4920,39 +5017,13 @@ ${mpn ? `原廠料號 MPN：${mpn}` : ''}
               this.closeBatchMatchModal();
             }
           });
-
-          // Global Ctrl+V Paste Auto-Sync Listener (works anywhere outside text inputs)
-          document.addEventListener('paste', e => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
-            const pasted = e.clipboardData?.getData('text') || '';
-            if (!pasted.trim()) return;
-
-            const bRes = BookmarkletBridge.ingestPayload(pasted);
-            if (bRes) {
-              e.preventDefault();
-              Utils.showToast(`⚡ 已自動識別「${bRes.store}」書籤報價！核對 ${bRes.matchedCount} 項，更新 ${bRes.updatedCount} 項最新實價`);
-              return;
-            }
-
-            if (pasted.length > 40 && /(?:HK\$|\$)\s*[1-9]\d{2,4}/.test(pasted)) {
-              e.preventDefault();
-              const { store, candidates } = UniversalPageParser.parsePreview(pasted, 'AUTO');
-              if (candidates.length > 0) {
-                UniversalPageParser.applyParsedPreview();
-                Utils.showToast(`📋 已從剪貼簿自動解析「${store}」${candidates.length} 項最新報價！`);
-              } else {
-                this.openSyncModal('pageparse');
-                document.getElementById('pageParseRawInput').value = pasted;
-                Utils.showToast('已將貼上內容載入全頁校準器，請選擇目標店舖預覽');
-              }
-            }
-          });
         }
       };
 
       // Boot Application safely
       window.addEventListener('DOMContentLoaded', () => {
         DataStore.init();
+        UI.initBookmarklet();
         const outlierCb = document.getElementById('excludeOutliersCheckbox');
         if (outlierCb) outlierCb.checked = state.excludeOutliers;
         const outlierSel = document.getElementById('outlierThresholdSelect');
